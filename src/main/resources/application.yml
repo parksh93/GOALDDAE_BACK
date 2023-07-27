@@ -1,0 +1,22 @@
+spring:
+#  datasource:
+#    url: ${url}
+#    username: ${username_}
+#    password: ${password}
+#    driver-class-name: ${driver-class-name}
+  profiles:
+    active: db, jwt
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+jwt:
+  issuer: ${issuer}
+  secret_key: ${secret_key}
+
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/**/**.xml
