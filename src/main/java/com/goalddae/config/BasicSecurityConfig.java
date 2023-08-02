@@ -18,12 +18,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 @Configuration
 public class BasicSecurityConfig {
-    private final UserDetailsService userService;
+    private final UserDetailsService userDetailsService;
     private final TokenProvider tokenProvider;
 
     @Autowired
-    public BasicSecurityConfig(UserDetailsService userService, TokenProvider tokenProvider){
-        this.userService = userService;
+    public BasicSecurityConfig(UserDetailsService userDetailsService, TokenProvider tokenProvider){
+        this.userDetailsService = userDetailsService;
         this.tokenProvider = tokenProvider;
     }
 
@@ -65,7 +65,7 @@ public class BasicSecurityConfig {
     public AuthenticationManager authenticationManager(HttpSecurity http,
                                                        BCryptPasswordEncoder bCryptPasswordEncoder, UserDetailsService userDetailService) throws Exception{
         AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        builder.userDetailsService(userService)
+        builder.userDetailsService(userDetailsService)
                 .passwordEncoder(bCryptPasswordEncoder);
         return builder.build();
     }
