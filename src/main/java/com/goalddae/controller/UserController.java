@@ -1,46 +1,44 @@
 package com.goalddae.controller;
 
-import com.goalddae.config.jwt.TokenProvider;
-import com.goalddae.dto.AccessTokenResponseDTO;
 import com.goalddae.dto.user.LoginDTO;
-import com.goalddae.entity.User;
 import com.goalddae.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Duration;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    private TokenProvider tokenProvider;
 
     @Autowired
-    public UserController(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, TokenProvider tokenProvider){
+    public UserController(UserService userService){
         this.userService = userService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.tokenProvider = tokenProvider;
     }
 
-    @RequestMapping("/login")
-    public AccessTokenResponseDTO login(@RequestBody LoginDTO loginDTO){
-        User userInfo = userService.getByCredentials(loginDTO.getLoginId());
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public List<Boolean> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response) {
+        String token = userService.generateTokenFromLogin(loginDTO);
+        if(!token.equals("")){
+            Cookie cookie = new Cookie("token", token);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/");
+            cookie.setSecure(true);
 
-        if (userInfo.getPassword().equals(loginDTO.getPassword())){
-            String token = tokenProvider.generateToken(userInfo, Duration.ofHours(2));
+            response.addCookie(cookie);
 
-            AccessTokenResponseDTO accessTokenResponseDTO = new AccessTokenResponseDTO(token);
-
-            return accessTokenResponseDTO;
+            return List.of(true);
         }else{
-            AccessTokenResponseDTO accessTokenResponseDTO = new AccessTokenResponseDTO("login fail");
-            return accessTokenResponseDTO;
+            return List.of(false);
         }
-
     }
+
+//    @RequestMapping(value = "/getUserInfo", method = RequestMethod.POST)
+//    public List<?> getUserInfo(@RequestBody String token){
+//
+//    }
 }
