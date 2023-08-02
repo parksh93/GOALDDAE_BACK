@@ -2,18 +2,19 @@ package com.goalddae.entity;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Setter
+@Entity
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false)
     private Long id;
 
     @Column(nullable = false, unique = true)

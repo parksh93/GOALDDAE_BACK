@@ -1,6 +1,8 @@
 package com.goalddae.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.cglib.core.Local;
@@ -9,10 +11,13 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class CommunicationReply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false)
     private long id;
 
     @Column(nullable = false)
