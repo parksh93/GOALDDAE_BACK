@@ -50,7 +50,7 @@ public class BasicSecurityConfig {
                 )
                 .logout(logoutConfig -> {
                     logoutConfig
-                            .logoutSuccessUrl("/main")
+                            .logoutSuccessUrl("/")
                             .invalidateHttpSession(true);
                 })
                 .sessionManagement(sessionConfig -> {

@@ -1,6 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.config.jwt.TokenProvider;
+import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.dto.user.LoginDTO;
 import com.goalddae.entity.User;
 import com.goalddae.exception.NotFoundUserException;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -64,5 +66,15 @@ public class UserService {
         }
     }
 
+    public GetUserInfoDTO getUserInfo(String token){
+        if(tokenProvider.validToken(token)){
+           User user = userJPARepository.findById(tokenProvider.getUserId(token)).get();
+
+           GetUserInfoDTO userInfoDTO = new GetUserInfoDTO(user);
+
+           return userInfoDTO;
+        }
+        return null;
+    }
 
 }
