@@ -17,12 +17,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 @Configuration
-public class BasicSecurityConfig {
+public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final TokenProvider tokenProvider;
 
     @Autowired
-    public BasicSecurityConfig(UserDetailsService userDetailsService, TokenProvider tokenProvider){
+    public SecurityConfig(UserDetailsService userDetailsService, TokenProvider tokenProvider){
         this.userDetailsService = userDetailsService;
         this.tokenProvider = tokenProvider;
     }
