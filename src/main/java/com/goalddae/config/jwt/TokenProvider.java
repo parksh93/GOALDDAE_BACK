@@ -30,12 +30,21 @@ public class TokenProvider {
     private String makeToken(Date expiry, User user){
         Date now = new Date();
 
+        String auth = "";
+
+        if(user.getAuthority().equals("user")){
+                auth = "ROLE_USER";
+        }else if(user.getAuthority().equals("manager")){
+                auth = "ROLE_MANAGER";
+        }else if(user.getAuthority().equals("admin")){
+                auth = "ROLE_ADMIN";
+        }
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setIssuer(jwtProperties.getIssuer())
                 .setIssuedAt(now)
                 .setExpiration(expiry)
-                .setSubject(user.getLoginId())
+                .setSubject(auth)
                 .claim("id", user.getId())
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
                 .compact();
@@ -58,8 +67,10 @@ public class TokenProvider {
     public Authentication getAuthentication(String token) {
 
         Claims claims = getClaims(token);
+        String auth = claims.getSubject();
+
         Set<SimpleGrantedAuthority> authorities =
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+                Collections.singleton(new SimpleGrantedAuthority(auth));
 
         return new UsernamePasswordAuthenticationToken(
                 new org.springframework.security.core.userdetails.User(claims.getSubject(),
