@@ -13,6 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetUserInfoDTO {
+    private long id;
     private String loginId;
     private String nickname;
     private String userCode;
@@ -29,6 +30,7 @@ public class GetUserInfoDTO {
     private int activityClass;
 
     public GetUserInfoDTO(User user){
+        this.id = user.getId();
         this.loginId = user.getLoginId();
         this.nickname = user.getNickname();
         this.userCode = user.getUserCode();

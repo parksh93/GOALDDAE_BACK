@@ -111,7 +111,7 @@ public class User implements UserDetails {
 
     @PrePersist
     public void setInformation() {
-        this.profileImgUrl = "기본 이미지 주소 설정 필요";
+        this.profileImgUrl = "./userProfileImg/goalddae_default_profile.png";
         this.matchesCnt = 0;
         this.level = "유망주";
         this.signupDate = LocalDateTime.now();
