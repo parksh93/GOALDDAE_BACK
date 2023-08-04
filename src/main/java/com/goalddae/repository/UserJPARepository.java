@@ -1,5 +1,6 @@
 package com.goalddae.repository;
 
+import com.goalddae.dto.user.LoginDTO;
 import com.goalddae.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
