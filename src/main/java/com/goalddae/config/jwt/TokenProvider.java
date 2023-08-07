@@ -44,8 +44,9 @@ public class TokenProvider {
                 .setIssuer(jwtProperties.getIssuer())
                 .setIssuedAt(now)
                 .setExpiration(expiry)
-                .setSubject(auth)
+                .setSubject(user.getLoginId())
                 .claim("id", user.getId())
+                .claim("auth", auth)
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
                 .compact();
     }
@@ -67,7 +68,7 @@ public class TokenProvider {
     public Authentication getAuthentication(String token) {
 
         Claims claims = getClaims(token);
-        String auth = claims.getSubject();
+        String auth = claims.get("auth", String.class);
 
         Set<SimpleGrantedAuthority> authorities =
                 Collections.singleton(new SimpleGrantedAuthority(auth));

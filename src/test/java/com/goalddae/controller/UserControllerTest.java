@@ -53,6 +53,8 @@ public class UserControllerTest {
                 .content(requestBody).accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isOk())
-                .andExpect(jsonPath("$[0]").value(true));
+                .andExpect(jsonPath("$").value(true));
     }
+
+
 }

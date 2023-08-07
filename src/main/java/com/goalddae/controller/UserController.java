@@ -6,6 +6,7 @@ import com.goalddae.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public List<Boolean> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response) {
+    public ResponseEntity<Boolean> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response) {
         String token = userService.generateTokenFromLogin(loginDTO);
         if(!token.equals("")){
             Cookie cookie = new Cookie("token", token);
@@ -31,29 +32,29 @@ public class UserController {
             cookie.setSecure(true);
 
             response.addCookie(cookie);
-            return List.of(true);
+            return ResponseEntity.ok(true);
         }else{
-            return List.of(false);
+            return ResponseEntity.badRequest().body(false);
         }
     }
 
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.POST)
-    public List<?> getUserInfo(@CookieValue(required = false) String token){
+    public ResponseEntity<?> getUserInfo(@CookieValue(required = false) String token){
         if(token == null){
-            return List.of("null");
+            return ResponseEntity.badRequest().body("");
         }
         GetUserInfoDTO userInfoDTO = userService.getUserInfo(token);
 
-        return List.of(userInfoDTO);
+        return ResponseEntity.ok(userInfoDTO);
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    public List<Boolean> logout(HttpServletResponse response){
+    public ResponseEntity<Boolean> logout(HttpServletResponse response){
         Cookie cookie = new Cookie("token", null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);
 
-        return List.of(true);
+        return ResponseEntity.ok(true);
     }
 }
