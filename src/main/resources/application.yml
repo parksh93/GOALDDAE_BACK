@@ -1,9 +1,9 @@
 spring:
-#  datasource:
-#    url: ${url}
-#    username: ${username_}
-#    password: ${password}
-#    driver-class-name: ${driver-class-name}
+  datasource:
+    url: ${url}
+    username: ${username_}
+    password: ${password}
+    driver-class-name: ${driver-class-name}
   profiles:
     active: db, jwt
   jpa:

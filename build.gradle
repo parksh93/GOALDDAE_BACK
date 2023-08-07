@@ -1,7 +1,7 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.1.2'
-	id 'io.spring.dependency-management' version '1.1.2'
+	id 'org.springframework.boot' version '3.1.0'
+	id 'io.spring.dependency-management' version '1.1.0'
 }
 
 group = 'com'
@@ -30,9 +30,9 @@ dependencies {
 	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.28'
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
-//	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.1.0'
-//	// https://mvnrepository.com/artifact/org.springframework.security/spring-security-test
-//	testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '6.1.0'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.1.0'
+	// https://mvnrepository.com/artifact/org.springframework.security/spring-security-test
+	testImplementation group: 'org.springframework.security', name: 'spring-security-test', version: '6.1.0'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1' //JWT
 	implementation 'javax.xml.bind:jaxb-api:2.3.1' // XML문서와 Java간 매핑 자동화
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
