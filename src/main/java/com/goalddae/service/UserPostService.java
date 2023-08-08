@@ -23,10 +23,10 @@ public class UserPostService {
     }
 
     public List<CommunicationBoard> getUserCommunicationBoardPosts(long id) {
-        return communicationBoardRepository.findById(id);
+        return communicationBoardRepository.findPostById(id);
     }
     public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(long id) {
-        return usedTransactionBoardRepository.findById(id);
+        return usedTransactionBoardRepository.findPostById(id);
     }
 
 

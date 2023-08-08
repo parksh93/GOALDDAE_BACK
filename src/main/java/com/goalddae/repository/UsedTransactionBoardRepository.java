@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface UsedTransactionBoardRepository extends JpaRepository<UsedTransactionBoard, Long> {
-    List<UsedTransactionBoard> findById(long id);
+    List<UsedTransactionBoard> findPostById(long id);
 }
