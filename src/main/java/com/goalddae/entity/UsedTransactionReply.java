@@ -23,7 +23,10 @@ public class UsedTransactionReply {
     private long boardId;
 
     @Column(nullable = false)
-    private String writer;
+    private String userId;  // 작성자 (id)
+
+    @Column(nullable = false)
+    private String writer; // 작성자 (닉네임)
 
     @Column(nullable = false)
     private LocalDateTime replyWriteDate;
