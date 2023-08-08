@@ -51,4 +51,11 @@ public class BoardController {
         return ResponseEntity.ok(response);
     }
 
+    @RequestMapping(value = "/detail/{boardId}")
+    public ResponseEntity<?> detail(@PathVariable long boardId){
+        CommunicationBoard communicationBoard = boardService.findById(boardId);
+
+        return ResponseEntity.ok(communicationBoard);
+    }
+
 }

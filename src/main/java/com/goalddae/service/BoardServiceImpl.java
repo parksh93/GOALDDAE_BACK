@@ -26,6 +26,11 @@ public class BoardServiceImpl implements BoardService{
         return boardJPARepository.findAll(pageable);
     }
 
+    @Override
+    public CommunicationBoard findById(Long boardId) {
+        return boardJPARepository.findById(boardId).get();
+    }
+
     public int getCalibratedPno(Integer pno){
         long count = boardJPARepository.count();
         if (pno <= 0 || count == 0) {
