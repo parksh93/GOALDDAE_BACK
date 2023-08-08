@@ -2,8 +2,6 @@ package com.goalddae.service;
 
 import com.goalddae.dto.user.LoginDTO;
 import com.goalddae.entity.User;
-import com.goalddae.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 @SpringBootTest
 public class UserServiceTest {
     @Autowired
-    UserService userService;
+    UserServiceImpl userService;
 
     @Test
     @Transactional

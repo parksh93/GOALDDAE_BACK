@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("mypage/posts")
 public class UserPostController {
     private final UserPostService userPostService;
     @Autowired
@@ -25,7 +25,7 @@ public class UserPostController {
     }
 
     // 내가 쓴 글 조회
-    @GetMapping("/post/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserPostsResponse> getUserPosts(@PathVariable long id) {
 
         try {
@@ -37,7 +37,7 @@ public class UserPostController {
 
         } catch (NotFoundPostException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
         }
+
     }
 }
