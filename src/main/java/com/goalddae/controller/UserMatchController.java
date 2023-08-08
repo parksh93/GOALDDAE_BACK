@@ -11,13 +11,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/mypage/match")
+@RequestMapping("/mypage")
 public class UserMatchController {
-
+    private final UserMatchService userMatchService;
     @Autowired
-    UserMatchService userMatchService;
+    public UserMatchController(UserMatchService userMatchService) {
+        this.userMatchService = userMatchService;
+    }
 
-    @GetMapping("/{userId}")
+    // 내가 신청한 개인매치 불러오기
+    @GetMapping("/match/{userId}")
     public ResponseEntity<List<Match>> getMatchById(@PathVariable long userId) {
 
         try {
