@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("mypage/posts")
+@RequestMapping("/mypage")
 public class UserPostController {
     private final UserPostService userPostService;
     @Autowired
@@ -25,7 +25,7 @@ public class UserPostController {
     }
 
     // 내가 쓴 글 조회
-    @GetMapping("/{id}")
+    @GetMapping("/posts/{id}")
     public ResponseEntity<UserPostsResponse> getUserPosts(@PathVariable long id) {
 
         try {
