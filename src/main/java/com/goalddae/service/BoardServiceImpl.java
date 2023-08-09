@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class BoardServiceImpl implements BoardService{
 
@@ -57,9 +59,26 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public void update(CommunicationBoard communicationBoard) {
+
         CommunicationBoard updatedPost = boardJPARepository.findById(communicationBoard.getId()).get();
 
-            updatedPost.update(communicationBoard);
+        System.out.println(updatedPost.getId());
+
+        updatedPost = CommunicationBoard.builder()
+                .id(communicationBoard.getId())
+                .userId(communicationBoard.getUserId())
+                .writer(communicationBoard.getWriter())
+                .title(communicationBoard.getTitle())
+                .content(communicationBoard.getContent())
+                .img1(communicationBoard.getImg1())
+                .img2(communicationBoard.getImg2())
+                .img3(communicationBoard.getImg3())
+                .img4(communicationBoard.getImg4())
+                .img5(communicationBoard.getImg5())
+                .boardSortation(communicationBoard.getBoardSortation())
+                .updateDate(LocalDateTime.now())
+                .writeDate(updatedPost.getWriteDate())
+                .build();
 
             boardJPARepository.save(updatedPost);
 
