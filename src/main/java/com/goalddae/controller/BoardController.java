@@ -1,13 +1,12 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.board.BoardListDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +24,7 @@ public class BoardController {
 
 
 
-    @RequestMapping({"/list/{page}", "/list"})
+    @GetMapping({"/list/{page}", "/list"})
     public ResponseEntity<Map<String, Object>> list(@PathVariable(required = false) Integer page) {
 
         if (page == null) {
@@ -35,7 +34,7 @@ public class BoardController {
         final int PAGE_SIZE = 10;
         final int PAGE_BTN_NUM = 10;
 
-        Page<CommunicationBoard> pageInfo = boardService.findAll(page, PAGE_SIZE);
+        Page<BoardListDTO> pageInfo = boardService.findAllBoardListDTO(page, PAGE_SIZE);
 
         int currentPageNum = pageInfo.getNumber() + 1;
         int endPageNum = (int) Math.ceil(currentPageNum / (double) PAGE_BTN_NUM) * PAGE_BTN_NUM;
@@ -51,11 +50,31 @@ public class BoardController {
         return ResponseEntity.ok(response);
     }
 
-    @RequestMapping(value = "/detail/{boardId}")
+    @GetMapping(value = "/detail/{boardId}")
     public ResponseEntity<?> detail(@PathVariable long boardId){
         CommunicationBoard communicationBoard = boardService.findById(boardId);
 
         return ResponseEntity.ok(communicationBoard);
     }
+
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<String> deleteBoard(@PathVariable Long boardId) {
+        boardService.deleteById(boardId);
+        return ResponseEntity.ok("게시글이 삭제되었습니다.");
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<String> saveBoard(@RequestBody CommunicationBoard communicationBoard) {
+        boardService.save(communicationBoard);
+        return ResponseEntity.ok("게시글이 저장되었습니다.");
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateBoard(@RequestBody CommunicationBoard communicationBoard) {
+        boardService.update(communicationBoard);
+        return ResponseEntity.ok("게시글이 수정되었습니다.");
+    }
+
+
 
 }
