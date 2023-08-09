@@ -54,32 +54,16 @@ public class BoardServiceImpl implements BoardService{
         boardJPARepository.save(newPost);
     }
 
+
     @Override
     public void update(CommunicationBoard communicationBoard) {
-        
-    }
+        CommunicationBoard updatedPost = boardJPARepository.findById(communicationBoard.getId()).get();
 
-//    @Override
-//    public void update(CommunicationBoard communicationBoard) {
-//        CommunicationBoard updatedPost = boardJPARepository.findById(communicationBoard.getId()).orElse(null);
-//
-//        if (updatedPost != null) {
-//            updatedPost.setUserId(communicationBoard.getUserId());
-//            updatedPost.setWriter(communicationBoard.getWriter());
-//            updatedPost.setTitle(communicationBoard.getTitle());
-//            updatedPost.setContent(communicationBoard.getContent());
-//            updatedPost.setImg1(communicationBoard.getImg1());
-//            updatedPost.setImg2(communicationBoard.getImg2());
-//            updatedPost.setImg3(communicationBoard.getImg3());
-//            updatedPost.setImg4(communicationBoard.getImg4());
-//            updatedPost.setImg5(communicationBoard.getImg5());
-//            updatedPost.setBoardSortation(communicationBoard.getBoardSortation());
-//
-//            boardJPARepository.save(updatedPost);
-//        } else {
-//            // 엔티티를 찾지 못한 경우 예외 처리 등을 수행할 수 있습니다.
-//        }
-//    }
+            updatedPost.update(communicationBoard);
+
+            boardJPARepository.save(updatedPost);
+
+    }
 
 
     public int getCalibratedPno(Integer pno){
