@@ -5,6 +5,7 @@ import com.goalddae.dto.user.LoginDTO;
 import com.goalddae.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.coyote.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,5 +54,12 @@ public class UserController {
         response.addCookie(cookie);
 
         return ResponseEntity.ok(true);
+    }
+
+    // 유저 정보 수정
+    @RequestMapping(value = "/updateUserInfo", method = RequestMethod.PUT)
+    public ResponseEntity<String> updateUserInfo() {
+
+        return ResponseEntity.ok("수정되었습니다.");
     }
 }

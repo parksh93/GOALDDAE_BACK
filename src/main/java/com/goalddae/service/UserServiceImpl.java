@@ -75,4 +75,14 @@ public class UserServiceImpl implements UserService{
         }
         return null;
     }
+
+    @Override
+    public void updateUserInfo(User user) {
+       User upadateUser = userJPARepository.findByLoginId(user.getLoginId());
+
+        upadateUser.setInformation();
+        upadateUser.setUpdateTime();
+
+       userJPARepository.save(upadateUser);
+    }
 }
