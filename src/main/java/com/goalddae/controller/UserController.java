@@ -1,13 +1,14 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.user.CheckLoginIdDTO;
+import com.goalddae.dto.user.CheckNicknameDTO;
 import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.dto.user.LoginDTO;
-import com.goalddae.service.UserService;
+import com.goalddae.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,10 +16,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @Autowired
-    public UserController(UserService userService){
+    public UserController(UserServiceImpl userService){
         this.userService = userService;
     }
 
@@ -56,5 +57,15 @@ public class UserController {
         response.addCookie(cookie);
 
         return ResponseEntity.ok(true);
+    }
+
+    @PostMapping("/checkLoginId")
+    public List<Boolean> checkLoginId(@RequestBody CheckLoginIdDTO checkLoginIdDTO){
+        return List.of(userService.checkLoginId(checkLoginIdDTO));
+    }
+
+    @RequestMapping(value = "/checkNickname", method = RequestMethod.POST)
+    public List<Boolean> checkNickname(@RequestBody CheckNicknameDTO checkNicknameDTO){
+        return List.of(userService.checkNickname(checkNicknameDTO));
     }
 }
