@@ -1,10 +1,7 @@
 package com.goalddae.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class CommunicationBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,17 +59,5 @@ public class CommunicationBoard {
         this.updateDate = LocalDateTime.now();
     }
 
-    public void update(CommunicationBoard updatedBoard) {
-        this.writer = updatedBoard.getWriter();
-        this.title = updatedBoard.getTitle();
-        this.content = updatedBoard.getContent();
-        this.img1 = updatedBoard.getImg1();
-        this.img2 = updatedBoard.getImg2();
-        this.img3 = updatedBoard.getImg3();
-        this.img4 = updatedBoard.getImg4();
-        this.img5 = updatedBoard.getImg5();
-        this.boardSortation = updatedBoard.getBoardSortation();
-        this.updateDate = LocalDateTime.now();
-    }
 
 }
