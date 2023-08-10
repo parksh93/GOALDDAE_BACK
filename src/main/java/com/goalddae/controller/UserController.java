@@ -4,6 +4,7 @@ import com.goalddae.dto.user.CheckLoginIdDTO;
 import com.goalddae.dto.user.CheckNicknameDTO;
 import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.dto.user.LoginDTO;
+import com.goalddae.entity.User;
 import com.goalddae.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -67,5 +68,10 @@ public class UserController {
     @RequestMapping(value = "/checkNickname", method = RequestMethod.POST)
     public List<Boolean> checkNickname(@RequestBody CheckNicknameDTO checkNicknameDTO){
         return List.of(userService.checkNickname(checkNicknameDTO));
+    }
+
+    @PostMapping("/signup")
+    public void signup(@RequestBody User user){
+        userService.save(user);
     }
 }

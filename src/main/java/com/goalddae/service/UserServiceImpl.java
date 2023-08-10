@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.Random;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -33,18 +34,44 @@ public class UserServiceImpl implements UserService{
 
     public void save(User user){
         User newUser = User.builder()
+                .loginId(user.getLoginId())
                 .email(user.getEmail())
                 .password(bCryptPasswordEncoder.encode(user.getPassword()))
                 .nickname(user.getNickname())
                 .gender(user.getGender())
-                .profileImgUrl(user.getProfileImgUrl())
                 .phoneNumber(user.getPhoneNumber())
                 .birth(user.getBirth())
                 .preferredCity(user.getPreferredCity())
                 .preferredArea(user.getPreferredArea())
+                .activityClass(user.getActivityClass())
+                .authority(user.getAuthority())
+                .userCode(createUserCode())
                 .build();
 
         userJPARepository.save(newUser);
+    }
+
+    public static String createUserCode() {
+        StringBuffer code = new StringBuffer();
+        Random rnd = new Random();
+
+        for (int i = 0; i < 6; i++) {
+            int index = rnd.nextInt(3);
+
+            switch (index) {
+                case 0:
+                    code.append((char) ((int) (rnd.nextInt(26)) + 97));
+                    break;
+                case 1:
+                    code.append((char) ((int) (rnd.nextInt(26)) + 65));
+                    break;
+                case 2:
+                    code.append((rnd.nextInt(10)));
+                    break;
+            }
+        }
+
+        return code.toString();
     }
 
     public User getByCredentials(String loginId){

@@ -75,10 +75,7 @@ public class EmailServiceImpl implements EmailService{
     @Override
     public String sendSimpleMessage(String email) throws Exception {
         MimeMessage message = createMessage(email);
-        try{//예외처리
-
-            // JavaMailSender에서 제공하는 send메서드를 통해
-            // EmailConfig에서 설정해둔 포트등을 확인해 메일을 발송한다.
+        try{
             emailSender.send(message);
         }catch(MailException e){
             e.printStackTrace();

@@ -1,9 +1,12 @@
 package com.goalddae.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goalddae.dto.user.CheckLoginIdDTO;
 import com.goalddae.dto.user.CheckNicknameDTO;
 import com.goalddae.dto.user.LoginDTO;
+import com.goalddae.entity.User;
+import com.goalddae.repository.UserJPARepository;
 import com.goalddae.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.sql.Date;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -93,6 +98,4 @@ public class UserControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(false));
     }
-
-
 }
