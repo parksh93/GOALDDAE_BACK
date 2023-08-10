@@ -5,5 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface SoccerJPARepository extends JpaRepository<SoccerFiled, Long>, SoccerRepositoryExtension{
+public interface SoccerFiledRepository extends JpaRepository<SoccerFiled, Long> {
+    List<SoccerFiled> findByRegion(String keyword);
+
 }

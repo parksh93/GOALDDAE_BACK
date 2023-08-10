@@ -54,4 +54,8 @@ public class SoccerFiled {
 
     @Column(nullable = false)
     private String region;          // 지역
+
+    public SoccerFiled(String region) {
+        this.region = region;
+    }
 }
