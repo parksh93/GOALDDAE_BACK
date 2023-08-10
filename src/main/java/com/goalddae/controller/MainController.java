@@ -17,7 +17,6 @@ public class MainController {
         this.soccerFieldService = soccerFieldService;
     }
 
-
     @GetMapping("/search/soccerFiled")
     public List<SoccerFiled> searchSoccerFields(@RequestParam String keyword) {
         return soccerFieldService.searchSoccerFields(keyword);
