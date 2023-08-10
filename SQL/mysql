@@ -1,0 +1,11 @@
+insert into users values (
+    null, false, 20, "user", "2003-03-10", "asssd@naver.com",
+    "남", "뉴비", "qwe", 0, "신현섭",0, "123", "010232555232",
+    "서울", "동대문구", "./img/userProfileImg/goalddae_default_profile.Webp",
+    now(), now(),"zxczxcxz"
+    );
+
+insert into soccer_filed values (
+    null, 1, "img1", "img2", "img3", "풋살장",
+    "14x15", "인조", "실내", 1, "성남", 1, 1
+	);

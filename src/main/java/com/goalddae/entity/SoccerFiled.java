@@ -51,4 +51,7 @@ public class SoccerFiled {
 
     @Column(nullable = false)
     private String grassWhether;    // 잔디 여부
+
+    @Column(nullable = false)
+    private String region;          // 지역
 }
