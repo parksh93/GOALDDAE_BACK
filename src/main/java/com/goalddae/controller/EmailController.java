@@ -6,6 +6,7 @@ import com.goalddae.service.EmailService;
 import com.goalddae.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,22 +18,27 @@ public class EmailController {
     private UserService userService;
 
     @Autowired
-    public EmailController(EmailService emailService, UserService userService){
+    public EmailController(EmailService emailService, UserService userService) {
         this.emailService = emailService;
         this.userService = userService;
     }
 
     @RequestMapping(value = "/sendEmail", method = RequestMethod.POST)
-    public ResponseEntity<?> sendEmail(@RequestBody SendEmailDTO sendEmailDTO) throws Exception{
+    public ResponseEntity<?> sendEmail(@RequestBody SendEmailDTO sendEmailDTO) throws Exception {
         boolean checkEmail = userService.checkEmail(sendEmailDTO);
-        if (checkEmail == true){
-            ResponseCertificationCodeDTO responseCertificationCodeDTO = ResponseCertificationCodeDTO.builder()
-                    .certificationCode(emailService.sendSimpleMessage(sendEmailDTO.getEmail()))
-                    .build();
+        if (checkEmail == true) {
+            try {
+                ResponseCertificationCodeDTO responseCertificationCodeDTO = ResponseCertificationCodeDTO.builder()
+                        .certificationCode(emailService.sendSimpleMessage(sendEmailDTO.getEmail()))
+                        .build();
+                return ResponseEntity.ok(responseCertificationCodeDTO);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-            return ResponseEntity.ok(responseCertificationCodeDTO);
-        }else{
+        } else {
             return ResponseEntity.ok(false);
         }
+        return null;
     }
 }
