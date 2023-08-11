@@ -46,7 +46,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String profileImgUrl;   // 프로필사진 주소
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String phoneNumber; // 전화번호
 
     @Column(nullable = false)
@@ -111,7 +111,7 @@ public class User implements UserDetails {
 
     @PrePersist
     public void setInformation() {
-        this.profileImgUrl = "./userProfileImg/goalddae_default_profile.png";
+        this.profileImgUrl = "./userProfileImg/goalddae_default_profile.Webp";
         this.matchesCnt = 0;
         this.level = "유망주";
         this.signupDate = LocalDateTime.now();
