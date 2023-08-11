@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService{
         try {
             User userInfo = getByCredentials(loginDTO.getLoginId());
 
-            if (userInfo.getPassword().equals(loginDTO.getPassword())) {
+            if (bCryptPasswordEncoder.matches(loginDTO.getPassword(), userInfo.getPassword())) {
                 String token = tokenProvider.generateToken(userInfo, Duration.ofHours(2));
 
                 return token;
