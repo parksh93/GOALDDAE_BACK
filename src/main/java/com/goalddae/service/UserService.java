@@ -1,4 +1,5 @@
 package com.goalddae.service;
+
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.CheckLoginIdDTO;
 import com.goalddae.dto.user.CheckNicknameDTO;
