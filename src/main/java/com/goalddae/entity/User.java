@@ -111,7 +111,7 @@ public class User implements UserDetails {
 
     @PrePersist
     public void setInformation() {
-        this.profileImgUrl = "./userProfileImg/goalddae_default_profile.png";
+        this.profileImgUrl = "./userProfileImg/goalddae_default_profile.Webp";
         this.matchesCnt = 0;
         this.level = "유망주";
         this.signupDate = LocalDateTime.now();
