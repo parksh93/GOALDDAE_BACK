@@ -3,6 +3,7 @@ package com.goalddae.service;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.CheckLoginIdDTO;
 import com.goalddae.dto.user.CheckNicknameDTO;
+import com.goalddae.dto.user.FindLoginIdDTO;
 import com.goalddae.dto.user.LoginDTO;
 import com.goalddae.entity.User;
 import org.junit.jupiter.api.DisplayName;
@@ -11,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class UserServiceTest {
@@ -77,5 +77,19 @@ public class UserServiceTest {
         boolean checkNickname = userService.checkNickname(checkNicknameDTO);
 
         assertEquals(true, checkNickname);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("이메일과 닉네임을 통해 로그인 아이디 가져오기")
+    public void getLoginIdByEmail(){
+        String email = "asd@naver.com";
+        String nickname = "박상현";
+
+        FindLoginIdDTO findLoginIdDTO = FindLoginIdDTO.builder()
+                .email(email).nickname(nickname).build();
+        String loginId = userService.getLoginIdByEmailAndNickname(findLoginIdDTO);
+
+        assertNull(loginId);
     }
 }
