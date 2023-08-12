@@ -31,7 +31,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public CommunicationBoard findById(Long boardId) {
-        return boardJPARepository.findById(boardId).get();
+        return boardJPARepository.findById(boardId).orElse(null);
     }
 
     @Override
@@ -53,6 +53,7 @@ public class BoardServiceImpl implements BoardService{
                 .img5(communicationBoard.getImg5())
                 .boardSortation(communicationBoard.getBoardSortation())
                 .build();
+
         boardJPARepository.save(newPost);
     }
 
