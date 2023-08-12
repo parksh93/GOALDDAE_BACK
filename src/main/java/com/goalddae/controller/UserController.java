@@ -2,10 +2,10 @@ package com.goalddae.controller;
 
 import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.dto.user.LoginDTO;
+import com.goalddae.entity.User;
 import com.goalddae.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.coyote.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

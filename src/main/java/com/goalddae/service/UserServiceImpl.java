@@ -3,6 +3,7 @@ package com.goalddae.service;
 import com.goalddae.config.jwt.TokenProvider;
 import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.dto.user.LoginDTO;
+
 import com.goalddae.entity.User;
 import com.goalddae.exception.NotFoundUserException;
 import com.goalddae.repository.UserJPARepository;
@@ -30,6 +31,7 @@ public class UserServiceImpl implements UserService{
 
     public void save(User user){
         User newUser = User.builder()
+                .loginId(user.getLoginId())
                 .email(user.getEmail())
                 .password(bCryptPasswordEncoder.encode(user.getPassword()))
                 .nickname(user.getNickname())
@@ -39,6 +41,8 @@ public class UserServiceImpl implements UserService{
                 .birth(user.getBirth())
                 .preferredCity(user.getPreferredCity())
                 .preferredArea(user.getPreferredArea())
+                .activityClass(user.getActivityClass())
+                .authority(user.getAuthority())
                 .build();
 
         userJPARepository.save(newUser);
@@ -53,7 +57,7 @@ public class UserServiceImpl implements UserService{
         try {
             User userInfo = getByCredentials(loginDTO.getLoginId());
 
-            if (userInfo.getPassword().equals(loginDTO.getPassword())) {
+            if (bCryptPasswordEncoder.matches(loginDTO.getPassword(), userInfo.getPassword())) {
                 String token = tokenProvider.generateToken(userInfo, Duration.ofHours(2));
 
                 return token;
@@ -94,5 +98,4 @@ public class UserServiceImpl implements UserService{
 
         userJPARepository.save(updatedUser);
     }
-
 }
