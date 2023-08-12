@@ -18,12 +18,45 @@ public class UserJPARepositoryTest {
     @Test
     @Transactional
     @DisplayName("로그인아이디를 이용한 유저 정보 조회")
-    public void finByLoginId(){
+    public void finByLoginIdTest(){
         String loginId = "asd";
 
         User user = userJPARepository.findByLoginId(loginId);
 
         assertEquals("박상현", user.getNickname());
         assertEquals(1, user.getId());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("아이디 갯수 체크")
+    public void countByLoginIdTest(){
+        String loginId = "asd";
+
+        long checkLoginIdCnt = userJPARepository.countByLoginId(loginId);
+
+        assertEquals(1, checkLoginIdCnt);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("이메일 갯수 체크")
+    public void countByEmailTest() {
+        String email = "jsss@naver.com";
+
+        long checkEmailCnt = userJPARepository.countByEmail(email);
+
+        assertEquals(0, checkEmailCnt);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("닉네임 갯수 체크")
+    public void countByNicknameTest() {
+        String nickname = "새로운 닉네임";
+
+        long checkNicknameCnt = userJPARepository.countByNickname(nickname);
+
+        assertEquals(0, checkNicknameCnt);
     }
 }
