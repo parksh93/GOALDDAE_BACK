@@ -1,13 +1,18 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.user.CheckLoginIdDTO;
+import com.goalddae.dto.user.CheckNicknameDTO;
 import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.dto.user.LoginDTO;
+import com.goalddae.entity.User;
 import com.goalddae.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -53,5 +58,20 @@ public class UserController {
         response.addCookie(cookie);
 
         return ResponseEntity.ok(true);
+    }
+
+    @PostMapping("/checkLoginId")
+    public List<Boolean> checkLoginId(@RequestBody CheckLoginIdDTO checkLoginIdDTO){
+        return List.of(userService.checkLoginId(checkLoginIdDTO));
+    }
+
+    @RequestMapping(value = "/checkNickname", method = RequestMethod.POST)
+    public List<Boolean> checkNickname(@RequestBody CheckNicknameDTO checkNicknameDTO){
+        return List.of(userService.checkNickname(checkNicknameDTO));
+    }
+
+    @PostMapping("/signup")
+    public void signup(@RequestBody User user){
+        userService.save(user);
     }
 }
