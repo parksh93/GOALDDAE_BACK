@@ -9,5 +9,5 @@ public interface UserService {
     public User getByCredentials(String loginId);
     public String generateTokenFromLogin(LoginDTO loginDTO);
     public GetUserInfoDTO getUserInfo(String token);
-    public void updateUserInfo(User user);
+    public void update(User user);
 }
