@@ -38,3 +38,4 @@ out/
 
 application-db.yml
 application-jwt.yml
+application-email.properties
