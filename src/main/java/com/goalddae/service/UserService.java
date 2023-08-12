@@ -1,10 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.email.SendEmailDTO;
-import com.goalddae.dto.user.CheckLoginIdDTO;
-import com.goalddae.dto.user.CheckNicknameDTO;
-import com.goalddae.dto.user.GetUserInfoDTO;
-import com.goalddae.dto.user.LoginDTO;
+import com.goalddae.dto.user.*;
 import com.goalddae.entity.User;
 
 public interface UserService {
@@ -15,4 +12,5 @@ public interface UserService {
     public boolean checkLoginId(CheckLoginIdDTO checkLoginIdDTO);
     public boolean checkEmail(SendEmailDTO checkEmailDTO);
     public boolean checkNickname(CheckNicknameDTO checkNicknameDTO);
+    public String getLoginIdByEmailAndNickname(FindLoginIdDTO findLoginIdDTO);
 }
