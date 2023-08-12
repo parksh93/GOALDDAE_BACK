@@ -23,7 +23,7 @@ public class UsedTransactionBoard {
     private String userId;  // 작성자 (id)
 
     @Column(nullable = false)
-    private String writer; // 작성자 (닉네임)
+    private String writer;  // 작성자 (닉네임)
 
     @Column(nullable = false)
     private String title;   // 제목
