@@ -58,7 +58,9 @@ public class UserController {
 
     // 유저 정보 수정
     @RequestMapping(value = "/updateUserInfo", method = RequestMethod.PUT)
-    public ResponseEntity<String> updateUserInfo() {
+    public ResponseEntity<String> updateUserInfo(User user) {
+
+        userService.update(user);
 
         return ResponseEntity.ok("수정되었습니다.");
     }

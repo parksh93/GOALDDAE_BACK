@@ -77,12 +77,22 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void updateUserInfo(User user) {
-       User upadateUser = userJPARepository.findByLoginId(user.getLoginId());
+    public void update(User user) {
+        User updatedUser = userJPARepository.findByLoginId(user.getLoginId());
 
-        upadateUser.setInformation();
-        upadateUser.setUpdateTime();
+        updatedUser = User.builder()
+                .email(user.getEmail())
+                .password(bCryptPasswordEncoder.encode(user.getPassword()))
+                .nickname(user.getNickname())
+                .gender(user.getGender())
+                .profileImgUrl(user.getProfileImgUrl())
+                .phoneNumber(user.getPhoneNumber())
+                .birth(user.getBirth())
+                .preferredCity(user.getPreferredCity())
+                .preferredArea(user.getPreferredArea())
+                .build();
 
-       userJPARepository.save(upadateUser);
+        userJPARepository.save(updatedUser);
     }
+
 }
