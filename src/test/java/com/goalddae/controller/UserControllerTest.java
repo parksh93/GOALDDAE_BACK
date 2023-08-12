@@ -4,13 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goalddae.dto.user.CheckLoginIdDTO;
 import com.goalddae.dto.user.CheckNicknameDTO;
 import com.goalddae.dto.user.LoginDTO;
-<<<<<<< HEAD
 import com.goalddae.service.UserServiceImpl;
-=======
 import com.goalddae.entity.User;
 import com.goalddae.repository.UserJPARepository;
 import com.goalddae.service.UserService;
->>>>>>> 71a2f049829b4878df4ce759f50a22f2738ffdc0
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-
-<<<<<<< HEAD
-=======
 import java.sql.Date;
->>>>>>> 71a2f049829b4878df4ce759f50a22f2738ffdc0
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -102,5 +96,36 @@ public class UserControllerTest {
 
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(false));
+    }
+    @Test
+    @Transactional
+    @DisplayName("유저정보 수정 테스트")
+    public void updateUserInfoTest() throws Exception {
+        // given
+        String nickname = "정원";
+        String level = "프로";
+
+        User user = User.builder()
+                .nickname(nickname)
+                .level(level)
+                .build();
+
+        String url = "http://localhost:8080//updateUserInfo";
+//        String url2 = "/user/0/all"; findAll 메서드 작성후, 테스트 적용 예정
+
+        final String requestBody = objectMapper.writeValueAsString(user);
+
+        // when
+        mockMvc.perform(put(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody));
+
+        // then
+        final ResultActions result = mockMvc.perform(get(url2)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].nickname").value(nickname))
+                .andExpect(jsonPath("$[0].level").value(level));
     }
 }
