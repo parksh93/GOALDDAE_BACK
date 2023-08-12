@@ -2,10 +2,7 @@ package com.goalddae.service;
 
 import com.goalddae.config.jwt.TokenProvider;
 import com.goalddae.dto.email.SendEmailDTO;
-import com.goalddae.dto.user.CheckLoginIdDTO;
-import com.goalddae.dto.user.CheckNicknameDTO;
-import com.goalddae.dto.user.GetUserInfoDTO;
-import com.goalddae.dto.user.LoginDTO;
+import com.goalddae.dto.user.*;
 import com.goalddae.entity.User;
 import com.goalddae.exception.NotFoundUserException;
 import com.goalddae.repository.UserJPARepository;
@@ -134,5 +131,11 @@ public class UserServiceImpl implements UserService{
         }else{
             return false;
         }
+    }
+
+    public String getLoginIdByEmailAndNickname(FindLoginIdDTO findLoginIdDTO){
+        String loginId = userJPARepository.findLoginIdByEmailAndNickname(findLoginIdDTO.getEmail(), findLoginIdDTO.getNickname());
+
+        return loginId;
     }
 }

@@ -3,6 +3,7 @@ package com.goalddae.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goalddae.dto.user.CheckLoginIdDTO;
 import com.goalddae.dto.user.CheckNicknameDTO;
+import com.goalddae.dto.user.FindLoginIdDTO;
 import com.goalddae.dto.user.LoginDTO;
 import com.goalddae.entity.User;
 import com.goalddae.repository.UserJPARepository;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class UserControllerTest {
     @Autowired
-    UserServiceImpl userService;
+    UserService userService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -95,5 +96,26 @@ public class UserControllerTest {
 
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(false));
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("로그인 아이디 찾기")
+    public void findLoginIdTest() throws Exception {
+        String email = "jsap50@naver.com";
+        String nickname = "박상현";
+        String url = "/user/findLoginId";
+
+        FindLoginIdDTO findLoginIdDTO = FindLoginIdDTO.builder()
+                .email(email)
+                .nickname(nickname)
+                .build();
+        final String requestbody = objectMapper.writeValueAsString(findLoginIdDTO);
+
+        ResultActions result = mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON).content(requestbody)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$").value("asd"));
     }
 }

@@ -23,8 +23,8 @@ public class EmailController {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/sendEmail", method = RequestMethod.POST)
-    public ResponseEntity<?> sendEmail(@RequestBody SendEmailDTO sendEmailDTO) throws Exception {
+    @RequestMapping(value = "/sendEmailSignup", method = RequestMethod.POST)
+    public ResponseEntity<?> sendEmailSingup(@RequestBody SendEmailDTO sendEmailDTO) throws Exception {
         boolean checkEmail = userService.checkEmail(sendEmailDTO);
         if (checkEmail == true) {
             try {
@@ -40,5 +40,15 @@ public class EmailController {
             return ResponseEntity.ok(false);
         }
         return null;
+    }
+
+    @RequestMapping("/sendEmailFindLoginId")
+    public ResponseEntity<?> sendEmailFindLoginId(String email) throws Exception{
+        String certificationcode = emailService.sendSimpleMessage(email);
+
+        ResponseCertificationCodeDTO certificationCodeDTO = ResponseCertificationCodeDTO.builder()
+                .certificationCode(certificationcode).build();
+        return ResponseEntity.ok(certificationCodeDTO);
+
     }
 }

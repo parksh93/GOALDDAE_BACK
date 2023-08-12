@@ -1,9 +1,6 @@
 package com.goalddae.controller;
 
-import com.goalddae.dto.user.CheckLoginIdDTO;
-import com.goalddae.dto.user.CheckNicknameDTO;
-import com.goalddae.dto.user.GetUserInfoDTO;
-import com.goalddae.dto.user.LoginDTO;
+import com.goalddae.dto.user.*;
 import com.goalddae.entity.User;
 import com.goalddae.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
@@ -73,5 +70,12 @@ public class UserController {
     @PostMapping("/signup")
     public void signup(@RequestBody User user){
         userService.save(user);
+    }
+
+    @RequestMapping(value = "/findLoginId", method = RequestMethod.POST)
+    public ResponseEntity<String> findLoginId(@RequestBody FindLoginIdDTO findLoginIdDTO){
+        String loginId = userService.getLoginIdByEmailAndNickname(findLoginIdDTO);
+
+        return ResponseEntity.ok(loginId);
     }
 }
