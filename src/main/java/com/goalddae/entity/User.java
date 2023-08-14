@@ -37,7 +37,10 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String userCode;    // 유저코드
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
+    private String name;    // 사용자 이름
+    
+    @Column(unique = true)
     private String nickname;    // 닉네임
 
     @Column(nullable = false)
