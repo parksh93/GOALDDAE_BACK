@@ -12,4 +12,5 @@ import java.util.List;
 
 public interface ReplyJPARepository extends JpaRepository<CommunicationReply, Long> {
 
+    List<CommunicationReply> findByBoardIdAndParentId(long boardId, long parentId);
 }
