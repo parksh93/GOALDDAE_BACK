@@ -41,11 +41,22 @@ public class CommunicationReply {
     @Column(nullable = false)
     private LocalDateTime replyUpdateDate;
 
+    @Column(nullable = false)
+    private int status; // 0 : 정상, 1 : 본인 삭제, 2 : 관리자 삭제
+
 
     @PrePersist
     public void setTime() {
         this.replyWriteDate = LocalDateTime.now();
         this.replyUpdateDate = LocalDateTime.now();
+    }
+
+    public void deleteByUser() {
+        this.status = 1;
+    }
+
+    public void deleteByAdmin() {
+        this.status = 2;
     }
 
 }
