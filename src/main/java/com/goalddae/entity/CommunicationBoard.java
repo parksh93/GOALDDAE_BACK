@@ -1,10 +1,7 @@
 package com.goalddae.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class CommunicationBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +18,10 @@ public class CommunicationBoard {
     private long id;
 
     @Column(nullable = false)
-    private String writer;  // 작성자
+    private String userId;  // 작성자 (id)
+
+    @Column(nullable = false)
+    private String writer;  // 작성자 (닉네임)
 
     @Column(nullable = false)
     private String title;   // 제목
@@ -58,8 +59,5 @@ public class CommunicationBoard {
         this.updateDate = LocalDateTime.now();
     }
 
-    @PreUpdate
-    public void setUpdateTime() {
-        this.updateDate =LocalDateTime.now();
-    }
+
 }

@@ -12,14 +12,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SoccerFiled {
+public class SoccerField {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
     private long id;
 
     @Column(nullable = false, unique = true)
-    private String filedName;   // 구장명
+    private String fieldName;   // 구장명
 
     @Column(nullable = false)
     private boolean ToiletStatus;   // 화장실 여부
@@ -31,17 +31,17 @@ public class SoccerFiled {
     private boolean parkingStatus;  // 주차장 여부
 
     @Column(nullable = false)
-    private String filedSize;   // 구장 크기
+    private String fieldSize ;   // 구장 크기
 
     // 이미지의 경우 최소 하나 이상 최대 3개이하로 저장 가능
     @Column(nullable = false)
-    private String filedImg1;
+    private String fieldImg1;
 
     @Column
-    private String filedImg2;
+    private String fieldImg2;
 
     @Column
-    private String filedImg3;
+    private String fieldImg3;
 
     @Column(nullable = false)
     private int reservationFree;    // 대관비
@@ -55,7 +55,8 @@ public class SoccerFiled {
     @Column(nullable = false)
     private String region;          // 지역
 
-    public SoccerFiled(String region) {
+    public SoccerField(String region, String fieldName) {
         this.region = region;
+        this.fieldName = fieldName;
     }
 }
