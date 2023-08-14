@@ -29,6 +29,9 @@ public class CommunicationReply {
     @Column(nullable = false)
     private String writer; // 작성자 (닉네임)
 
+    @Column
+    private long parentId; // 부모 댓글의 ID (일반댓글일경우 본인)
+
     @Column(nullable = false)
     private LocalDateTime replyWriteDate;
 
@@ -45,4 +48,13 @@ public class CommunicationReply {
     public void setUpdateTime() {
         this.replyUpdateDate = LocalDateTime.now();
     }
+
+    @PrePersist
+    @PreUpdate
+    public void setNullParentId() {
+        if (parentId == 0) {
+            parentId = id; // Set parentId to the same value as id if it's null
+        }
+    }
+
 }
