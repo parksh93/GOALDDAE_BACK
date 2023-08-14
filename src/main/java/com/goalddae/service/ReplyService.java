@@ -10,5 +10,9 @@ public interface ReplyService {
 
     List<ReplyListDTO> findAllByBoardId(long boardId);
 
+    void deleteByUser(long replyId);
+
+    void deleteByAdmin(long replyId);
+
     void save(CommunicationReply communicationReply);
 }
