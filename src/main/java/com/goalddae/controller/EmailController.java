@@ -7,10 +7,7 @@ import com.goalddae.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class EmailController {
@@ -42,8 +39,8 @@ public class EmailController {
         return null;
     }
 
-    @RequestMapping("/sendEmailFindLoginId")
-    public ResponseEntity<?> sendEmailFindLoginId(String email) throws Exception{
+    @RequestMapping("/sendEmailFindLoginId/{email}")
+    public ResponseEntity<?> sendEmailFindLoginId(@PathVariable String email) throws Exception{
         String certificationcode = emailService.sendSimpleMessage(email);
 
         ResponseCertificationCodeDTO certificationCodeDTO = ResponseCertificationCodeDTO.builder()
