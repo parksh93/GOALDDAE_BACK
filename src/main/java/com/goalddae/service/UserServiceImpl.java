@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService{
                 .loginId(user.getLoginId())
                 .email(user.getEmail())
                 .password(bCryptPasswordEncoder.encode(user.getPassword()))
+                .name(user.getName())
                 .nickname(user.getNickname())
                 .gender(user.getGender())
                 .phoneNumber(user.getPhoneNumber())
@@ -83,7 +84,7 @@ public class UserServiceImpl implements UserService{
         try {
             User userInfo = getByCredentials(loginDTO.getLoginId());
 
-            if (userInfo.getPassword().equals(loginDTO.getPassword())) {
+            if (bCryptPasswordEncoder.matches(loginDTO.getPassword(), userInfo.getPassword())) {
                 String token = tokenProvider.generateToken(userInfo, Duration.ofHours(2));
 
                 return token;

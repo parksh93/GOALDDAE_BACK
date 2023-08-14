@@ -37,7 +37,10 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String userCode;    // 유저코드
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
+    private String name;    // 사용자 이름
+    
+    @Column(unique = true)
     private String nickname;    // 닉네임
 
     @Column(nullable = false)
@@ -86,7 +89,7 @@ public class User implements UserDetails {
                             // 일반 유저 : user / 매니저 : manager / 관리자 : admin
 
     @Builder
-    public User(String loginId, String email, String password, String userCode, String nickname, String gender, String profileImgUrl,
+    public User(String loginId, String email, String password, String userCode, String name, String nickname, String gender, String profileImgUrl,
                 String phoneNumber, Date birth, int matchesCnt, String level,
                 boolean accountSuspersion, int noShowCnt, String preferredCity,
                 String preferredArea, int activityClass, String authority){
@@ -94,6 +97,7 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.userCode = userCode;
+        this.name = name;
         this.nickname = nickname;
         this.gender = gender;
         this.profileImgUrl = profileImgUrl;
