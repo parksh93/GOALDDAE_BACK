@@ -15,4 +15,6 @@ public interface ReplyService {
     void deleteByAdmin(long replyId);
 
     void save(CommunicationReply communicationReply);
+
+    void update(CommunicationReply communicationReply);
 }
