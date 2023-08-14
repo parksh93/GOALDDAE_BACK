@@ -6,6 +6,7 @@ import com.goalddae.entity.CommunicationReply;
 import com.goalddae.repository.ReplyJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,20 @@ public class ReplyServiceImpl implements ReplyService{
             newList.add(replyListDTO);
         }
         return newList;
+    }
+
+    @Transactional
+    @Override
+    public void deleteByUser(long replyId) {
+        CommunicationReply communicationReply = replyJPARepository.findById(replyId).get();
+        communicationReply.deleteByUser();
+    }
+
+    @Transactional
+    @Override
+    public void deleteByAdmin(long replyId) {
+        CommunicationReply communicationReply = replyJPARepository.findById(replyId).get();
+        communicationReply.deleteByAdmin();
     }
 
     @Override

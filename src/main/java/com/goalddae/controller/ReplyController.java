@@ -34,6 +34,19 @@ public class ReplyController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/user/{boardId}")
+    public ResponseEntity<String> deleteByUser(@PathVariable Long boardId) {
+        replyService.deleteByUser(boardId);
+        return ResponseEntity.ok("댓글이 유저에 의해 삭제되었습니다.");
+    }
+
+    @DeleteMapping("/admin/{boardId}")
+    public ResponseEntity<String> deleteByAdmin(@PathVariable Long boardId) {
+        replyService.deleteByAdmin(boardId);
+        return ResponseEntity.ok("게시글이 관리자에 의해 삭제되었습니다.");
+    }
+
+
     @PostMapping("/save")
     public ResponseEntity<String> saveReplry(@RequestBody CommunicationReply communicationReply) {
         replyService.save(communicationReply);
