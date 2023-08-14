@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService{
                 .loginId(user.getLoginId())
                 .email(user.getEmail())
                 .password(bCryptPasswordEncoder.encode(user.getPassword()))
+                .name(user.getName())
                 .nickname(user.getNickname())
                 .gender(user.getGender())
                 .phoneNumber(user.getPhoneNumber())
