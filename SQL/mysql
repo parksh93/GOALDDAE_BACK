@@ -5,7 +5,15 @@ insert into users values (
     now(), now(),"zxczxcxz"
     );
 
-insert into soccer_filed values (
-    null, 1, "img1", "img2", "img3", "풋살장",
+insert into soccer_field values (
+    null, 1, "img1", "img2", "img3", "야탑풋살장",
     "14x15", "인조", "실내", 1, "성남", 1, 1
 	);
+
+insert into soccer_field values (
+    null, 1, "img1", "img2", "img3", "모란 풋살장",
+    "14x15", "인조", "실내", 1, "성남", 1, 1
+	);
+
+SELECT * FROM soccer_field
+WHERE field_name LIKE '%검색어%';

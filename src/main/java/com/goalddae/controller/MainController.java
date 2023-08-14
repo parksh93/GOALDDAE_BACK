@@ -1,6 +1,6 @@
 package com.goalddae.controller;
 
-import com.goalddae.entity.SoccerFiled;
+import com.goalddae.entity.SoccerField;
 import com.goalddae.service.SoccerFieldService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,9 +17,15 @@ public class MainController {
         this.soccerFieldService = soccerFieldService;
     }
 
-    @GetMapping("/search/soccerFiled")
-    public List<SoccerFiled> searchSoccerFields(@RequestParam String keyword) {
-        return soccerFieldService.searchSoccerFields(keyword);
+    @GetMapping("/search/soccerField")
+    public List<SoccerField> searchSoccerFields(
+            @RequestParam(value = "searchTerm", required = false, defaultValue = "") String searchTerm) {
+        return soccerFieldService.searchSoccerFields(searchTerm);
     }
 
+    @GetMapping("/search/city") // 추가
+    public List<String> searchCityNames(
+            @RequestParam(value = "searchTerm", required = false, defaultValue = "") String searchTerm) { // 추가
+        return soccerFieldService.searchCityNames(searchTerm); // 추가
+    }
 }
