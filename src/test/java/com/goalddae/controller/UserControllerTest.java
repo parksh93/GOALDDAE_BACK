@@ -3,10 +3,8 @@ package com.goalddae.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goalddae.dto.user.CheckLoginIdDTO;
 import com.goalddae.dto.user.CheckNicknameDTO;
-import com.goalddae.dto.user.FindLoginIdDTO;
+import com.goalddae.dto.user.RequestFindLoginIdDTO;
 import com.goalddae.dto.user.LoginDTO;
-import com.goalddae.entity.User;
-import com.goalddae.repository.UserJPARepository;
 import com.goalddae.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +17,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.sql.Date;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -103,12 +100,12 @@ public class UserControllerTest {
     @DisplayName("로그인 아이디 찾기")
     public void findLoginIdTest() throws Exception {
         String email = "jsap50@naver.com";
-        String nickname = "박상현";
+        String name = "박상현";
         String url = "/user/findLoginId";
 
-        FindLoginIdDTO findLoginIdDTO = FindLoginIdDTO.builder()
+        RequestFindLoginIdDTO findLoginIdDTO = RequestFindLoginIdDTO.builder()
                 .email(email)
-                .nickname(nickname)
+                .name(name)
                 .build();
         final String requestbody = objectMapper.writeValueAsString(findLoginIdDTO);
 

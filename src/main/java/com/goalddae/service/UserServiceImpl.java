@@ -134,9 +134,16 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    public String getLoginIdByEmailAndNickname(FindLoginIdDTO findLoginIdDTO){
-        String loginId = userJPARepository.findLoginIdByEmailAndNickname(findLoginIdDTO.getEmail(), findLoginIdDTO.getNickname());
+    public String getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO){
+        String loginId = userJPARepository.findLoginIdByEmailAndName(requestFindLoginIdDTO.getEmail(), requestFindLoginIdDTO.getName());
 
+        String star = "";
+        for (int i = 2; i < loginId.length()-1; i++) {
+            star += "*";
+        }
+        if(loginId != null){
+            loginId = loginId.replace(loginId.substring(2, loginId.length()-1), star);
+        }
         return loginId;
     }
 }
