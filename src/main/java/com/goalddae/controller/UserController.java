@@ -73,9 +73,12 @@ public class UserController {
     }
 
     @RequestMapping(value = "/findLoginId", method = RequestMethod.POST)
-    public ResponseEntity<String> findLoginId(@RequestBody FindLoginIdDTO findLoginIdDTO){
-        String loginId = userService.getLoginIdByEmailAndNickname(findLoginIdDTO);
+    public ResponseEntity<ResponseFindLoginIdDTO> findLoginId(@RequestBody RequestFindLoginIdDTO requestFindLoginIdDTO){
+        String loginId = userService.getLoginIdByEmailAndName(requestFindLoginIdDTO);
 
-        return ResponseEntity.ok(loginId);
+        ResponseFindLoginIdDTO findLoginIdDTO = ResponseFindLoginIdDTO.builder()
+                .loginId(loginId).build();
+
+        return ResponseEntity.ok(findLoginIdDTO);
     }
 }

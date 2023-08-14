@@ -13,7 +13,7 @@ public interface UserJPARepository extends JpaRepository<User, Long> {
     Long countByLoginId(String loginId);
     Long countByEmail(String email);
     Long countByNickname(String nickname);
-    @Query(value = "SELECT u.login_id FROM users u WHERE u.email = :email AND nickname = :nickname", nativeQuery = true)
-    String findLoginIdByEmailAndNickname(@Param("email") String email, @Param("nickname") String nickname);
+    @Query(value = "SELECT u.login_id FROM users u WHERE u.email = :email AND name = :name", nativeQuery = true)
+    String findLoginIdByEmailAndName(@Param("email") String email, @Param("name") String name);
 
 }

@@ -3,7 +3,7 @@ package com.goalddae.service;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.CheckLoginIdDTO;
 import com.goalddae.dto.user.CheckNicknameDTO;
-import com.goalddae.dto.user.FindLoginIdDTO;
+import com.goalddae.dto.user.RequestFindLoginIdDTO;
 import com.goalddae.dto.user.LoginDTO;
 import com.goalddae.entity.User;
 import org.junit.jupiter.api.DisplayName;
@@ -84,10 +84,10 @@ public class UserServiceTest {
     @DisplayName("이메일과 닉네임을 통해 로그인 아이디 가져오기")
     public void getLoginIdByEmail(){
         String email = "asd@naver.com";
-        String nickname = "박상현";
+        String name = "박상현";
 
-        FindLoginIdDTO findLoginIdDTO = FindLoginIdDTO.builder()
-                .email(email).nickname(nickname).build();
+        RequestFindLoginIdDTO findLoginIdDTO = RequestFindLoginIdDTO.builder()
+                .email(email).name(name).build();
         String loginId = userService.getLoginIdByEmailAndNickname(findLoginIdDTO);
 
         assertNull(loginId);
