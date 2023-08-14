@@ -65,9 +65,9 @@ public class UserJPARepositoryTest {
     @DisplayName("이메일과 닉네임을 통해 로그인 아이디 찾기")
     public void findeLoginIdByEmailTest () {
         String email = "jsap50@naver.com";
-        String nickname = "박상현";
+        String name = "박상현";
 
-        String loginId = userJPARepository.findLoginIdByEmailAndNickname(email, nickname);
+        String loginId = userJPARepository.findLoginIdByEmailAndName(email, name);
 
         assertEquals("asd", loginId);
     }

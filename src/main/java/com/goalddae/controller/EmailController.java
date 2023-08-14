@@ -41,10 +41,10 @@ public class EmailController {
 
     @RequestMapping("/sendEmailFindLoginId/{email}")
     public ResponseEntity<?> sendEmailFindLoginId(@PathVariable String email) throws Exception{
-        String certificationcode = emailService.sendSimpleMessage(email);
+        String certificationCode = emailService.sendSimpleMessage(email);
 
         ResponseCertificationCodeDTO certificationCodeDTO = ResponseCertificationCodeDTO.builder()
-                .certificationCode(certificationcode).build();
+                .certificationCode(certificationCode).build();
         return ResponseEntity.ok(certificationCodeDTO);
 
     }
