@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,8 +59,30 @@ public class ReplyServiceImpl implements ReplyService{
         communicationReply.deleteByAdmin();
     }
 
+    @Transactional
     @Override
     public void save(CommunicationReply communicationReply) {
        replyJPARepository.save(communicationReply);
+    }
+
+    @Transactional
+    @Override
+    public void update(CommunicationReply communicationReply) {
+
+        CommunicationReply targetReply = replyJPARepository.findById(communicationReply.getId()).get();
+
+        CommunicationReply updatedReply = CommunicationReply.builder()
+                .id(targetReply.getId())
+                .boardId(targetReply.getBoardId())
+                .parentId(targetReply.getParentId())
+                .userId(targetReply.getUserId())
+                .writer(targetReply.getWriter())
+                .content(communicationReply.getContent())
+                .replyWriteDate(targetReply.getReplyWriteDate())
+                .replyUpdateDate(LocalDateTime.now())
+                .status(targetReply.getStatus())
+                .build();
+
+        replyJPARepository.save(updatedReply);
     }
 }
