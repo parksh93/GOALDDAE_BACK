@@ -3,7 +3,9 @@ package com.goalddae.service;
 import com.goalddae.dto.board.BoardListDTO;
 import com.goalddae.dto.board.ReplyListDTO;
 import com.goalddae.entity.CommunicationReply;
+import com.goalddae.entity.ReportedReply;
 import com.goalddae.repository.ReplyJPARepository;
+import com.goalddae.repository.ReportedReplyJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +21,12 @@ public class ReplyServiceImpl implements ReplyService{
 
 
     ReplyJPARepository replyJPARepository;
+    ReportedReplyJPARepository reportedReplyJPARepository;
 
     @Autowired
-    public ReplyServiceImpl(ReplyJPARepository replyJPARepository){
+    public ReplyServiceImpl(ReplyJPARepository replyJPARepository, ReportedReplyJPARepository reportedReplyJPARepository){
         this.replyJPARepository = replyJPARepository;
+        this.reportedReplyJPARepository = reportedReplyJPARepository;
     }
 
     @Override
@@ -110,4 +114,33 @@ public class ReplyServiceImpl implements ReplyService{
 
         replyJPARepository.save(updatedReply);
     }
+
+    @Override
+    public List<ReportedReply> findAllReportedReply() {
+        return reportedReplyJPARepository.findAll();
+    }
+
+    @Transactional
+    @Override
+    public void saveReportedReply(ReportedReply reportedReply) {
+        reportedReplyJPARepository.save(reportedReply);
+    }
+
+    @Transactional
+    @Override
+    public void rejectReportedReply(long reportId) {
+        reportedReplyJPARepository.deleteById(reportId);
+    }
+
+    @Transactional
+    @Override
+    public void approveReportedReply(long reportId) {
+        ReportedReply reportedReply = reportedReplyJPARepository.findById(reportId).get();
+        CommunicationReply communicationReply = replyJPARepository.findById(reportedReply.getReplyId()).get();
+
+        communicationReply.deleteByAdmin();
+        reportedReplyJPARepository.delete(reportedReply);
+    }
+
+
 }
