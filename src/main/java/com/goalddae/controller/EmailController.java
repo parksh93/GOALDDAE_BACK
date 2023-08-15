@@ -39,7 +39,7 @@ public class EmailController {
         return null;
     }
 
-    @RequestMapping("/sendEmailFindLoginId/{email}")
+    @RequestMapping("/sendEmailFind/{email}")
     public ResponseEntity<?> sendEmailFindLoginId(@PathVariable String email) throws Exception{
         String certificationCode = emailService.sendSimpleMessage(email);
 
