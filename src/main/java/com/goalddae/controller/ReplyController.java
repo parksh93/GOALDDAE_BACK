@@ -1,8 +1,8 @@
 package com.goalddae.controller;
 
 import com.goalddae.dto.board.ReplyListDTO;
-import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationReply;
+import com.goalddae.entity.ReportedReply;
 import com.goalddae.service.ReplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +57,34 @@ public class ReplyController {
     public ResponseEntity<String> updateBoard(@RequestBody CommunicationReply communicationReply) {
         replyService.update(communicationReply);
         return ResponseEntity.ok("게시글이 수정되었습니다.");
+    }
+
+
+
+    // 댓글 신고
+    @GetMapping("/report")
+    public ResponseEntity<List<ReportedReply>> getReportedRepliesByBoardId() {
+        List<ReportedReply> reportedReplies = replyService.findAllReportedReply();
+        return ResponseEntity.ok(reportedReplies);
+    }
+
+
+    @PostMapping("/report")
+    public ResponseEntity<String> addReport(@RequestBody ReportedReply reportedReply) {
+        replyService.saveReportedReply(reportedReply);
+        return ResponseEntity.ok("신고가 접수되었습니다.");
+    }
+
+    @DeleteMapping("/report/reject/{reportId}")
+    public ResponseEntity<String> rejectReport(@PathVariable long reportId) {
+        replyService.rejectReportedReply(reportId);
+        return ResponseEntity.ok("신고가 거절되었습니다.");
+    }
+
+    @DeleteMapping("/report/approve/{reportId}")
+    public ResponseEntity<String> approveReport(@PathVariable long reportId) {
+        replyService.approveReportedReply(reportId);
+        return ResponseEntity.ok("신고가 승인되었습니다.");
     }
 
 
