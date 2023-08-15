@@ -39,13 +39,17 @@ public class EmailController {
         return null;
     }
 
-    @RequestMapping("/sendEmailFindLoginId/{email}")
-    public ResponseEntity<?> sendEmailFindLoginId(@PathVariable String email) throws Exception{
+    @RequestMapping("/sendEmailFind/{email}")
+    public ResponseEntity<?> sendEmailFind(@PathVariable String email) throws Exception{
         String certificationCode = emailService.sendSimpleMessage(email);
 
         ResponseCertificationCodeDTO certificationCodeDTO = ResponseCertificationCodeDTO.builder()
                 .certificationCode(certificationCode).build();
         return ResponseEntity.ok(certificationCodeDTO);
+    }
 
+    @RequestMapping("sendEmailChangePassword/{email}")
+    public void sendEmailChangePassword(@PathVariable String email) throws Exception {
+        emailService.sendChangPasswordMessage(email);
     }
 }

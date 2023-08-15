@@ -1,5 +1,6 @@
 package com.goalddae.service;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,5 +17,12 @@ public class EmailServiceTest {
         String key = emailService.sendSimpleMessage("sinh8492@naver.com");
 
         System.out.println(key);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("비밀번호 변경 이메일 발송")
+    public void sendChangePasswordMessageTest() throws Exception {
+        emailService.sendChangPasswordMessage("jsap50@naver.com");
     }
 }

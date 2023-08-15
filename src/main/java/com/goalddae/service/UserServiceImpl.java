@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserService{
         this.tokenProvider = tokenProvider;
     }
 
+    @Override
     public void save(User user){
         User newUser = User.builder()
                 .loginId(user.getLoginId())
@@ -72,11 +73,12 @@ public class UserServiceImpl implements UserService{
         return code.toString();
     }
 
+    @Override
     public User getByCredentials(String loginId){
         return userJPARepository.findByLoginId(loginId);
     }
 
-    // ****회원가입 구현 후 인코딩 코드 추가 예정
+    @Override
     public String generateTokenFromLogin(LoginDTO loginDTO){
         try {
             User userInfo = getByCredentials(loginDTO.getLoginId());
@@ -93,6 +95,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
     public GetUserInfoDTO getUserInfo(String token){
         if(tokenProvider.validToken(token)){
            User user = userJPARepository.findById(tokenProvider.getUserId(token)).get();
@@ -104,8 +107,9 @@ public class UserServiceImpl implements UserService{
         return null;
     }
 
+    @Override
     public boolean checkLoginId(CheckLoginIdDTO checkLoginIdDTO){
-        long checkLoginIdCnt = userJPARepository.countByLoginId(checkLoginIdDTO.getLoginId());
+        int checkLoginIdCnt = userJPARepository.countByLoginId(checkLoginIdDTO.getLoginId());
 
         if(checkLoginIdCnt == 0){
             return true;
@@ -114,8 +118,9 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
     public boolean checkEmail(SendEmailDTO checkEmailDTO){
-        long checkEmailCnt = userJPARepository.countByEmail(checkEmailDTO.getEmail());
+        int checkEmailCnt = userJPARepository.countByEmail(checkEmailDTO.getEmail());
 
         if(checkEmailCnt == 0){
             return true;
@@ -124,8 +129,9 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
     public boolean checkNickname(CheckNicknameDTO checkNicknameDTO){
-        long checkNicknameCnt = userJPARepository.countByNickname(checkNicknameDTO.getNickname());
+        int checkNicknameCnt = userJPARepository.countByNickname(checkNicknameDTO.getNickname());
 
         if(checkNicknameCnt == 0){
             return true;
@@ -134,6 +140,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
     public String getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO){
         String loginId = userJPARepository.findLoginIdByEmailAndName(requestFindLoginIdDTO.getEmail(), requestFindLoginIdDTO.getName());
 
@@ -143,5 +150,15 @@ public class UserServiceImpl implements UserService{
             loginId = loginId.substring(0, loginId.length()-2) + star;
         }
         return loginId;
+    }
+
+    @Override
+    public boolean countByLoginIdAndEmail(RequestFindPasswordDTO findPasswordDTO) {
+        int userCnt = userJPARepository.countByLoginIdAndEmail(findPasswordDTO.getLoginId(), findPasswordDTO.getEmail());
+        if(userCnt == 1){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
