@@ -10,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ReplyServiceImpl implements ReplyService{
@@ -25,10 +27,31 @@ public class ReplyServiceImpl implements ReplyService{
 
     @Override
     public List<ReplyListDTO> findAllByBoardId(long boardId) {
-        List<CommunicationReply> topReplys = replyJPARepository.findByBoardIdAndParentId(boardId, 0);
-        List<ReplyListDTO> newList = new ArrayList<>();
+        List<CommunicationReply> allReplies = replyJPARepository.findByBoardId(boardId);
+        List<ReplyListDTO> resultList = new ArrayList<>();
+        Map<Long, List<CommunicationReply>> replyMap = new HashMap<>();
 
-        for (CommunicationReply topReply : topReplys) {
+        // 전체 댓글을 Map에 parentId를 기준으로 그룹화하여 저장
+        for (CommunicationReply reply : allReplies) {
+            long parentId = reply.getParentId();
+
+            if(parentId != 0 && reply.getStatus() != 0){
+                continue;
+            } // 부모id가 존재하는 댓글이면서 삭제 상태일경우 map에 포함하지 않음
+
+            replyMap.putIfAbsent(parentId, new ArrayList<>());
+            replyMap.get(parentId).add(reply);
+        }
+
+        // 부모id가 없는 상위 댓글 추출 및 자식 댓글 세팅
+        List<CommunicationReply> topReplies = replyMap.getOrDefault(0L, new ArrayList<>());
+        for (CommunicationReply topReply : topReplies) {
+            List<CommunicationReply> children = replyMap.getOrDefault(topReply.getId(), new ArrayList<>());
+
+            if(topReply.getStatus() != 0 && children.isEmpty()){
+                continue;
+            } // 상위 댓글이면서 자식댓글이 존재하지 않을경우 list에 포함하지 않음
+
             ReplyListDTO replyListDTO = ReplyListDTO.builder()
                     .id(topReply.getId())
                     .boardId(topReply.getBoardId())
@@ -37,12 +60,14 @@ public class ReplyServiceImpl implements ReplyService{
                     .userId(topReply.getUserId())
                     .writeDate(topReply.getReplyWriteDate())
                     .updateDate(topReply.getReplyUpdateDate())
-                    .children(replyJPARepository.findByBoardIdAndParentId(topReply.getBoardId(), topReply.getId()))
+                    .status(topReply.getStatus())
+                    .children(children)
                     .build();
 
-            newList.add(replyListDTO);
+            resultList.add(replyListDTO);
         }
-        return newList;
+
+        return resultList;
     }
 
     @Transactional
