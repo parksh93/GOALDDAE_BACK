@@ -33,7 +33,7 @@ public class UserJPARepositoryTest {
     public void countByLoginIdTest(){
         String loginId = "asd";
 
-        long checkLoginIdCnt = userJPARepository.countByLoginId(loginId);
+        int checkLoginIdCnt = userJPARepository.countByLoginId(loginId);
 
         assertEquals(1, checkLoginIdCnt);
     }
@@ -44,7 +44,7 @@ public class UserJPARepositoryTest {
     public void countByEmailTest() {
         String email = "jsss@naver.com";
 
-        long checkEmailCnt = userJPARepository.countByEmail(email);
+        int checkEmailCnt = userJPARepository.countByEmail(email);
 
         assertEquals(0, checkEmailCnt);
     }
@@ -55,7 +55,7 @@ public class UserJPARepositoryTest {
     public void countByNicknameTest() {
         String nickname = "새로운 닉네임";
 
-        long checkNicknameCnt = userJPARepository.countByNickname(nickname);
+        int checkNicknameCnt = userJPARepository.countByNickname(nickname);
 
         assertEquals(0, checkNicknameCnt);
     }
@@ -70,5 +70,17 @@ public class UserJPARepositoryTest {
         String loginId = userJPARepository.findLoginIdByEmailAndName(email, name);
 
         assertEquals("asd", loginId);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("로그인 아이디와 이메일에 해당하는 정보의 갯수 가져오기")
+    public void countByLoginIdAndEmailTest() {
+        String loginId = "asdas";
+        String email = "jsap50@naver.com";
+
+        int userCnt = userJPARepository.countByLoginIdAndEmail(loginId, email);
+
+        assertEquals(1, userCnt);
     }
 }

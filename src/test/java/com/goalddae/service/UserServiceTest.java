@@ -1,10 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.email.SendEmailDTO;
-import com.goalddae.dto.user.CheckLoginIdDTO;
-import com.goalddae.dto.user.CheckNicknameDTO;
-import com.goalddae.dto.user.RequestFindLoginIdDTO;
-import com.goalddae.dto.user.LoginDTO;
+import com.goalddae.dto.user.*;
 import com.goalddae.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -88,8 +85,25 @@ public class UserServiceTest {
 
         RequestFindLoginIdDTO findLoginIdDTO = RequestFindLoginIdDTO.builder()
                 .email(email).name(name).build();
-        String loginId = userService.getLoginIdByEmailAndNickname(findLoginIdDTO);
+        String loginId = userService.getLoginIdByEmailAndName(findLoginIdDTO);
 
         assertNull(loginId);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("로그인 아이디와 이메일에 해당하는 유저 정보 갯수 가져오기")
+    public void countByLoginIdAndEmailTest() {
+        String loginId = "asssss";
+        String email = "asds@naver.com";
+
+        RequestFindPasswordDTO findPasswordDTO = RequestFindPasswordDTO.builder()
+                .loginId(loginId)
+                .email(email)
+                .build();
+
+        boolean userCntCheck = userService.countByLoginIdAndEmail(findPasswordDTO);
+
+        assertFalse(userCntCheck);
     }
 }

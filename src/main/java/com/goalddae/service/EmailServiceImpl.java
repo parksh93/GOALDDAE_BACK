@@ -85,4 +85,46 @@ public class EmailServiceImpl implements EmailService{
         return certificationCode;
     }
 
+    public MimeMessage createGoPasswordChange(String email) throws Exception{
+        MimeMessage  message = emailSender.createMimeMessage();
+
+        message.addRecipients(MimeMessage.RecipientType.TO, email);
+        message.setSubject("GOALDDAE 비밀번호 분실에 따른 변경 안내");
+
+        String msg="";
+        msg+= "<div style='margin:100px;'>";
+        msg+= "<h1> 안녕하세요 GOALDDAE입니다. </h1>";
+        msg+= "<br/>";
+        msg+= "<p>비밀번호를 분실에 따라 새로운 비밀번호 변경해주셔야합니다.<p>";
+        msg+= "<br>";
+        msg+= "<p>아래의 <strong>\"비밀번호 변경\"</strong>을 클릭하시면 비밀번호를 변경할 수 있는 페이지로 이동됩니다.</p>";
+        msg+= "<p>감사합니다!<p>";
+        msg+= "<br/>";
+        msg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        msg+= "<h3>아래 글자를 눌러주세요.</h3>";
+        msg+= "<div style='font-size:130%; width: 100%'>";
+        msg+= "<a href='http://localhost:3000/changePasswordLost' style='color:green;'>";
+        msg+= "비밀번호 변경";
+        msg += "</a>";
+        msg += "<div><br/> ";
+        msg+= "</div>";
+
+        message.setText(msg, "utf-8", "html");
+
+        message.setFrom(new InternetAddress("goalddae@naver.com","GOALDDAE"));
+
+        return message;
+    }
+
+    @Override
+    public void sendChangPasswordMessage(String email) throws Exception {
+        MimeMessage message = createGoPasswordChange(email);
+        try{
+            emailSender.send(message);
+        }catch(MailException e){
+            e.printStackTrace();
+            throw new IllegalArgumentException();
+        }
+    }
+
 }

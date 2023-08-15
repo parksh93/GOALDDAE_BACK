@@ -10,10 +10,10 @@ import org.springframework.security.core.parameters.P;
 
 public interface UserJPARepository extends JpaRepository<User, Long> {
     User findByLoginId(String loginId);
-    Long countByLoginId(String loginId);
-    Long countByEmail(String email);
-    Long countByNickname(String nickname);
+    int countByLoginId(String loginId);
+    int countByEmail(String email);
+    int countByNickname(String nickname);
     @Query(value = "SELECT u.login_id FROM users u WHERE u.email = :email AND name = :name", nativeQuery = true)
     String findLoginIdByEmailAndName(@Param("email") String email, @Param("name") String name);
-
+    int countByLoginIdAndEmail(String loginId, String email);
 }

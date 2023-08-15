@@ -1,10 +1,7 @@
 package com.goalddae.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.goalddae.dto.user.CheckLoginIdDTO;
-import com.goalddae.dto.user.CheckNicknameDTO;
-import com.goalddae.dto.user.RequestFindLoginIdDTO;
-import com.goalddae.dto.user.LoginDTO;
+import com.goalddae.dto.user.*;
 import com.goalddae.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -114,5 +111,27 @@ public class UserControllerTest {
 
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$").value("asd"));
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("비밀번호 찾기")
+    public void findPasswordTest() throws Exception{
+        String loginId = "asdas";
+        String email = "jsap50@naver.com";
+        String url = "/user/findPassword";
+
+        RequestFindPasswordDTO findPasswordDTO = RequestFindPasswordDTO.builder()
+                .loginId(loginId)
+                .email(email)
+                .build();
+
+        final String request = objectMapper.writeValueAsString(findPasswordDTO);
+
+        ResultActions result = mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON).content(request)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$[0]").value(true));
     }
 }

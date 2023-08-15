@@ -81,4 +81,9 @@ public class UserController {
 
         return ResponseEntity.ok(findLoginIdDTO);
     }
+
+    @RequestMapping(value = "/findPassword", method = RequestMethod.POST)
+    public List<Boolean> findPassword(@RequestBody RequestFindPasswordDTO findPasswordDTO){
+        return List.of(userService.countByLoginIdAndEmail(findPasswordDTO));
+    }
 }
