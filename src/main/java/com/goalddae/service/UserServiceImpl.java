@@ -134,7 +134,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    public String getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO){
+    public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO){
         String loginId = userJPARepository.findLoginIdByEmailAndName(requestFindLoginIdDTO.getEmail(), requestFindLoginIdDTO.getName());
 
         String star = "**";
@@ -142,6 +142,10 @@ public class UserServiceImpl implements UserService{
         if(loginId != null){
             loginId = loginId.substring(0, loginId.length()-2) + star;
         }
-        return loginId;
+
+        ResponseFindLoginIdDTO findLoginIdDTO = ResponseFindLoginIdDTO.builder()
+                .loginId(loginId).build();
+
+        return findLoginIdDTO;
     }
 }

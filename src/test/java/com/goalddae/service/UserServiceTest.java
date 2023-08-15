@@ -1,10 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.email.SendEmailDTO;
-import com.goalddae.dto.user.CheckLoginIdDTO;
-import com.goalddae.dto.user.CheckNicknameDTO;
-import com.goalddae.dto.user.RequestFindLoginIdDTO;
-import com.goalddae.dto.user.LoginDTO;
+import com.goalddae.dto.user.*;
 import com.goalddae.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -88,7 +85,8 @@ public class UserServiceTest {
 
         RequestFindLoginIdDTO findLoginIdDTO = RequestFindLoginIdDTO.builder()
                 .email(email).name(name).build();
-        String loginId = userService.getLoginIdByEmailAndNickname(findLoginIdDTO);
+
+        ResponseFindLoginIdDTO loginId = userService.getLoginIdByEmailAndName(findLoginIdDTO);
 
         assertNull(loginId);
     }
