@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goalddae.repository.FieldReservationRepository">
+    <insert id="fieldReservation" parameterType="map">
+        DROP TABLE IF EXISTS ${fieldReservation};
+        CREATE TABLE `${fieldReservation}` (
+                                               id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                               reservation_id VARCHAR(255) NOT NULL,
+                                               reservation_data DATETIME NOT NULL,
+                                               reservation_team_Whether VARCHAR(255) NOT NULL,
+                                               reservation_team_id VARCHAR(255) NULL,
+                                               soccer_field BIGINT NOT NULL,
+                                               FOREIGN KEY (soccer_field) REFERENCES soccer_field(id)
+        );
+    </insert>
+</mapper>
