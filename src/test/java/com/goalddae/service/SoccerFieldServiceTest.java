@@ -26,7 +26,7 @@ public class SoccerFieldServiceTest {
 
         List<SoccerField> soccerFields = soccerFieldService.searchSoccerFields(region);
 
-        // 검색된 축구장 목록에 해당 지역이 포함되어 있는지 확인한다.
+        // 검색된 축구장 목록에 해당 지역이 포함되어 있는지 확인
         assertTrue(soccerFields.stream().anyMatch(soccerField -> soccerField.getRegion().equals(region)));
     }
 
@@ -34,11 +34,11 @@ public class SoccerFieldServiceTest {
     @Transactional
     @DisplayName("주어진 축구장 이름으로 검색")
     public void searchFieldsByFieldNameTest() {
-        String fieldName = "야탑풋살장";
+        String fieldName = "야탑 풋살장";
 
         List<SoccerField> soccerFields = soccerFieldService.searchSoccerFields(fieldName);
 
-        // 검색된 축구장 목록에 해당 축구장 이름이 포함되어 있는지 확인한다.
+        // 검색된 축구장 목록에 해당 축구장 이름이 포함되어 있는지 확인
         assertTrue(soccerFields.stream().anyMatch(soccerField -> soccerField.getFieldName().equals(fieldName)));
     }
 }
