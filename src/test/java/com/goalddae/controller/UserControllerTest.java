@@ -7,6 +7,7 @@ import com.goalddae.dto.user.LoginDTO;
 import com.goalddae.entity.User;
 import com.goalddae.repository.UserJPARepository;
 import com.goalddae.service.UserService;
+import com.goalddae.service.UserServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
