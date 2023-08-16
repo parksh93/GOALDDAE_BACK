@@ -5,6 +5,7 @@ insert into users values (
     now(), now(),"zxczxcxz"
     );
 
+/* 검색 테스트용 더미테이블 */
 insert into soccer_field values (
     null, 1, "img1", "img2", "img3", "야탑풋살장",
     "14x15", "인조", "실내", 1, "성남", 1, 1
@@ -15,5 +16,27 @@ insert into soccer_field values (
     "14x15", "인조", "실내", 1, "성남", 1, 1
 	);
 
+insert into soccer_field values (
+    null, 1, "img1", "img2", "img3", "서현 풋살장",
+    "14x15", "인조", "실내", 1, "성남", 1, 1
+	);
+
+insert into soccer_field values (
+    null, 1, "img1", "img2", "img3", "마포 풋살장",
+    "14x15", "인조", "실내", 1, "성남", 1, 1
+	);
+
+insert into soccer_field values (
+    null, 1, "img1", "img2", "img3", "인천 풋살장",
+    "14x15", "인조", "실내", 1, "성남", 1, 1
+	);
+
+insert into soccer_field values (
+    null, 1, "img1", "img2", "img3", "시흥 풋살장",
+    "14x15", "인조", "실내", 1, "성남", 1, 1
+	);
+
+/* Like연산자: 여러 조건에 따라 검색 결과를 반환함
+   예로 들어 '성' 입력하면 db에 있는 '성남'으로 검색됨*/
 SELECT * FROM soccer_field
 WHERE field_name LIKE '%검색어%';
