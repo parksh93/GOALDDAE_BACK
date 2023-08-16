@@ -59,4 +59,16 @@ public class UserJPARepositoryTest {
 
         assertEquals(0, checkNicknameCnt);
     }
+
+    @Test
+    @Transactional
+    @DisplayName("이메일과 닉네임을 통해 로그인 아이디 찾기")
+    public void findeLoginIdByEmailTest () {
+        String email = "jsap50@naver.com";
+        String name = "박상현";
+
+        String loginId = userJPARepository.findLoginIdByEmailAndName(email, name);
+
+        assertEquals("asd", loginId);
+    }
 }
