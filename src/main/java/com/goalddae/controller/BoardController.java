@@ -72,7 +72,7 @@ public class BoardController {
     @PutMapping("/update")
     public ResponseEntity<String> updateBoard(@RequestBody CommunicationBoard communicationBoard) {
         boardService.update(communicationBoard);
-        return ResponseEntity.ok("댓글이 수정되었습니다.");
+        return ResponseEntity.ok("게시글이 수정되었습니다.");
     }
 
 

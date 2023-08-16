@@ -56,7 +56,7 @@ public class ReplyController {
     @PutMapping("/update")
     public ResponseEntity<String> updateBoard(@RequestBody CommunicationReply communicationReply) {
         replyService.update(communicationReply);
-        return ResponseEntity.ok("게시글이 수정되었습니다.");
+        return ResponseEntity.ok("댓글이 수정되었습니다.");
     }
 
 
