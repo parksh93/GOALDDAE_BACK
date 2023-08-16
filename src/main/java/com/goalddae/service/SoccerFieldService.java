@@ -32,7 +32,7 @@ public class SoccerFieldService {
         // 객체를 생성
         ObjectMapper objectMapper = new ObjectMapper();
 
-        // 인풋스트림으로부터 읽어온 Json 데이터를 String[] 타입으로 변환 후, List<String> 변환
+        // 인풋스트림으로부터 읽어온 Json 데이터를 String[] 타입으로 변환 후, List<String>으로 변환
         // 변환 된 cityNames.json 파일의 도시 이름들이 cityNames리스트에 저장됨
         List<String> cityNames = Arrays.asList(objectMapper.readValue(inputStream, String[].class));
 
@@ -47,7 +47,7 @@ public class SoccerFieldService {
                 matchedCityNames.add(cityName);
             }
         }
-        // 반복문이 끝나면 matchedCityNames 리스트에 저장된,
+        // 반복문이 끝나면 matchedCityNames 리스트에 저장됨
         // searchTerm과 일치하는 도시 이름들을 반환
         return matchedCityNames;
     }

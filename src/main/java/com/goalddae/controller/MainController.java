@@ -26,7 +26,7 @@ public class MainController {
     }
 
     // 클라이언트가 전달한 searchTerm 매개변수를 받아 SoccerFieldService의 searchCityNames() 메서드를 호출
-    // 전달받은 searchTerm와 일치하는 도시 목록을 반환
+    // 전달받은 searchTerm과 일치하는 도시 목록을 반환
     @GetMapping("/search/city")
     public ResponseEntity<List<String>> searchCityNames(
             @RequestParam(value = "searchTerm", required = false, defaultValue = "") String searchTerm) {
