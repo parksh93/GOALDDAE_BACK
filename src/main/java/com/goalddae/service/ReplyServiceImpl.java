@@ -1,6 +1,5 @@
 package com.goalddae.service;
 
-import com.goalddae.dto.board.BoardListDTO;
 import com.goalddae.dto.board.ReplyListDTO;
 import com.goalddae.entity.CommunicationReply;
 import com.goalddae.entity.ReportedReply;
@@ -54,7 +53,7 @@ public class ReplyServiceImpl implements ReplyService{
 
             if(topReply.getStatus() != 0 && children.isEmpty()){
                 continue;
-            } // 상위 댓글이면서 자식댓글이 존재하지 않을경우 list에 포함하지 않음
+            } // 삭제 상태이며 자식댓글이 존재하지 않을경우 list에 포함하지 않음
 
             ReplyListDTO replyListDTO = ReplyListDTO.builder()
                     .id(topReply.getId())
