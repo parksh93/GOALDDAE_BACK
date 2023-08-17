@@ -103,9 +103,9 @@ public class UserServiceTest {
                 .email(email)
                 .build();
 
-        boolean userCntCheck = userService.countByLoginIdAndEmail(findPasswordDTO);
+        String loginIdToken = userService.checkLoginIdAndEmail(findPasswordDTO);
 
-        assertFalse(userCntCheck);
+        assertNotNull(loginIdToken);
     }
 
     @Test
@@ -114,9 +114,14 @@ public class UserServiceTest {
     public void changePasswordTest() {
         String loginId = "asdas";
         String password = "asd123123";
+        String email = "jsap50@naver.com";
+        RequestFindPasswordDTO findPasswordDTO = RequestFindPasswordDTO.builder()
+                .loginId(loginId)
+                .email(email)
+                .build();
 
         ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder()
-                .loginId(loginId)
+                .loginIdToken(userService.checkLoginIdAndEmail(findPasswordDTO))
                 .password(password)
                 .build();
 
