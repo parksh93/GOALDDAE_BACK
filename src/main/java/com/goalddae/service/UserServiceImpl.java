@@ -151,7 +151,6 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    @Transactional
     public void update(User user) {
 //        User updatedUser = userJPARepository.findByLoginId(user.getLoginId());
 //        updatedUser = User.builder()
@@ -188,6 +187,7 @@ public class UserServiceImpl implements UserService{
             userJPARepository.save(updatedUser);
         }
     }
+
 
     @Override
     public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId) {

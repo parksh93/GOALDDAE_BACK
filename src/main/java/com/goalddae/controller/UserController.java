@@ -85,9 +85,7 @@ public class UserController {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResponseEntity<String> updateUserInfo(User user) {
-
         userService.update(user);
-
         return ResponseEntity.ok("수정되었습니다.");
     }
 
