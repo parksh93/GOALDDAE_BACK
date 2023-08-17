@@ -1,10 +1,7 @@
 package com.goalddae.controller;
 
 import com.goalddae.dto.post.UserPostsResponse;
-import com.goalddae.dto.user.CheckLoginIdDTO;
-import com.goalddae.dto.user.CheckNicknameDTO;
-import com.goalddae.dto.user.GetUserInfoDTO;
-import com.goalddae.dto.user.LoginDTO;
+import com.goalddae.dto.user.*;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.entity.User;
@@ -83,9 +80,9 @@ public class UserController {
         userService.save(user);
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ResponseEntity<String> updateUserInfo(User user) {
-        userService.update(user);
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    public ResponseEntity<String> updateUserInfo(@RequestBody GetUserInfoDTO getUserInfoDTO) {
+        userService.update(getUserInfoDTO);
         return ResponseEntity.ok("수정 되었습니다.");
     }
 

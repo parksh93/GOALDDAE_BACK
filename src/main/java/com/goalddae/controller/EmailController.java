@@ -23,7 +23,7 @@ public class EmailController {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/sendEmail", method = RequestMethod.POST)
+    @RequestMapping(value = "/sendEmailSignup", method = RequestMethod.POST)
     public ResponseEntity<?> sendEmail(@RequestBody SendEmailDTO sendEmailDTO) throws Exception {
         boolean checkEmail = userService.checkEmail(sendEmailDTO);
         if (checkEmail == true) {
