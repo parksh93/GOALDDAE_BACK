@@ -83,27 +83,29 @@ public class UserController {
     }
 
     @RequestMapping(value = "/findPassword", method = RequestMethod.POST)
-    public List<Boolean> findPassword(@RequestBody RequestFindPasswordDTO findPasswordDTO, HttpServletResponse response){
-        boolean userCheck = userService.countByLoginIdAndEmail(findPasswordDTO);
-        if(userCheck) {
-            Cookie cookie = new Cookie("loginId", findPasswordDTO.getLoginId());
+    public List<String> findPassword(@RequestBody RequestFindPasswordDTO findPasswordDTO, HttpServletResponse response){
+        String token = userService.checkLoginIdAndEmail(findPasswordDTO);
+        if(!token.equals("")) {
+            Cookie cookie = new Cookie("loginIdToken", token);
             cookie.setPath("/");
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
 
             response.addCookie(cookie);
         }
-        return List.of(userCheck);
+        return List.of(token);
     }
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
-    public List<Boolean> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO, HttpServletResponse response) {
+    public List<Boolean> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO,@CookieValue(required = false) String loginIdToken, HttpServletResponse response) {
+       changePasswordDTO.setLoginIdToken(loginIdToken);
        boolean changeCheck = userService.changePassword(changePasswordDTO);
-       Cookie cookie = new Cookie("loginId", null);
+        Cookie cookie = new Cookie("loginIdToken", null);
 
-       if(changeCheck){
-            cookie.setMaxAge(0);
-            cookie.setPath("/");
-            response.addCookie(cookie);
-       }
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+
+        response.addCookie(cookie);
 
         return List.of(changeCheck);
     }
