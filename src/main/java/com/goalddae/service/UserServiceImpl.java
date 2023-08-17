@@ -168,9 +168,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
-        String loginId = tokenProvider.getLoginId(changePasswordDTO.getLoginIdToken());
-
         try {
+            String loginId = tokenProvider.getLoginId(changePasswordDTO.getLoginIdToken());
             User user = userJPARepository.findByLoginId(loginId);
 
            ChangeUserInfoDTO userInfoDTO = new ChangeUserInfoDTO(user);
@@ -178,7 +177,7 @@ public class UserServiceImpl implements UserService{
            User updateUser = userInfoDTO.toEntity();
 
             userJPARepository.save(updateUser);
-        }catch (NullPointerException e){
+        }catch (Exception e){
             return false;
         }
         return true;
