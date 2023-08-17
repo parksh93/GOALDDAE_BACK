@@ -2,6 +2,7 @@ package com.goalddae.controller;
 
 import com.goalddae.dto.email.ResponseCertificationCodeDTO;
 import com.goalddae.dto.email.SendEmailDTO;
+import com.goalddae.dto.user.RequestFindPasswordDTO;
 import com.goalddae.service.EmailService;
 import com.goalddae.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +49,8 @@ public class EmailController {
         return ResponseEntity.ok(certificationCodeDTO);
     }
 
-    @RequestMapping("sendEmailChangePassword/{email}")
-    public void sendEmailChangePassword(@PathVariable String email) throws Exception {
-        emailService.sendChangPasswordMessage(email);
+    @RequestMapping("/sendEmailChangePassword")
+    public void sendEmailChangePassword(@RequestBody RequestFindPasswordDTO findPasswordDTO) throws Exception {
+        emailService.sendChangPasswordMessage(findPasswordDTO);
     }
 }

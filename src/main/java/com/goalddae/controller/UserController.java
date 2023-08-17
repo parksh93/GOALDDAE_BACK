@@ -4,12 +4,16 @@ import com.goalddae.dto.user.*;
 import com.goalddae.entity.User;
 import com.goalddae.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 @RestController
 @RequestMapping("/user")
@@ -74,16 +78,33 @@ public class UserController {
 
     @RequestMapping(value = "/findLoginId", method = RequestMethod.POST)
     public ResponseEntity<ResponseFindLoginIdDTO> findLoginId(@RequestBody RequestFindLoginIdDTO requestFindLoginIdDTO){
-        String loginId = userService.getLoginIdByEmailAndName(requestFindLoginIdDTO);
-
-        ResponseFindLoginIdDTO findLoginIdDTO = ResponseFindLoginIdDTO.builder()
-                .loginId(loginId).build();
-
+        ResponseFindLoginIdDTO findLoginIdDTO = userService.getLoginIdByEmailAndName(requestFindLoginIdDTO);
         return ResponseEntity.ok(findLoginIdDTO);
     }
 
     @RequestMapping(value = "/findPassword", method = RequestMethod.POST)
-    public List<Boolean> findPassword(@RequestBody RequestFindPasswordDTO findPasswordDTO){
-        return List.of(userService.countByLoginIdAndEmail(findPasswordDTO));
+    public List<Boolean> findPassword(@RequestBody RequestFindPasswordDTO findPasswordDTO, HttpServletResponse response){
+        boolean userCheck = userService.countByLoginIdAndEmail(findPasswordDTO);
+        if(userCheck) {
+            Cookie cookie = new Cookie("loginId", findPasswordDTO.getLoginId());
+            cookie.setPath("/");
+
+            response.addCookie(cookie);
+        }
+        return List.of(userCheck);
+    }
+
+    @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
+    public List<Boolean> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO, HttpServletResponse response) {
+       boolean changeCheck = userService.changePassword(changePasswordDTO);
+       Cookie cookie = new Cookie("loginId", null);
+
+       if(changeCheck){
+            cookie.setMaxAge(0);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+       }
+
+        return List.of(changeCheck);
     }
 }
