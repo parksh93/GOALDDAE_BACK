@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
@@ -174,6 +175,7 @@ public class UserServiceImpl implements UserService{
 
            ChangeUserInfoDTO userInfoDTO = new ChangeUserInfoDTO(user);
            userInfoDTO.setPassword(bCryptPasswordEncoder.encode(changePasswordDTO.getPassword()));
+           userInfoDTO.setProfileUpdateDate(LocalDateTime.now());
            User updateUser = userInfoDTO.toEntity();
 
             userJPARepository.save(updateUser);
