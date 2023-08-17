@@ -1,10 +1,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.goalddae.repository.IndividualMatchRepository">
-    <insert id="individualMatch">
+    <insert id="createIndividualMatchTable">
         DROP TABLE IF EXISTS ${individualMatch};
         CREATE TABLE ${individualMatch} (
                                             id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                            likes INT NOT NULL default 0,
+                                            likes BIGINT NOT NULL default 0,
+                                            views BIGINT NOT NULL default 0,
                                             individual_gender VARCHAR(255) NOT NULL,
                                             individual_minimum BIGINT NOT NULL,
                                             individual_maximum BIGINT NOT NULL,
@@ -12,6 +13,7 @@
                                             recruit_start DATETIME NOT NULL,
                                             recruit_end DATETIME NOT NULL,
                                             manager_id VARCHAR(255) NOT NULL,
+
                                             soccer_field BIGINT NOT NULL,
                                             FOREIGN KEY (soccer_field) REFERENCES soccer_field(id),
                                             field_reservation BIGINT NOT NULL,
