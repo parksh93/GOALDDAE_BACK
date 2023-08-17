@@ -3,10 +3,10 @@ package com.goalddae.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goalddae.dto.user.CheckLoginIdDTO;
 import com.goalddae.dto.user.CheckNicknameDTO;
+import com.goalddae.dto.user.RequestFindLoginIdDTO;
 import com.goalddae.dto.user.LoginDTO;
-import com.goalddae.entity.User;
-import com.goalddae.repository.UserJPARepository;
 import com.goalddae.service.UserService;
+import com.goalddae.service.UserServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.sql.Date;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class UserControllerTest {
     @Autowired
-    UserServiceImpl userService;
+    UserService userService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -95,5 +94,26 @@ public class UserControllerTest {
 
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(false));
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("로그인 아이디 찾기")
+    public void findLoginIdTest() throws Exception {
+        String email = "jsap50@naver.com";
+        String name = "박상현";
+        String url = "/user/findLoginId";
+
+        RequestFindLoginIdDTO findLoginIdDTO = RequestFindLoginIdDTO.builder()
+                .email(email)
+                .name(name)
+                .build();
+        final String requestbody = objectMapper.writeValueAsString(findLoginIdDTO);
+
+        ResultActions result = mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON).content(requestbody)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$").value("asd"));
     }
 }

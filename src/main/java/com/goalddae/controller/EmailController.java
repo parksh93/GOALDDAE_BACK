@@ -7,10 +7,7 @@ import com.goalddae.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class EmailController {
@@ -23,8 +20,8 @@ public class EmailController {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/sendEmail", method = RequestMethod.POST)
-    public ResponseEntity<?> sendEmail(@RequestBody SendEmailDTO sendEmailDTO) throws Exception {
+    @RequestMapping(value = "/sendEmailSignup", method = RequestMethod.POST)
+    public ResponseEntity<?> sendEmailSingup(@RequestBody SendEmailDTO sendEmailDTO) throws Exception {
         boolean checkEmail = userService.checkEmail(sendEmailDTO);
         if (checkEmail == true) {
             try {
@@ -40,5 +37,15 @@ public class EmailController {
             return ResponseEntity.ok(false);
         }
         return null;
+    }
+
+    @RequestMapping("/sendEmailFind/{email}")
+    public ResponseEntity<?> sendEmailFindLoginId(@PathVariable String email) throws Exception{
+        String certificationCode = emailService.sendSimpleMessage(email);
+
+        ResponseCertificationCodeDTO certificationCodeDTO = ResponseCertificationCodeDTO.builder()
+                .certificationCode(certificationCode).build();
+        return ResponseEntity.ok(certificationCodeDTO);
+
     }
 }
