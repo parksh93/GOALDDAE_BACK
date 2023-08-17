@@ -80,7 +80,7 @@ public class BoardJPARepositoryTest {
     @DisplayName("객체를 이용해 게시글 추가")
     public void saveTest(){
 
-        String userId = "testuser";
+        long userId = 1;
         String writer = "테스트닉네임";
         String title = "테스트제목";
         String content = "테스트내용";
@@ -121,7 +121,7 @@ public class BoardJPARepositoryTest {
     public void updateTest(){
 
         long id = 7;
-        String userId = "testuser";
+        long userId = 1;
         String writer = "테스트닉네임";
         String title = "테스트제목";
         String content = "테스트내용";

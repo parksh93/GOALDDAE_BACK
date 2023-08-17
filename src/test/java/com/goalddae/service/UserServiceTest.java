@@ -86,6 +86,7 @@ public class UserServiceTest {
 
         RequestFindLoginIdDTO findLoginIdDTO = RequestFindLoginIdDTO.builder()
                 .email(email).name(name).build();
+
         ResponseFindLoginIdDTO loginId = userService.getLoginIdByEmailAndName(findLoginIdDTO);
 
         assertNull(loginId);
