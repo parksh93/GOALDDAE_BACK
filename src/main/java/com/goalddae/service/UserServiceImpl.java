@@ -11,10 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
@@ -22,8 +20,6 @@ public class UserServiceImpl implements UserService{
     private final UserJPARepository userJPARepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
-
-
     @Autowired
     public UserServiceImpl(UserJPARepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, TokenProvider tokenProvider){
         this.userJPARepository = userRepository;
@@ -174,9 +170,11 @@ public class UserServiceImpl implements UserService{
         try {
             User user = userJPARepository.findByLoginId(changePasswordDTO.getLoginId());
 
-            user.updataPassword(bCryptPasswordEncoder.encode(changePasswordDTO.getPassword()));
+           ChangeUserInfoDTO userInfoDTO = new ChangeUserInfoDTO(user);
+           userInfoDTO.setPassword(bCryptPasswordEncoder.encode(changePasswordDTO.getPassword()));
+           User updateUser = userInfoDTO.toEntity();
 
-            userJPARepository.save(user);
+            userJPARepository.save(updateUser);
         }catch (NullPointerException e){
             return false;
         }
