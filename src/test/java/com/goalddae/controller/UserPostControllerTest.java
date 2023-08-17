@@ -3,7 +3,6 @@ package com.goalddae.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.UsedTransactionBoard;
-import com.goalddae.service.UserPostService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

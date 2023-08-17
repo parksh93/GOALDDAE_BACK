@@ -16,6 +16,7 @@ public class GetUserInfoDTO {
     private long id;
     private String loginId;
     private String nickname;
+    private String email;
     private String userCode;
     private String gender;
     private String profileImgUrl;
@@ -33,6 +34,7 @@ public class GetUserInfoDTO {
         this.id = user.getId();
         this.loginId = user.getLoginId();
         this.nickname = user.getNickname();
+        this.email = user.getEmail();
         this.userCode = user.getUserCode();
         this.gender = user.getGender();
         this.profileImgUrl = user.getProfileImgUrl();
