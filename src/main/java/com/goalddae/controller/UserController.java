@@ -86,7 +86,7 @@ public class UserController {
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public ResponseEntity<String> updateUserInfo(User user) {
         userService.update(user);
-        return ResponseEntity.ok("수정되었습니다.");
+        return ResponseEntity.ok("수정 되었습니다.");
     }
 
     @RequestMapping(value = "/posts/{userId}", method = RequestMethod.GET)

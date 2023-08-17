@@ -152,28 +152,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void update(User user) {
-//        User updatedUser = userJPARepository.findByLoginId(user.getLoginId());
-//        updatedUser = User.builder()
-//                .loginId(user.getLoginId())
-//                .email(user.getEmail())
-//                .password(user.getPassword())
-//                .userCode(user.getUserCode())
-//                .nickname(user.getNickname())
-//                .gender(user.getGender())
-//                .profileImgUrl(user.getProfileImgUrl())
-//                .phoneNumber(user.getPhoneNumber())
-//                .birth(user.getBirth())
-//                .matchesCnt(user.getMatchesCnt())
-//                .level(user.getLevel())
-//                .accountSuspersion(user.isAccountSuspersion())
-//                .noShowCnt(user.getNoShowCnt())
-//                .preferredCity(user.getPreferredCity())
-//                .preferredArea(user.getPreferredArea())
-//                .activityClass(user.getActivityClass())
-//                .authority(updatedUser.getAuthority())
-//                .build();
-//        userJPARepository.save(updatedUser);
-
         User updatedUser = userJPARepository.findByLoginId(user.getLoginId());
         if (updatedUser != null) {
             updatedUser.setEmail(user.getEmail());
@@ -185,6 +163,8 @@ public class UserServiceImpl implements UserService{
             updatedUser.setActivityClass(user.getActivityClass());
             updatedUser.setAuthority(updatedUser.getAuthority());
             userJPARepository.save(updatedUser);
+
+            // DTO -> toentity로 바꾸기
         }
     }
 
