@@ -13,4 +13,6 @@ public interface UserService {
     public boolean checkEmail(SendEmailDTO checkEmailDTO);
     public boolean checkNickname(CheckNicknameDTO checkNicknameDTO);
     public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO);
+    public String checkLoginIdAndEmail(RequestFindPasswordDTO requestFindPasswordDTO);
+    public boolean changePassword(ChangePasswordDTO changePasswordDTO);
 }

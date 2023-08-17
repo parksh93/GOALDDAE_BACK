@@ -26,6 +26,11 @@ public class TokenProvider {
         return makeToken(new Date(now.getTime() + expiredAt.toMillis()), user);
     }
 
+    public String generateLoinIdToken(String loginId, Duration expiredAt) {
+        Date now = new Date();
+        return makeLoginIdToken(new Date(now.getTime() + expiredAt.toMillis()), loginId);
+    }
+
     // 내부적으로 토큰 생성 *
     private String makeToken(Date expiry, User user){
         Date now = new Date();
@@ -50,6 +55,22 @@ public class TokenProvider {
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
                 .compact();
     }
+
+    private String makeLoginIdToken(Date expiry, String loginId){
+        Date now = new Date();
+
+        return Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setIssuer(jwtProperties.getIssuer())
+                .setIssuedAt(now)
+                .setExpiration(expiry)
+                .setSubject(loginId)
+                .claim("loginId", loginId)
+                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
+                .compact();
+    }
+
+
 
     // 토큰의 유효성 검증 *
     // 발급된 토큰을 입력받았을때, 유효하면 true, 아니면 false 리턴
@@ -85,6 +106,11 @@ public class TokenProvider {
     public Long getUserId(String token){
         Claims claims = getClaims(token);
         return claims.get("id", Long.class);
+    }
+
+    public String getLoginId(String token){
+        Claims claims = getClaims(token);
+        return claims.get("loginId", String.class);
     }
 
     // 토큰 입력시 클레임을 리턴하도록 해 주는 메서드

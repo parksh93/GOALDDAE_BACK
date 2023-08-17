@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -89,5 +90,42 @@ public class UserServiceTest {
         ResponseFindLoginIdDTO loginId = userService.getLoginIdByEmailAndName(findLoginIdDTO);
 
         assertNull(loginId);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("로그인 아이디와 이메일에 해당하는 유저 정보 갯수 가져오기")
+    public void countByLoginIdAndEmailTest() {
+        String loginId = "asssss";
+        String email = "asds@naver.com";
+
+        RequestFindPasswordDTO findPasswordDTO = RequestFindPasswordDTO.builder()
+                .loginId(loginId)
+                .email(email)
+                .build();
+
+        String loginIdToken = userService.checkLoginIdAndEmail(findPasswordDTO);
+
+        assertNotNull(loginIdToken);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("비밀번호 변경")
+    public void changePasswordTest() {
+        String loginId = "asdas";
+        String password = "asd123123";
+        String email = "jsap50@naver.com";
+        RequestFindPasswordDTO findPasswordDTO = RequestFindPasswordDTO.builder()
+                .loginId(loginId)
+                .email(email)
+                .build();
+
+        ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder()
+                .loginIdToken(userService.checkLoginIdAndEmail(findPasswordDTO))
+                .password(password)
+                .build();
+
+        userService.changePassword(changePasswordDTO);
     }
 }

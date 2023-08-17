@@ -7,12 +7,14 @@ import com.goalddae.entity.User;
 import com.goalddae.exception.NotFoundUserException;
 import com.goalddae.repository.UserJPARepository;
 
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
@@ -20,8 +22,6 @@ public class UserServiceImpl implements UserService{
     private final UserJPARepository userJPARepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
-
-
     @Autowired
     public UserServiceImpl(UserJPARepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, TokenProvider tokenProvider){
         this.userJPARepository = userRepository;
@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserService{
         this.tokenProvider = tokenProvider;
     }
 
+    @Override
     public void save(User user){
         User newUser = User.builder()
                 .loginId(user.getLoginId())
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserService{
                 .activityClass(user.getActivityClass())
                 .authority(user.getAuthority())
                 .userCode(createUserCode())
+                .profileImgUrl(user.getProfileImgUrl())
                 .build();
 
         userJPARepository.save(newUser);
@@ -72,11 +74,12 @@ public class UserServiceImpl implements UserService{
         return code.toString();
     }
 
+    @Override
     public User getByCredentials(String loginId){
         return userJPARepository.findByLoginId(loginId);
     }
 
-    // ****회원가입 구현 후 인코딩 코드 추가 예정
+    @Override
     public String generateTokenFromLogin(LoginDTO loginDTO){
         try {
             User userInfo = getByCredentials(loginDTO.getLoginId());
@@ -93,6 +96,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
     public GetUserInfoDTO getUserInfo(String token){
         if(tokenProvider.validToken(token)){
            User user = userJPARepository.findById(tokenProvider.getUserId(token)).get();
@@ -104,8 +108,9 @@ public class UserServiceImpl implements UserService{
         return null;
     }
 
+    @Override
     public boolean checkLoginId(CheckLoginIdDTO checkLoginIdDTO){
-        long checkLoginIdCnt = userJPARepository.countByLoginId(checkLoginIdDTO.getLoginId());
+        int checkLoginIdCnt = userJPARepository.countByLoginId(checkLoginIdDTO.getLoginId());
 
         if(checkLoginIdCnt == 0){
             return true;
@@ -114,8 +119,9 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
     public boolean checkEmail(SendEmailDTO checkEmailDTO){
-        long checkEmailCnt = userJPARepository.countByEmail(checkEmailDTO.getEmail());
+        int checkEmailCnt = userJPARepository.countByEmail(checkEmailDTO.getEmail());
 
         if(checkEmailCnt == 0){
             return true;
@@ -124,8 +130,9 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
     public boolean checkNickname(CheckNicknameDTO checkNicknameDTO){
-        long checkNicknameCnt = userJPARepository.countByNickname(checkNicknameDTO.getNickname());
+        int checkNicknameCnt = userJPARepository.countByNickname(checkNicknameDTO.getNickname());
 
         if(checkNicknameCnt == 0){
             return true;
@@ -134,6 +141,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
     public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO){
         String loginId = userJPARepository.findLoginIdByEmailAndName(requestFindLoginIdDTO.getEmail(), requestFindLoginIdDTO.getName());
 
@@ -147,5 +155,33 @@ public class UserServiceImpl implements UserService{
                 .loginId(loginId).build();
 
         return findLoginIdDTO;
+    }
+
+    @Override
+    public String checkLoginIdAndEmail(RequestFindPasswordDTO findPasswordDTO) {
+        int userCnt = userJPARepository.countByLoginIdAndEmail(findPasswordDTO.getLoginId(), findPasswordDTO.getEmail());
+        if(userCnt == 1){
+            return tokenProvider.generateLoinIdToken(findPasswordDTO.getLoginId(), Duration.ofMinutes(5));
+        }else{
+            return "";
+        }
+    }
+
+    @Override
+    public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
+        try {
+            String loginId = tokenProvider.getLoginId(changePasswordDTO.getLoginIdToken());
+            User user = userJPARepository.findByLoginId(loginId);
+
+           ChangeUserInfoDTO userInfoDTO = new ChangeUserInfoDTO(user);
+           userInfoDTO.setPassword(bCryptPasswordEncoder.encode(changePasswordDTO.getPassword()));
+           userInfoDTO.setProfileUpdateDate(LocalDateTime.now());
+           User updateUser = userInfoDTO.toEntity();
+
+            userJPARepository.save(updateUser);
+        }catch (Exception e){
+            return false;
+        }
+        return true;
     }
 }
