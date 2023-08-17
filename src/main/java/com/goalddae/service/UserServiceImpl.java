@@ -7,6 +7,7 @@ import com.goalddae.entity.User;
 import com.goalddae.exception.NotFoundUserException;
 import com.goalddae.repository.UserJPARepository;
 
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -156,19 +157,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public boolean countByLoginIdAndEmail(RequestFindPasswordDTO findPasswordDTO) {
+    public String checkLoginIdAndEmail(RequestFindPasswordDTO findPasswordDTO) {
         int userCnt = userJPARepository.countByLoginIdAndEmail(findPasswordDTO.getLoginId(), findPasswordDTO.getEmail());
         if(userCnt == 1){
-            return true;
+            return tokenProvider.generateLoinIdToken(findPasswordDTO.getLoginId(), Duration.ofMinutes(5));
         }else{
-            return false;
+            return "";
         }
     }
 
     @Override
     public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
+        String loginId = tokenProvider.getLoginId(changePasswordDTO.getLoginIdToken());
+
         try {
-            User user = userJPARepository.findByLoginId(changePasswordDTO.getLoginId());
+            User user = userJPARepository.findByLoginId(loginId);
 
            ChangeUserInfoDTO userInfoDTO = new ChangeUserInfoDTO(user);
            userInfoDTO.setPassword(bCryptPasswordEncoder.encode(changePasswordDTO.getPassword()));
