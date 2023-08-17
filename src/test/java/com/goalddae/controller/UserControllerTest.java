@@ -111,7 +111,7 @@ public class UserControllerTest {
                 .build();
 
         String url = "http://localhost:8080//updateUserInfo";
-//        String url2 = "/user/0/all"; findAll 메서드 작성후, 테스트 적용 예정
+        String url2 = "/user/0/all"; // findAll 메서드 작성후, 테스트 적용 예정
 
         final String requestBody = objectMapper.writeValueAsString(user);
 
