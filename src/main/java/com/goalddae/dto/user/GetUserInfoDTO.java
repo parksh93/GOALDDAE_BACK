@@ -4,7 +4,7 @@ import com.goalddae.entity.User;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.sql.Date;
 
 @Getter
 @Setter

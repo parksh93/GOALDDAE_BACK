@@ -2,10 +2,7 @@ package com.goalddae.service;
 
 import com.goalddae.config.jwt.TokenProvider;
 import com.goalddae.dto.email.SendEmailDTO;
-import com.goalddae.dto.user.CheckLoginIdDTO;
-import com.goalddae.dto.user.CheckNicknameDTO;
-import com.goalddae.dto.user.GetUserInfoDTO;
-import com.goalddae.dto.user.LoginDTO;
+import com.goalddae.dto.user.*;
 
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.UsedTransactionBoard;
@@ -50,6 +47,7 @@ public class UserServiceImpl implements UserService{
                 .loginId(user.getLoginId())
                 .email(user.getEmail())
                 .password(bCryptPasswordEncoder.encode(user.getPassword()))
+                .name(user.getName())
                 .nickname(user.getNickname())
                 .gender(user.getGender())
                 .profileImgUrl(user.getProfileImgUrl())
@@ -151,23 +149,25 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void update(User user) {
-        User updatedUser = userJPARepository.findByLoginId(user.getLoginId());
-        if (updatedUser != null) {
-            updatedUser.setEmail(user.getEmail());
-            updatedUser.setNickname(user.getNickname());
-            updatedUser.setPhoneNumber(user.getPhoneNumber());
-            updatedUser.setBirth(user.getBirth());
-            updatedUser.setPreferredCity(user.getPreferredCity());
-            updatedUser.setPreferredArea(user.getPreferredArea());
-            updatedUser.setActivityClass(user.getActivityClass());
-            updatedUser.setAuthority(updatedUser.getAuthority());
-            userJPARepository.save(updatedUser);
+    public void update(GetUserInfoDTO getUserInfoDTO) {
+        User user = userJPARepository.findByLoginId(getUserInfoDTO.getLoginId());
+        System.out.println(user);
+        if (user != null) {
+            ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
 
-            // DTO -> toentity로 바꾸기
+            changeUserInfoDTO.setEmail(getUserInfoDTO.getEmail());
+            changeUserInfoDTO.setNickname(getUserInfoDTO.getNickname());
+            changeUserInfoDTO.setPhoneNumber(getUserInfoDTO.getPhoneNumber());
+            changeUserInfoDTO.setBirth(getUserInfoDTO.getBirth());
+            changeUserInfoDTO.setPreferredCity(getUserInfoDTO.getPreferredCity());
+            changeUserInfoDTO.setPreferredArea(getUserInfoDTO.getPreferredArea());
+            changeUserInfoDTO.setActivityClass(getUserInfoDTO.getActivityClass());
+
+            User updateduser = changeUserInfoDTO.toEntity();
+            System.out.println(updateduser.toString());
+            userJPARepository.save(updateduser);
         }
     }
-
 
     @Override
     public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId) {
