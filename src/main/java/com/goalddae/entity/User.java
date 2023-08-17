@@ -1,12 +1,12 @@
 package com.goalddae.entity;
 
+import com.goalddae.dto.user.ChangePasswordDTO;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -16,6 +16,8 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Table(name="users")
 public class User implements UserDetails {
     @Id
@@ -89,10 +91,12 @@ public class User implements UserDetails {
                             // 일반 유저 : user / 매니저 : manager / 관리자 : admin
 
     @Builder
-    public User(String loginId, String email, String password, String userCode, String name, String nickname, String gender, String profileImgUrl,
+    public User(long id, String loginId, String email, String password, String userCode, String name, String nickname, String gender, String profileImgUrl,
                 String phoneNumber, Date birth, int matchesCnt, String level,
                 boolean accountSuspersion, int noShowCnt, String preferredCity,
-                String preferredArea, int activityClass, String authority){
+                String preferredArea, int activityClass, String authority,
+                LocalDateTime signupDate, LocalDateTime profileUpdateDate){
+        this.id = id;
         this.loginId = loginId;
         this.email = email;
         this.password = password;
@@ -111,6 +115,8 @@ public class User implements UserDetails {
         this.preferredArea = preferredArea;
         this.activityClass = activityClass;
         this.authority = authority;
+        this.signupDate = signupDate;
+        this.profileUpdateDate = profileUpdateDate;
     }
 
     @PrePersist
@@ -124,14 +130,14 @@ public class User implements UserDetails {
         this.noShowCnt = 0;
     }
 
-    @PreUpdate
-    public void setUpdateTime() {
-        this.profileUpdateDate = LocalDateTime.now();
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.authority));
+    }
+
+    public void updataPassword(String password) {
+        this.password = password;
+        this.profileUpdateDate = LocalDateTime.now();
     }
 
     @Override

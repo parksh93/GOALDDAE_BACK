@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -85,7 +86,7 @@ public class UserServiceTest {
 
         RequestFindLoginIdDTO findLoginIdDTO = RequestFindLoginIdDTO.builder()
                 .email(email).name(name).build();
-        String loginId = userService.getLoginIdByEmailAndName(findLoginIdDTO);
+        ResponseFindLoginIdDTO loginId = userService.getLoginIdByEmailAndName(findLoginIdDTO);
 
         assertNull(loginId);
     }
@@ -105,5 +106,20 @@ public class UserServiceTest {
         boolean userCntCheck = userService.countByLoginIdAndEmail(findPasswordDTO);
 
         assertFalse(userCntCheck);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("비밀번호 변경")
+    public void changePasswordTest() {
+        String loginId = "asdas";
+        String password = "asd123123";
+
+        ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder()
+                .loginId(loginId)
+                .password(password)
+                .build();
+
+        userService.changePassword(changePasswordDTO);
     }
 }

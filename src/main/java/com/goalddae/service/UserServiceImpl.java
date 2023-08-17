@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
@@ -45,6 +47,7 @@ public class UserServiceImpl implements UserService{
                 .activityClass(user.getActivityClass())
                 .authority(user.getAuthority())
                 .userCode(createUserCode())
+                .profileImgUrl(user.getProfileImgUrl())
                 .build();
 
         userJPARepository.save(newUser);
@@ -141,7 +144,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO){
+    public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO){
         String loginId = userJPARepository.findLoginIdByEmailAndName(requestFindLoginIdDTO.getEmail(), requestFindLoginIdDTO.getName());
 
         String star = "**";
@@ -149,7 +152,11 @@ public class UserServiceImpl implements UserService{
         if(loginId != null){
             loginId = loginId.substring(0, loginId.length()-2) + star;
         }
-        return loginId;
+
+        ResponseFindLoginIdDTO findLoginIdDTO = ResponseFindLoginIdDTO.builder()
+                .loginId(loginId).build();
+
+        return findLoginIdDTO;
     }
 
     @Override
@@ -160,5 +167,19 @@ public class UserServiceImpl implements UserService{
         }else{
             return false;
         }
+    }
+
+    @Override
+    public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
+        try {
+            User user = userJPARepository.findByLoginId(changePasswordDTO.getLoginId());
+
+            user.updataPassword(bCryptPasswordEncoder.encode(changePasswordDTO.getPassword()));
+
+            userJPARepository.save(user);
+        }catch (NullPointerException e){
+            return false;
+        }
+        return true;
     }
 }

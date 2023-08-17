@@ -1,5 +1,6 @@
 package com.goalddae.service;
 
+import com.goalddae.dto.user.RequestFindPasswordDTO;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,10 +86,10 @@ public class EmailServiceImpl implements EmailService{
         return certificationCode;
     }
 
-    public MimeMessage createGoPasswordChange(String email) throws Exception{
+    public MimeMessage createGoPasswordChange(RequestFindPasswordDTO findPasswordDTO) throws Exception{
         MimeMessage  message = emailSender.createMimeMessage();
 
-        message.addRecipients(MimeMessage.RecipientType.TO, email);
+        message.addRecipients(MimeMessage.RecipientType.TO, findPasswordDTO.getEmail());
         message.setSubject("GOALDDAE 비밀번호 분실에 따른 변경 안내");
 
         String msg="";
@@ -103,9 +104,9 @@ public class EmailServiceImpl implements EmailService{
         msg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
         msg+= "<h3>아래 글자를 눌러주세요.</h3>";
         msg+= "<div style='font-size:130%; width: 100%'>";
-        msg+= "<a href='http://localhost:3000/changePasswordLost' style='color:green;'>";
-        msg+= "비밀번호 변경";
-        msg += "</a>";
+        msg+= "<a href='http://localhost:3000/changeLostPassword'";
+        msg += "style='color:green;'>";
+        msg+= "비밀번호 변경</a>";
         msg += "<div><br/> ";
         msg+= "</div>";
 
@@ -117,8 +118,8 @@ public class EmailServiceImpl implements EmailService{
     }
 
     @Override
-    public void sendChangPasswordMessage(String email) throws Exception {
-        MimeMessage message = createGoPasswordChange(email);
+    public void sendChangPasswordMessage(RequestFindPasswordDTO findPasswordDTO) throws Exception {
+        MimeMessage message = createGoPasswordChange(findPasswordDTO);
         try{
             emailSender.send(message);
         }catch(MailException e){
