@@ -2,23 +2,22 @@
 <mapper namespace="com.goalddae.repository.MatchIndividualRepository">
     <update id="createMatchIndividualTable">
         CREATE TABLE ${matchIndividual} (
-                                            id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                            likes BIGINT NOT NULL default 0,
-                                            views BIGINT NOT NULL default 0,
-                                            gender VARCHAR(255) NOT NULL,
-                                            minimum BIGINT NOT NULL,
-                                            maximum BIGINT NOT NULL,
-                                            player_number BIGINT NOT NULL,
-                                            recruit_start DATETIME NOT NULL,
-                                            recruit_end DATETIME NOT NULL,
-                                            manager_id VARCHAR(255) NOT NULL,
-
-                                            users_id BIGINT NOT NULL,
-                                                FOREIGN KEY (users_id) REFERENCES users(id),
-                                            soccer_field_id BIGINT NOT NULL,
-                                                FOREIGN KEY (soccer_field_id) REFERENCES soccer_field(id),
-                                            field_reservation_id BIGINT NOT NULL,
-                                                FOREIGN KEY (field_reservation_id) REFERENCES field_reservation(id)
+                                      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                      likes BIGINT default 0 NOT NULL,
+                                      views BIGINT default 0 NOT NULL,
+                                      gender VARCHAR(255) NOT NULL,
+                                      minimum BIGINT NOT NULL,
+                                      maximum BIGINT NOT NULL,
+                                      player_number BIGINT NOT NULL,
+                                      recruit_start DATETIME NOT NULL,
+                                      recruit_end DATETIME NOT NULL,
+                                      manager_id VARCHAR(255) NOT NULL,
+                                      users_id VARCHAR(255) NOT NULL,
+            --                                    FOREIGN KEY (users_id) REFERENCES soccer_users(id),
+                                      soccer_field_id BIGINT NOT NULL,
+--                                                FOREIGN KEY (soccer_field_id) REFERENCES soccer_field(id),
+                                      field_reservation_id BIGINT NOT NULL
+--                                                FOREIGN KEY (field_reservation_id) REFERENCES field_reservation(id)
         );
     </update>
 </mapper>

@@ -26,7 +26,6 @@ public class MatchServiceImpl implements MatchService{
     }
 
     @Override
-    @Transactional
     public void createMatchIndividualTable(String matchIndividual) {
         matchIndividualRepository.createMatchIndividualTable(matchIndividual);
     }

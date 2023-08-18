@@ -35,13 +35,26 @@ public class TeamController {
     }
 
 
-    // 팀 가입신청 테이블 생성
+    // 팀가입신청 테이블 생성
     @PostMapping("/team-apply/create-table")
     public ResponseEntity<String> teamApplyCreateTable(@RequestParam("teamApply") String teamApply) {
         try {
             String decodedTeamApply = URLDecoder.decode(teamApply, StandardCharsets.UTF_8);
             teamService.createTeamApplyTable(decodedTeamApply);
             return new ResponseEntity<>("테이블 생성 완료: " + decodedTeamApply, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>("테이블 생성 실패: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 팀경기결과 테이블 생성
+    @PostMapping("/team-match-result/create-table")
+    public ResponseEntity<String> teamMatchResultCreateTable(@RequestParam("teamMatchResult") String teamMatchResult) {
+        try {
+            String decodedTeamMatchResult = URLDecoder.decode(teamMatchResult, StandardCharsets.UTF_8);
+            teamService.createTeamMatchResult(decodedTeamMatchResult);
+            return new ResponseEntity<>("테이블 생성 완료: " + decodedTeamMatchResult, HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>("테이블 생성 실패: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

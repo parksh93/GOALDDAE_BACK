@@ -1,6 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.repository.TeamApplyRepository;
+import com.goalddae.repository.TeamMatchResultRepository;
 import com.goalddae.repository.TeamMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,11 +13,15 @@ public class TeamServiceImpl implements TeamService {
     private final TeamMemberRepository teamMemberRepository;
     private final TeamApplyRepository teamApplyRepository;
 
+    private final TeamMatchResultRepository teamMatchResultRepository;
+
     @Autowired
     public TeamServiceImpl(TeamMemberRepository teamMemberRepository,
-                           TeamApplyRepository teamApplyRepository) {
+                           TeamApplyRepository teamApplyRepository,
+                           TeamMatchResultRepository teamMatchResultRepository) {
         this.teamMemberRepository = teamMemberRepository;
         this.teamApplyRepository = teamApplyRepository;
+        this.teamMatchResultRepository = teamMatchResultRepository;
     }
 
     @Override
@@ -29,6 +34,11 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     public void createTeamApplyTable(String teamApply) {
         teamApplyRepository.createTeamApplyTable(teamApply);
+    }
 
+    @Override
+    @Transactional
+    public void createTeamMatchResult(String teamMatchResult) {
+        teamMatchResultRepository.createTeamMatchResultTable(teamMatchResult);
     }
 }
