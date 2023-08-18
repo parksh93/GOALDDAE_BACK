@@ -1,15 +1,20 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.email.SendEmailDTO;
-import com.goalddae.dto.user.CheckLoginIdDTO;
-import com.goalddae.dto.user.CheckNicknameDTO;
-import com.goalddae.dto.user.LoginDTO;
+import com.goalddae.dto.user.*;
+import com.goalddae.entity.CommunicationBoard;
+import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.entity.User;
+import com.goalddae.repository.UserJPARepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -18,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 public class UserServiceTest {
     @Autowired
     UserServiceImpl userService;
+    @Autowired
+    UserJPARepository userJPARepository;
 
     @Test
     @Transactional
@@ -78,4 +85,54 @@ public class UserServiceTest {
 
         assertEquals(true, checkNickname);
     }
+    @Test
+    @Transactional
+    @DisplayName("유저정보 수정 테스트")
+    public void updateTest() {
+        // given
+        String loginId = "수정아이디";
+        String nickname = "수정닉네임";
+        String email = "abc@abc.com";
+
+        GetUserInfoDTO getUserInfoDTO = GetUserInfoDTO.builder()
+                .loginId(loginId)
+                        .nickname(nickname)
+                                .email(email)
+                                        .build();
+
+        // when
+        userService.update(getUserInfoDTO);
+
+        // then
+        User updatedUser = userJPARepository.findByLoginId(loginId);
+        assertEquals("abc@abc.com", updatedUser.getEmail());
+        assertEquals("수정닉네임", updatedUser.getNickname());
+    }
+    @Test
+    @Transactional
+    @DisplayName("자유게시판에 쓴 글 조회 테스트")
+    public void getUserCommunicationBoardPostsTest() {
+        // given
+        long userId = 1;
+
+        // when
+        List<CommunicationBoard> communicationBoardList = userService.getUserCommunicationBoardPosts(userId);
+
+        // then
+        assertEquals(0, communicationBoardList.size());
+    }
+    @Test
+    @Transactional
+    @DisplayName("중고거래게시판에 쓴 글 조회 테스트")
+    public void getUserUsedTransactionBoardPostsTest() {
+        // given
+        long userId = 1;
+
+        // when
+        List<UsedTransactionBoard> usedTransactionBoardList = userService.getUserUsedTransactionBoardPosts(userId);
+
+        // then
+        assertEquals(0, usedTransactionBoardList.size());
+    }
+
 }

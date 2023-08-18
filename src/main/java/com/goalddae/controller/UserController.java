@@ -99,7 +99,7 @@ public class UserController {
         return ResponseEntity.ok(combinedList);
     }
 
-    // 매치테이블 생성되면 추가해야할 코드
+//    미리 매치 리스트 조회 기능 만들어 놓음 -유정원
 //    @GetMapping("/match/{userId}")
 //    public ResponseEntity<List<Match>> getMatchById(@PathVariable long userId) {
 //
