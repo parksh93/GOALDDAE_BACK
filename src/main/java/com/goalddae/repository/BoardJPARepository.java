@@ -10,6 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface BoardJPARepository extends JpaRepository<CommunicationBoard, Long> {
-    @Query("SELECT new com.goalddae.dto.board.BoardListDTO(b.id, b.writer, b.title, b.writeDate, b.updateDate, b.img1, b.boardSortation) FROM CommunicationBoard b")
+    @Query("SELECT new com.goalddae.dto.board.BoardListDTO(b.id, b.writer, b.title, b.writeDate, b.updateDate, b.img1, b.boardSortation, b.count, 0, 0) FROM CommunicationBoard b")
     Page<BoardListDTO> findAllBoardListDTO(Pageable pageable);
 }

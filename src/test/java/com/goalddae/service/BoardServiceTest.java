@@ -1,6 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.board.BoardListDTO;
+import com.goalddae.dto.board.BoardUpdateDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.repository.BoardJPARepository;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -117,18 +119,12 @@ public class BoardServiceTest {
     public void updateTest(){
 
         long id = 7;
-        long userId = 7;
-        String writer = "테스트닉네임";
         String title = "테스트제목";
         String content = "테스트내용";
 
-        CommunicationBoard post = boardService.findById(id);
 
-
-        CommunicationBoard updatedPost = CommunicationBoard.builder()
+        BoardUpdateDTO boardUpdateDTO = BoardUpdateDTO.builder()
                 .id(id)
-                .userId(userId)
-                .writer(writer)
                 .title(title)
                 .content(content)
                 .img1(null)
@@ -136,15 +132,12 @@ public class BoardServiceTest {
                 .img3(null)
                 .img4(null)
                 .img5(null)
-                .boardSortation(1)
                 .build();
 
-        boardService.update(updatedPost);
+        boardService.update(boardUpdateDTO);
 
         CommunicationBoard result = boardService.findById(id);
 
-        assertEquals(result.getUserId(), userId);
-        assertEquals(result.getWriter(), writer);
         assertEquals(result.getTitle(), title);
         assertEquals(result.getContent(), content);
         assertNull(result.getImg1());
