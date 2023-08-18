@@ -1,12 +1,10 @@
 package com.goalddae.entity;
 
-import com.goalddae.dto.user.ChangePasswordDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -133,11 +131,6 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.authority));
-    }
-
-    public void updataPassword(String password) {
-        this.password = password;
-        this.profileUpdateDate = LocalDateTime.now();
     }
 
     @Override
