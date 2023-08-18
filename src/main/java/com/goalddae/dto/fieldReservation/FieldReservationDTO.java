@@ -11,8 +11,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FieldReservationDTO {
-    private String id;
-    private LocalDateTime reservationData;
-    private int reservationTeamId;
-
+    private long id;
+    private String reservationId;
+    private LocalDateTime reservationDate;
+    private int reservationTeamWhether;
+    private String reservationTeamId;
+    private Long SoccerFieldId;
 }

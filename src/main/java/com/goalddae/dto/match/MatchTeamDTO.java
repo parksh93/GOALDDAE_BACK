@@ -1,4 +1,4 @@
-package com.goalddae.dto.individualMatch;
+package com.goalddae.dto.match;
 
 import lombok.*;
 
@@ -10,20 +10,18 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class IndividualMatchDTO {
-    private Long id;
-    private int like;
+public class MatchTeamDTO {
+    private long id;
+    private int likes;
     private int views;
-    private String individualGender;
-    private int individualMinimum;
-    private int individualMaximum;
-    private int individualNumber;
+    private String gender;
+    private int minimum;
+    private int maximum;
+    private int playerNumber;
     private LocalDateTime recruitStart;
     private LocalDateTime recruitEnd;
     private String managerId;
-
-    // 외래키
     private Long soccerField;
     private Long fieldReservation;
-    private Long users;
+    private Long userId;
 }
