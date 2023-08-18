@@ -80,7 +80,7 @@ public class BoardJPARepositoryTest {
         CommunicationBoard result = boardJPARepository.findById(boardId).orElse(null);
 
         assertNull(result);
-        assertEquals(boardJPARepository.count(), 199);
+        assertEquals(boardJPARepository.count(), 198);
 
 
     }
