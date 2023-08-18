@@ -151,10 +151,9 @@ public class UserServiceImpl implements UserService{
     @Override
     public void update(GetUserInfoDTO getUserInfoDTO) {
         User user = userJPARepository.findByLoginId(getUserInfoDTO.getLoginId());
-        System.out.println(user);
+
         if (user != null) {
             ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
-
             changeUserInfoDTO.setEmail(getUserInfoDTO.getEmail());
             changeUserInfoDTO.setNickname(getUserInfoDTO.getNickname());
             changeUserInfoDTO.setPhoneNumber(getUserInfoDTO.getPhoneNumber());
@@ -164,7 +163,7 @@ public class UserServiceImpl implements UserService{
             changeUserInfoDTO.setActivityClass(getUserInfoDTO.getActivityClass());
 
             User updateduser = changeUserInfoDTO.toEntity();
-            System.out.println(updateduser.toString());
+
             userJPARepository.save(updateduser);
         }
     }
@@ -179,7 +178,7 @@ public class UserServiceImpl implements UserService{
         return usedTransactionBoardRepository.findPostById(userId);
     }
 
-    // 매치테이블 생성되면 추가해야할 코드
+    // 매치테이블 생성되면 추가해야할 코드 -유정원
 //    @Override
 //    public List<Match> getUserMatchList(long userId) {
 //        return MatchRepository.findAllByuserId(userId);
