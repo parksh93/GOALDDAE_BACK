@@ -170,12 +170,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId) {
-        return communicationBoardRepository.findPostById(userId);
+        return communicationBoardRepository.findByUserId(userId);
     }
 
     @Override
     public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(long userId) {
-        return usedTransactionBoardRepository.findPostById(userId);
+        return usedTransactionBoardRepository.findByUserId(userId);
     }
 
     // 매치테이블 생성되면 추가해야할 코드 -유정원

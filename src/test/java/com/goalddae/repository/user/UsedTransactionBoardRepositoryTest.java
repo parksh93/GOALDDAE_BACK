@@ -26,7 +26,7 @@ public class UsedTransactionBoardRepositoryTest {
         long userId = 1;
 
         // when
-        List<UsedTransactionBoard>usedTransactionBoardList = usedTransactionBoardRepository.findPostById(userId);
+        List<UsedTransactionBoard>usedTransactionBoardList = usedTransactionBoardRepository.findByUserId(userId);
 
         // then
         assertEquals(0, usedTransactionBoardList.size());
