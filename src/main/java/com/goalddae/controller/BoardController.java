@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/board")
@@ -32,22 +33,31 @@ public class BoardController {
 
 
 
-    @GetMapping({"/list/{page}", "/list"})
-    public ResponseEntity<Map<String, Object>> list(@PathVariable(required = false) Integer page) {
-
-        if (page == null) {
-            page = 1;
-        }
+    @GetMapping("/list")
+    public ResponseEntity<Map<String, Object>> list(@RequestParam(required = false, defaultValue = "") String type,
+                                                    @RequestParam(required = false, defaultValue = "") String name,
+                                                    @RequestParam(required = false, defaultValue = "1") Integer page) {
 
         final int PAGE_SIZE = 10;
-        final int PAGE_BTN_NUM = 10;
+        final int PAGE_BTN_NUM = 5;
 
-        Page<BoardListDTO> pageInfo = boardService.findAllBoardListDTO(page, PAGE_SIZE);
+        Page<BoardListDTO> pageInfo;
+
+        if(Objects.equals(type, "writer")){
+            pageInfo = boardService.findAllBoardListDTOByWriter(page, PAGE_SIZE, name);
+        } else if(Objects.equals(type, "title")){
+            pageInfo = boardService.findAllBoardListDTOByTitle(page, PAGE_SIZE, name);
+        } else {
+            pageInfo = boardService.findAllBoardListDTO(page, PAGE_SIZE);
+        }
+
 
         int currentPageNum = pageInfo.getNumber() + 1;
         int endPageNum = (int) Math.ceil(currentPageNum / (double) PAGE_BTN_NUM) * PAGE_BTN_NUM;
         int startPageNum = endPageNum - PAGE_BTN_NUM + 1;
         endPageNum = Math.min(endPageNum, pageInfo.getTotalPages());
+        startPageNum = Math.min(startPageNum, pageInfo.getTotalPages());
+        currentPageNum = Math.min(currentPageNum, pageInfo.getTotalPages());
 
         Map<String, Object> response = new HashMap<>();
         response.put("pageInfo", pageInfo);
@@ -110,7 +120,7 @@ public class BoardController {
 
     // 게시글 신고
     @GetMapping("/report")
-    public ResponseEntity<List<ReportedBoard>> getReportedRepliesByBoardId() {
+    public ResponseEntity<List<ReportedBoard>> getReportedBoardByBoardId() {
         List<ReportedBoard> reportedBoardList = boardService.findAllReportedBoard();
         return ResponseEntity.ok(reportedBoardList);
     }

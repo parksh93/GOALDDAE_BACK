@@ -8,6 +8,7 @@ import com.goalddae.entity.CommunicationHeart;
 import com.goalddae.entity.ReportedBoard;
 import com.goalddae.repository.BoardJPARepository;
 import com.goalddae.repository.HeartJPARepository;
+import com.goalddae.repository.ReplyJPARepository;
 import com.goalddae.repository.ReportedBoardJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,19 +19,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class BoardServiceImpl implements BoardService{
 
     BoardJPARepository boardJPARepository;
+    ReplyJPARepository replyJPARepository;
     HeartJPARepository heartJPARepository;
     ReportedBoardJPARepository reportedBoardJPARepository;
 
     @Autowired
-    public BoardServiceImpl(BoardJPARepository boardJPARepository, HeartJPARepository heartJPARepository, ReportedBoardJPARepository reportedBoardJPARepository){
+    public BoardServiceImpl(BoardJPARepository boardJPARepository, ReplyJPARepository replyJPARepository, HeartJPARepository heartJPARepository, ReportedBoardJPARepository reportedBoardJPARepository){
         this.boardJPARepository = boardJPARepository;
+        this.replyJPARepository = replyJPARepository;
         this.heartJPARepository = heartJPARepository;
         this.reportedBoardJPARepository = reportedBoardJPARepository;
     }
@@ -39,7 +41,58 @@ public class BoardServiceImpl implements BoardService{
     public Page<BoardListDTO> findAllBoardListDTO(Integer page, Integer size) {
 
         Pageable pageable = PageRequest.of(getCalibratedPno(page), size, Sort.by("id").descending());
-        return boardJPARepository.findAllBoardListDTO(pageable);
+        return getBoardListWithCounts(boardJPARepository.findAllBoardListDTO(pageable));
+    }
+
+    @Override
+    public Page<BoardListDTO> findAllBoardListDTOByWriter(Integer page, Integer size, String name) {
+
+        Pageable pageable = PageRequest.of(getCalibratedPno(page), size, Sort.by("id").descending());
+        return getBoardListWithCounts(boardJPARepository.findAllBoardListDTOByWriter(name, pageable));
+    }
+
+    @Override
+    public Page<BoardListDTO> findAllBoardListDTOByTitle(Integer page, Integer size, String name) {
+
+        Pageable pageable = PageRequest.of(getCalibratedPno(page), size, Sort.by("id").descending());
+        return getBoardListWithCounts(boardJPARepository.findAllBoardListDTOByTitle(name, pageable));
+    }
+
+    public Page<BoardListDTO> getBoardListWithCounts(Page<BoardListDTO> pagedBoardList) {
+        List<Long> boardIds = new ArrayList<>();
+        for (BoardListDTO dto : pagedBoardList) {
+            boardIds.add(dto.getId());
+        }
+
+        List<Object[]> replyCounts = replyJPARepository.countRepliesByBoardIds(boardIds);
+        List<Object[]> heartCounts = heartJPARepository.countHeartsByBoardIds(boardIds);
+
+        Map<Long, Long> replyCountsMap = new HashMap<>();
+        for (Object[] arr : replyCounts) {
+            Long boardId = (Long) arr[0];
+            Long replyCount = (Long) arr[1];
+            replyCountsMap.put(boardId, replyCount);
+        }
+
+        Map<Long, Long> heartCountsMap = new HashMap<>();
+        for (Object[] arr : heartCounts) {
+            Long boardId = (Long) arr[0];
+            Long heartCount = (Long) arr[1];
+            heartCountsMap.put(boardId, heartCount);
+        }
+
+
+        for (BoardListDTO dto : pagedBoardList) {
+            Long boardId = dto.getId();
+            Long replyCount = replyCountsMap.getOrDefault(boardId, 0L);
+            Long heartCount = heartCountsMap.getOrDefault(boardId, 0L);
+
+            dto.setReplyCount(replyCount);
+            dto.setHeart(heartCount);
+
+        }
+
+        return pagedBoardList;
     }
 
     @Override
@@ -158,12 +211,9 @@ public class BoardServiceImpl implements BoardService{
 
 
     public int getCalibratedPno(Integer pno){
-        long count = boardJPARepository.count();
-        if (pno <= 0 || count == 0) {
+        if (pno <= 0) {
             return 0;
         }
-        int page = (int) Math.ceil(count / 10.0);
-        pno = pno > page ? page : pno;
         return pno - 1;
     }
 }
