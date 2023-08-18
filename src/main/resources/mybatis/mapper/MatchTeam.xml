@@ -1,0 +1,24 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goalddae.repository.MatchTeamRepository">
+    <update id="createMatchTeamTable">
+        CREATE TABLE ${matchTeam} (
+                                            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                            likes BIGINT NOT NULL default 0,
+                                            views BIGINT NOT NULL default 0,
+                                            gender VARCHAR(255) NOT NULL,
+                                            minimum BIGINT NOT NULL,
+                                            maximum BIGINT NOT NULL,
+                                            playerNumber BIGINT NOT NULL,
+                                            recruit_start DATETIME NOT NULL,
+                                            recruit_end DATETIME NOT NULL,
+                                            manager_id VARCHAR(255) NOT NULL,
+
+                                            team_id BIGINT NOT NULL,
+                                                FOREIGN KEY (team_id) REFERENCES team(id),
+                                            soccer_field_id BIGINT NOT NULL,
+                                               FOREIGN KEY (soccer_field_id) REFERENCES soccer_field(id),
+                                            field_reservation_id BIGINT NOT NULL,
+                                              FOREIGN KEY (field_reservation_id) REFERENCES field_reservation(id)
+        );
+    </update>
+</mapper>

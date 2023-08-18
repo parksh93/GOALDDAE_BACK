@@ -5,6 +5,4 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface FieldReservationRepository {
     void createFieldReservationTable(String fieldReservation);
-
-    void dropFieldReservationTable(String fieldReservation);
 }

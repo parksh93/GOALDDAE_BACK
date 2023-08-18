@@ -19,10 +19,10 @@ public class FieldReservationController {
         this.fieldReservationService = fieldReservationService;
     }
 
+    // 구장 예약 테이블 생성
     @PostMapping("/create-table")
     public ResponseEntity<String> createTable(@RequestParam("fieldReservation") String fieldReservation) {
         try {
-
             String decodedFieldReservation = URLDecoder.decode(fieldReservation, StandardCharsets.UTF_8);
             fieldReservationService.createFieldReservationTable(decodedFieldReservation);
             return new ResponseEntity<>("테이블 생성 완료: " + decodedFieldReservation, HttpStatus.OK);

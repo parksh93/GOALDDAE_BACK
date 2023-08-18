@@ -18,7 +18,6 @@ public class FieldReservationServiceImpl implements FieldReservationService {
     @Override
     @Transactional
     public void createFieldReservationTable(String fieldReservation) {
-        fieldReservationRepository.dropFieldReservationTable(fieldReservation);
         fieldReservationRepository.createFieldReservationTable(fieldReservation);
     }
 }
