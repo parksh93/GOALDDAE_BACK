@@ -89,10 +89,13 @@ public class User implements UserDetails {
                             // 일반 유저 : user / 매니저 : manager / 관리자 : admin
 
     @Builder
-    public User(String loginId, String email, String password, String userCode, String name, String nickname, String gender, String profileImgUrl,
+    public User(long id, String loginId, String email, String password, String userCode,
+                String name, String nickname, String gender, String profileImgUrl,
                 String phoneNumber, Date birth, int matchesCnt, String level,
                 boolean accountSuspersion, int noShowCnt, String preferredCity,
-                String preferredArea, int activityClass, String authority){
+                String preferredArea, int activityClass, String authority,
+                LocalDateTime profileUpdateDate ,LocalDateTime signupDate){
+        this.id = id;
         this.loginId = loginId;
         this.email = email;
         this.password = password;
@@ -111,6 +114,8 @@ public class User implements UserDetails {
         this.preferredArea = preferredArea;
         this.activityClass = activityClass;
         this.authority = authority;
+        this.signupDate = signupDate;
+        this.profileUpdateDate = profileUpdateDate;
     }
 
     @PrePersist
