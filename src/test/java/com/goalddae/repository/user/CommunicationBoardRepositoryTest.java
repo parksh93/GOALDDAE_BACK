@@ -25,7 +25,7 @@ public class CommunicationBoardRepositoryTest {
         long userId = 1;
 
         // when
-        List<CommunicationBoard> communicationBoardList = communicationBoardRepository.findPostById(userId);
+        List<CommunicationBoard> communicationBoardList = communicationBoardRepository.findByUserId(userId);
 
         // then
         assertEquals(0, communicationBoardList.size());

@@ -14,6 +14,4 @@ public interface UserJPARepository extends JpaRepository<User, Long> {
     Long countByLoginId(String loginId);
     Long countByEmail(String email);
     Long countByNickname(String nickname);
-    GetUserInfoDTO findUserById(long id);
-
 }
