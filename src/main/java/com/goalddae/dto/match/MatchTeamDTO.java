@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MatchTeamDTO {
     private long id;
+    private String teamId;
     private int likes;
     private int views;
     private String gender;
@@ -21,7 +22,6 @@ public class MatchTeamDTO {
     private LocalDateTime recruitStart;
     private LocalDateTime recruitEnd;
     private String managerId;
-    private Long soccerField;
-    private Long fieldReservation;
-    private Long userId;
+    private long soccerField;
+    private long fieldReservationId;
 }

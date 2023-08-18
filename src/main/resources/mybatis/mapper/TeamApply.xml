@@ -7,7 +7,7 @@
                                        team_accept_status BIGINT NOT NULL,
 
                                        team_id BIGINT NOT NULL,
-                                            FOREIGN KEY (team_id) REFERENCES team(id),
+                                            FOREIGN KEY (team_id) REFERENCES team(id)
         );
     </update>
 </mapper>
