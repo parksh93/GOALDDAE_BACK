@@ -7,9 +7,8 @@
                                              reservation_date DATETIME NOT NULL,
                                              reservation_team_Whether BIGINT NOT NULL,
                                              reservation_team_id VARCHAR(255) NULL,
-
                                              soccer_field_id BIGINT NOT NULL,
-                                                 FOREIGN KEY (soccer_field_id) REFERENCES soccer_field(id)
+                                             FOREIGN KEY (soccer_field_id) REFERENCES soccer_field(id)
         );
     </update>
 </mapper>

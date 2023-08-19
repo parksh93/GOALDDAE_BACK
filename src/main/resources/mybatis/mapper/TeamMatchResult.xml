@@ -7,9 +7,9 @@
                                             team_lose VARCHAR(255) NOT NULL,
                                             win_score BIGINT,
                                             lose_score BIGINT,
-                                            draw VARCHAR(255) NULL
---                                             team_match BIGINT NOT NULL,
---                                                FOREIGN KEY (team_match) REFERENCES team_match(id)
+                                            draw VARCHAR(255) NULL,
+                                            match_team_id BIGINT NOT NULL,
+                                               FOREIGN KEY (match_team_id) REFERENCES match_team(id)
         );
     </update>
 </mapper>

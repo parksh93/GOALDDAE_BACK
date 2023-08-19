@@ -14,9 +14,9 @@
                                             recruit_end DATETIME NOT NULL,
                                             manager_id VARCHAR(255) NOT NULL,
                                             soccer_field_id BIGINT NOT NULL,
---                                                FOREIGN KEY (soccer_field_id) REFERENCES soccer_field(1),
-                                            field_reservation_id BIGINT NOT NULL
---                                                 FOREIGN KEY (field_reservation_id) REFERENCES field_reservation(1)
+                                               FOREIGN KEY (soccer_field_id) REFERENCES soccer_field(id),
+                                            field_reservation_id BIGINT NOT NULL,
+                                                FOREIGN KEY (field_reservation_id) REFERENCES field_reservation(id)
         );
     </update>
 </mapper>
