@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -163,6 +164,17 @@ public class ReplyJPARepositoryTest {
         ReportedReply reportedReply = reportedReplyJPARepository.findById(id).orElse(null);
 
         assertNull(reportedReply);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("")
+    public void findTest(){
+        List<Long> boardIds = Arrays.asList(1L, 2L, 3L);
+
+        List<Object[]> result = replyJPARepository.countRepliesByBoardIds(boardIds);
+
+        System.out.println(Arrays.toString(result.get(1)));
     }
 
 

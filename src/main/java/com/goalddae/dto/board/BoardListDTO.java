@@ -19,4 +19,7 @@ public class BoardListDTO {
     private LocalDateTime updateDate;   // 수정일
     private String img1;
     private int boardSortation;    // 게시판 구분
+    private long count; // 조회수
+    private long heart; // 좋아요수
+    private long replyCount; // 댓글수
 }
