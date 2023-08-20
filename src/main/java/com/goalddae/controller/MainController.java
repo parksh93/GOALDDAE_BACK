@@ -1,7 +1,7 @@
 package com.goalddae.controller;
 
 import com.goalddae.entity.SoccerField;
-import com.goalddae.service.SoccerFieldService;
+import com.goalddae.service.SoccerFieldServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,9 +13,9 @@ import java.util.List;
 @RestController
 public class MainController {
 
-    private final SoccerFieldService soccerFieldService;
+    private final SoccerFieldServiceImpl soccerFieldService;
 
-    public MainController(SoccerFieldService soccerFieldService) {
+    public MainController(SoccerFieldServiceImpl soccerFieldService) {
         this.soccerFieldService = soccerFieldService;
     }
 

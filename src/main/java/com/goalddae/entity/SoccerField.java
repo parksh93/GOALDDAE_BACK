@@ -22,7 +22,7 @@ public class SoccerField {
     private String fieldName;   // 구장명
 
     @Column(nullable = false)
-    private boolean ToiletStatus;   // 화장실 여부
+    private boolean toiletStatus;   // 화장실 여부
 
     @Column(nullable = false)
     private boolean showerStatus;   //샤워실 여부
