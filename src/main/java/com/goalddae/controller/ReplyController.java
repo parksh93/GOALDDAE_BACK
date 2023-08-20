@@ -1,6 +1,7 @@
 package com.goalddae.controller;
 
 import com.goalddae.dto.board.ReplyListDTO;
+import com.goalddae.dto.board.ReplyUpdateDTO;
 import com.goalddae.entity.CommunicationReply;
 import com.goalddae.entity.ReportedReply;
 import com.goalddae.service.ReplyService;
@@ -48,14 +49,14 @@ public class ReplyController {
 
 
     @PostMapping("/save")
-    public ResponseEntity<String> saveReplry(@RequestBody CommunicationReply communicationReply) {
+    public ResponseEntity<String> saveReply(@RequestBody CommunicationReply communicationReply) {
         replyService.save(communicationReply);
         return ResponseEntity.ok("댓글이 저장되었습니다.");
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateBoard(@RequestBody CommunicationReply communicationReply) {
-        replyService.update(communicationReply);
+    public ResponseEntity<String> updateBoard(@RequestBody ReplyUpdateDTO replyUpdateDTO) {
+        replyService.update(replyUpdateDTO);
         return ResponseEntity.ok("댓글이 수정되었습니다.");
     }
 

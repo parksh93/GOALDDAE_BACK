@@ -1,6 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.board.ReplyListDTO;
+import com.goalddae.dto.board.ReplyUpdateDTO;
 import com.goalddae.entity.CommunicationReply;
 import com.goalddae.entity.ReportedReply;
 import com.goalddae.repository.ReplyJPARepository;
@@ -95,9 +96,9 @@ public class ReplyServiceImpl implements ReplyService{
 
     @Transactional
     @Override
-    public void update(CommunicationReply communicationReply) {
+    public void update(ReplyUpdateDTO replyUpdateDTO) {
 
-        CommunicationReply targetReply = replyJPARepository.findById(communicationReply.getId()).get();
+        CommunicationReply targetReply = replyJPARepository.findById(replyUpdateDTO.getId()).get();
 
         CommunicationReply updatedReply = CommunicationReply.builder()
                 .id(targetReply.getId())
@@ -105,7 +106,7 @@ public class ReplyServiceImpl implements ReplyService{
                 .parentId(targetReply.getParentId())
                 .userId(targetReply.getUserId())
                 .writer(targetReply.getWriter())
-                .content(communicationReply.getContent())
+                .content(replyUpdateDTO.getContent())
                 .replyWriteDate(targetReply.getReplyWriteDate())
                 .replyUpdateDate(LocalDateTime.now())
                 .status(targetReply.getStatus())
