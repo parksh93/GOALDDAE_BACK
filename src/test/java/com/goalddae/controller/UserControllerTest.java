@@ -1,9 +1,13 @@
 package com.goalddae.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.goalddae.dto.user.*;
+import com.goalddae.dto.user.CheckLoginIdDTO;
+import com.goalddae.dto.user.CheckNicknameDTO;
+import com.goalddae.dto.user.RequestFindLoginIdDTO;
+import com.goalddae.dto.user.LoginDTO;
 import com.goalddae.service.UserService;
-import com.goalddae.service.UserServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
