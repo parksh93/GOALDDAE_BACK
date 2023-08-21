@@ -3,9 +3,7 @@ package com.goalddae.controller;
 import com.goalddae.entity.SoccerField;
 import com.goalddae.service.SoccerFieldService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,6 +17,7 @@ public class MainController {
         this.soccerFieldService = soccerFieldService;
     }
 
+    // 구장 검색
     @GetMapping("/search/soccerField")
     public List<SoccerField> searchSoccerFields(
             @RequestParam(value = "searchTerm", required = false, defaultValue = "") String searchTerm) {
@@ -34,6 +33,18 @@ public class MainController {
             List<String> cityNames = soccerFieldService.searchCityNames(searchTerm);
             return ResponseEntity.ok(cityNames);
         } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    // 구장 등록
+    @PostMapping("/api/MainController/addSoccerField")
+    public ResponseEntity<SoccerField> addSoccerField(@RequestBody SoccerField soccerField) {
+        try {
+            SoccerField addedField = soccerFieldService.addSoccerField(soccerField);
+            return ResponseEntity.ok(addedField);
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).build();
         }

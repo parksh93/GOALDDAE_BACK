@@ -1,7 +1,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.goalddae.repository.FriendAddRepository">
     <update id="createFriendAddTable">
-        CREATE TABLE ${friendAdd} (
+        CREATE TABLE ${login_id} (
                                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                         to_user VARCHAR(255) NOT NULL,
                                         request_date DATETIME NOT NULL,

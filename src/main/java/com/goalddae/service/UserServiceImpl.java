@@ -21,12 +21,17 @@ public class UserServiceImpl implements UserService{
     private final UserJPARepository userJPARepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
+    private final FriendService friendService;
 
     @Autowired
-    public UserServiceImpl(UserJPARepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, TokenProvider tokenProvider){
+    public UserServiceImpl(UserJPARepository userRepository,
+                           BCryptPasswordEncoder bCryptPasswordEncoder,
+                           TokenProvider tokenProvider,
+                           FriendService friendService){
         this.userJPARepository = userRepository;
         this.bCryptPasswordEncoder =bCryptPasswordEncoder;
         this.tokenProvider = tokenProvider;
+        this.friendService = friendService;
     }
 
     @Override
@@ -48,6 +53,16 @@ public class UserServiceImpl implements UserService{
                 .build();
 
         userJPARepository.save(newUser);
+
+        // 로그인 아이디를 가져와 테이블 생성에 사용
+        String loginId = newUser.getLoginId();
+
+        // 동적 테이블 생성
+        friendService.createFriendAcceptTable("friend_accept_" + loginId);
+        friendService.createFriendAddTable("friend_add_" + loginId);
+        friendService.createFriendBlockTable("friend_block_" + loginId);
+        friendService.createFriendListTable("friend_list_" + loginId);
+
     }
 
     public static String createUserCode() {
