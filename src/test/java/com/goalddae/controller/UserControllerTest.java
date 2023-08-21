@@ -9,7 +9,9 @@ import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.service.UserServiceImpl;
 import com.goalddae.entity.User;
 import com.goalddae.repository.UserJPARepository;
+import com.goalddae.dto.user.*;
 import com.goalddae.service.UserService;
+import com.goalddae.service.UserServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,8 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -103,6 +107,7 @@ public class UserControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(false));
     }
+
     @Test
     @Transactional
     @DisplayName("유저정보 수정 테스트")
@@ -139,15 +144,15 @@ public class UserControllerTest {
     @DisplayName("내가 쓴 게시글 조회 테스트")
     public void getUserPostsTest() throws Exception {
         // given
-        long id = 1;
+        String userId = "뀨";
         List<CommunicationBoard> communicationBoardPosts = new ArrayList<>();
         List<UsedTransactionBoard> usedTransactionBoardPosts = new ArrayList<>();
 
         // when
-        when(userService.getUserCommunicationBoardPosts(id)).thenReturn(communicationBoardPosts);
-        when(userService.getUserUsedTransactionBoardPosts(id)).thenReturn(usedTransactionBoardPosts);
+        when(userService.getUserCommunicationBoardPosts(userId)).thenReturn(communicationBoardPosts);
+        when(userService.getUserUsedTransactionBoardPosts(userId)).thenReturn(usedTransactionBoardPosts);
 
-        ResultActions resultActions = mockMvc.perform(get("/posts/{userId}", id)
+        ResultActions resultActions = mockMvc.perform(get("/posts/{userId}", userId)
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -155,5 +160,48 @@ public class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.communicationBoardPosts").isArray())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.usedTransactionBoardPosts").isArray());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("로그인 아이디 찾기")
+    public void findLoginIdTest() throws Exception {
+        String email = "jsap50@naver.com";
+        String name = "박상현";
+        String url = "/user/findLoginId";
+
+        RequestFindLoginIdDTO findLoginIdDTO = RequestFindLoginIdDTO.builder()
+                .email(email)
+                .name(name)
+                .build();
+        final String requestbody = objectMapper.writeValueAsString(findLoginIdDTO);
+
+        ResultActions result = mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON).content(requestbody)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$").value("asd"));
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("비밀번호 찾기")
+    public void findPasswordTest() throws Exception{
+        String loginId = "asdas";
+        String email = "jsap50@naver.com";
+        String url = "/user/findPassword";
+
+        RequestFindPasswordDTO findPasswordDTO = RequestFindPasswordDTO.builder()
+                .loginId(loginId)
+                .email(email)
+                .build();
+
+        final String request = objectMapper.writeValueAsString(findPasswordDTO);
+
+        ResultActions result = mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON).content(request)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$[0]").value(true));
     }
 }

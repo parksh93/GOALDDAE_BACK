@@ -36,11 +36,12 @@ public class EmailControllerTest {
     @Test
     @Transactional
     @DisplayName("이메일 발송")
-    public void sendEmailTest() throws Exception{
+
+    public void sendEmailSignupTest() throws Exception{
         SendEmailDTO sendEmailDTO = SendEmailDTO.builder()
-                .email("asssd@naver.com")
+                .email("jsap50@naver.com")
                 .build();
-        String url = "/sendEmail";
+        String url = "/sendEmailSignup";
 
         final String requestBody = objectMapper.writeValueAsString(sendEmailDTO);
 

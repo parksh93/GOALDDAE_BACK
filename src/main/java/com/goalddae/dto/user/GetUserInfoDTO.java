@@ -15,6 +15,7 @@ import java.sql.Date;
 public class GetUserInfoDTO {
     private long id;
     private String loginId;
+    private String name;
     private String nickname;
     private String email;
     private String userCode;
@@ -33,6 +34,7 @@ public class GetUserInfoDTO {
     public GetUserInfoDTO(User user){
         this.id = user.getId();
         this.loginId = user.getLoginId();
+        this.name = user.getName();
         this.nickname = user.getNickname();
         this.email = user.getEmail();
         this.userCode = user.getUserCode();

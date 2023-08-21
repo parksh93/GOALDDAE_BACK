@@ -1,10 +1,14 @@
 package com.goalddae.entity;
 
 import jakarta.persistence.*;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import lombok.*;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +22,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Table(name="users")
 public class User implements UserDetails {
     @Id
@@ -42,7 +48,6 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String name;    // 사용자 이름
 
-    @Column(nullable = false, unique = true)
     private String nickname;    // 닉네임
 
     @Column(nullable = false)
@@ -95,12 +100,14 @@ public class User implements UserDetails {
                 String phoneNumber, Date birth, int matchesCnt, LocalDateTime signupDate, LocalDateTime profileUpdateDate, String level,
                 boolean accountSuspersion, int noShowCnt, String preferredCity,
                 String preferredArea, int activityClass, String authority){
+
         this.id = id;
         this.loginId = loginId;
         this.name = name;
         this.email = email;
         this.password = password;
         this.userCode = userCode;
+        this.name = name;
         this.nickname = nickname;
         this.gender = gender;
         this.profileImgUrl = profileImgUrl;
@@ -116,6 +123,8 @@ public class User implements UserDetails {
         this.preferredArea = preferredArea;
         this.activityClass = activityClass;
         this.authority = authority;
+        this.signupDate = signupDate;
+        this.profileUpdateDate = profileUpdateDate;
     }
 
     @PrePersist
@@ -127,11 +136,6 @@ public class User implements UserDetails {
         this.profileUpdateDate = LocalDateTime.now();
         this.accountSuspersion = false;
         this.noShowCnt = 0;
-    }
-
-    @PreUpdate
-    public void setUpdateTime() {
-        this.profileUpdateDate = LocalDateTime.now();
     }
 
     @Override
