@@ -82,6 +82,5 @@ public class ChangeUserInfoDTO {
                 .activityClass(activityClass)
                 .authority(authority)
                 .build();
-
     }
 }

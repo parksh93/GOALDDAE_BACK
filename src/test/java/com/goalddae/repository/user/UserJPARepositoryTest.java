@@ -71,7 +71,6 @@ public class UserJPARepositoryTest {
 
         assertEquals("asd", loginId);
     }
-
     @Test
     @Transactional
     @DisplayName("로그인 아이디와 이메일에 해당하는 정보의 갯수 가져오기")
