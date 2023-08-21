@@ -27,7 +27,10 @@ public class Team {
     private int averageAge; // 나이대
 
     @Column(nullable = false)
-    private int entryFree;  // 입단비
+    private boolean recruiting; // 모집중
+
+    @Column(nullable = false)
+    private int entryFee;  // 입단비
 
     @Column(nullable = false)
     private String entryGender; // 입단 가능 성별
