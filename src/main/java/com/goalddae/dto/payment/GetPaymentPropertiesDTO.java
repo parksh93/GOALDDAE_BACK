@@ -9,5 +9,4 @@ import lombok.*;
 @NoArgsConstructor
 public class GetPaymentPropertiesDTO {
     private String franchiseKey;
-    private String pg;
 }
