@@ -1,15 +1,15 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.match.MatchIndividualDTO;
 import com.goalddae.service.MatchService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -44,6 +44,32 @@ public class MatchController {
 
         } catch (Exception e) {
             return new ResponseEntity<>("테이블 생성 실패: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 개인매치 조회
+    @GetMapping("/match-individual/find")
+    public ResponseEntity<?> findIndividualMatches(
+            @RequestParam("matchIndividualTable") String matchIndividualTable,
+            @RequestParam("recruitStart") String recruitStartStr,
+            @RequestParam("recruitEnd") String recruitEndStr) {
+        try {
+            String decodedMatchIndividualTable = URLDecoder.decode(matchIndividualTable, StandardCharsets.UTF_8);
+
+            // URL 디코딩 추가
+            String decodedRecruitStartStr = URLDecoder.decode(recruitStartStr, StandardCharsets.UTF_8);
+            String decodedRecruitEndStr = URLDecoder.decode(recruitEndStr, StandardCharsets.UTF_8);
+
+            LocalDateTime recruitStart = LocalDateTime.parse(decodedRecruitStartStr);
+            LocalDateTime recruitEnd = LocalDateTime.parse(decodedRecruitEndStr);
+
+            List<MatchIndividualDTO> individualMatches = matchService.findIndividualMatches(decodedMatchIndividualTable, recruitStart, recruitEnd);
+
+            return new ResponseEntity<>(individualMatches, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("개인매치 조회 실패: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
