@@ -37,6 +37,7 @@ dependencies {
 	implementation 'javax.xml.bind:jaxb-api:2.3.1' // XML문서와 Java간 매핑 자동화
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	testImplementation 'org.testcontainers:mysql' // 테스트 코드
 }
 
 tasks.named('test') {

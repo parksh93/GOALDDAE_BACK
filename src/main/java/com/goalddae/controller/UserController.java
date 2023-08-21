@@ -7,16 +7,22 @@ import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.entity.User;
 import com.goalddae.exception.NotFoundMatchException;
 import com.goalddae.exception.NotFoundPostException;
+import com.goalddae.dto.user.*;
+import com.goalddae.entity.User;
 import com.goalddae.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 @RestController
 @RequestMapping("/user")
@@ -82,12 +88,15 @@ public class UserController {
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseEntity<String> updateUserInfo(@RequestBody GetUserInfoDTO getUserInfoDTO) {
+
+        System.out.println(getUserInfoDTO.toString());
+
         userService.update(getUserInfoDTO);
         return ResponseEntity.ok("수정 되었습니다.");
     }
 
     @RequestMapping(value = "/posts/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<?> viewUserPosts(@PathVariable long userId) {
+    public ResponseEntity<?> viewUserPosts(@PathVariable String userId) {
 
         List<CommunicationBoard> communicationBoardsList = userService.getUserCommunicationBoardPosts(userId);
         List<UsedTransactionBoard> usedTransactionBoardList = userService.getUserUsedTransactionBoardPosts(userId);
@@ -99,18 +108,38 @@ public class UserController {
         return ResponseEntity.ok(combinedList);
     }
 
-//    미리 매치 리스트 조회 기능 만들어 놓음 -유정원
-//    @GetMapping("/match/{userId}")
-//    public ResponseEntity<List<Match>> getMatchById(@PathVariable long userId) {
-//
-//        try {
-//            List<Match> matchList = userMatchService.findMatchById(userId);
-//            return ResponseEntity.ok(matchList);
-//
-//        } catch (NotFoundMatchException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//        }
-//
-//    }
+    @RequestMapping(value = "/findLoginId", method = RequestMethod.POST)
+    public ResponseEntity<ResponseFindLoginIdDTO> findLoginId(@RequestBody RequestFindLoginIdDTO requestFindLoginIdDTO){
+        ResponseFindLoginIdDTO findLoginIdDTO = userService.getLoginIdByEmailAndName(requestFindLoginIdDTO);
+      
+        return ResponseEntity.ok(findLoginIdDTO);
+    }
 
+    @RequestMapping(value = "/findPassword", method = RequestMethod.POST)
+    public List<String> findPassword(@RequestBody RequestFindPasswordDTO findPasswordDTO, HttpServletResponse response){
+        String token = userService.checkLoginIdAndEmail(findPasswordDTO);
+        if(!token.equals("")) {
+            Cookie cookie = new Cookie("loginIdToken", token);
+            cookie.setPath("/");
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
+
+            response.addCookie(cookie);
+        }
+        return List.of(token);
+    }
+
+    @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
+    public List<Boolean> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO,@CookieValue(required = false) String loginIdToken, HttpServletResponse response) {
+       changePasswordDTO.setLoginIdToken(loginIdToken);
+       boolean changeCheck = userService.changePassword(changePasswordDTO);
+        Cookie cookie = new Cookie("loginIdToken", null);
+
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+
+        response.addCookie(cookie);
+
+        return List.of(changeCheck);
+    }
 }

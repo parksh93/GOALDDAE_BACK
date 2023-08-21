@@ -13,6 +13,11 @@ import com.goalddae.repository.MatchRepository;
 import com.goalddae.repository.UsedTransactionBoardRepository;
 import com.goalddae.repository.UserJPARepository;
 
+import com.goalddae.entity.User;
+import com.goalddae.exception.NotFoundUserException;
+import com.goalddae.repository.UserJPARepository;
+
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,6 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.List;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
@@ -42,6 +50,7 @@ public class UserServiceImpl implements UserService{
         this.usedTransactionBoardRepository = usedTransactionBoardRepository;
     }
 
+    @Override
     public void save(User user){
         User newUser = User.builder()
                 .loginId(user.getLoginId())
@@ -50,7 +59,6 @@ public class UserServiceImpl implements UserService{
                 .name(user.getName())
                 .nickname(user.getNickname())
                 .gender(user.getGender())
-                .profileImgUrl(user.getProfileImgUrl())
                 .phoneNumber(user.getPhoneNumber())
                 .birth(user.getBirth())
                 .preferredCity(user.getPreferredCity())
@@ -58,6 +66,7 @@ public class UserServiceImpl implements UserService{
                 .activityClass(user.getActivityClass())
                 .authority(user.getAuthority())
                 .userCode(createUserCode())
+                .profileImgUrl(user.getProfileImgUrl())
                 .build();
 
         userJPARepository.save(newUser);
@@ -85,12 +94,12 @@ public class UserServiceImpl implements UserService{
 
         return code.toString();
     }
-
+    @Override
     public User getByCredentials(String loginId){
         return userJPARepository.findByLoginId(loginId);
     }
 
-    // ****회원가입 구현 후 인코딩 코드 추가 예정
+    @Override
     public String generateTokenFromLogin(LoginDTO loginDTO){
         try {
             User userInfo = getByCredentials(loginDTO.getLoginId());
@@ -107,6 +116,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
     public GetUserInfoDTO getUserInfo(String token){
         if(tokenProvider.validToken(token)){
            User user = userJPARepository.findById(tokenProvider.getUserId(token)).get();
@@ -118,8 +128,9 @@ public class UserServiceImpl implements UserService{
         return null;
     }
 
+    @Override
     public boolean checkLoginId(CheckLoginIdDTO checkLoginIdDTO){
-        long checkLoginIdCnt = userJPARepository.countByLoginId(checkLoginIdDTO.getLoginId());
+        int checkLoginIdCnt = userJPARepository.countByLoginId(checkLoginIdDTO.getLoginId());
 
         if(checkLoginIdCnt == 0){
             return true;
@@ -128,8 +139,9 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
     public boolean checkEmail(SendEmailDTO checkEmailDTO){
-        long checkEmailCnt = userJPARepository.countByEmail(checkEmailDTO.getEmail());
+        int checkEmailCnt = userJPARepository.countByEmail(checkEmailDTO.getEmail());
 
         if(checkEmailCnt == 0){
             return true;
@@ -138,13 +150,39 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Override
     public boolean checkNickname(CheckNicknameDTO checkNicknameDTO){
-        long checkNicknameCnt = userJPARepository.countByNickname(checkNicknameDTO.getNickname());
+        int checkNicknameCnt = userJPARepository.countByNickname(checkNicknameDTO.getNickname());
 
         if(checkNicknameCnt == 0){
             return true;
         }else{
             return false;
+        }
+    }
+
+    public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO){
+        String loginId = userJPARepository.findLoginIdByEmailAndName(requestFindLoginIdDTO.getEmail(), requestFindLoginIdDTO.getName());
+
+        String star = "**";
+
+        if(loginId != null){
+            loginId = loginId.substring(0, loginId.length()-2) + star;
+        }
+
+        ResponseFindLoginIdDTO findLoginIdDTO = ResponseFindLoginIdDTO.builder()
+                .loginId(loginId).build();
+
+        return findLoginIdDTO;
+    }
+
+    @Override
+    public String checkLoginIdAndEmail(RequestFindPasswordDTO findPasswordDTO) {
+        int userCnt = userJPARepository.countByLoginIdAndEmail(findPasswordDTO.getLoginId(), findPasswordDTO.getEmail());
+        if(userCnt == 1){
+            return tokenProvider.generateLoinIdToken(findPasswordDTO.getLoginId(), Duration.ofMinutes(5));
+        }else{
+            return "";
         }
     }
 
@@ -169,18 +207,30 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId) {
+    public List<CommunicationBoard> getUserCommunicationBoardPosts(String userId) {
         return communicationBoardRepository.findByUserId(userId);
     }
 
     @Override
-    public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(long userId) {
+    public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(String userId) {
         return usedTransactionBoardRepository.findByUserId(userId);
     }
 
-    // 매치테이블 생성되면 추가해야할 코드 -유정원
-//    @Override
-//    public List<Match> getUserMatchList(long userId) {
-//        return MatchRepository.findAllByuserId(userId);
-//    }
+
+    public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
+        try {
+            String loginId = tokenProvider.getLoginId(changePasswordDTO.getLoginIdToken());
+            User user = userJPARepository.findByLoginId(loginId);
+
+           ChangeUserInfoDTO userInfoDTO = new ChangeUserInfoDTO(user);
+           userInfoDTO.setPassword(bCryptPasswordEncoder.encode(changePasswordDTO.getPassword()));
+           userInfoDTO.setProfileUpdateDate(LocalDateTime.now());
+           User updateUser = userInfoDTO.toEntity();
+
+            userJPARepository.save(updateUser);
+        }catch (Exception e){
+            return false;
+        }
+        return true;
+    }
 }

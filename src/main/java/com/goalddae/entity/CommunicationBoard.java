@@ -1,10 +1,7 @@
 package com.goalddae.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class CommunicationBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,8 +59,5 @@ public class CommunicationBoard {
         this.updateDate = LocalDateTime.now();
     }
 
-    @PreUpdate
-    public void setUpdateTime() {
-        this.updateDate =LocalDateTime.now();
-    }
+
 }
