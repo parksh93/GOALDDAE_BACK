@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 public class PaymentProperties {
     @Value("${franchise_key}")
     private String franchiseKey;
-    @Value("${pg}")
-    private String pg;
     @Value("${rest_api_key}")
     private String restApiKey;
     @Value("${rest_api_secret}")
