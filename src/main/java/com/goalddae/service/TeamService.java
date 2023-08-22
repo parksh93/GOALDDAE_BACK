@@ -17,7 +17,7 @@ public interface TeamService {
 
     void deleteTeamById(Long id);
 
-    List<TeamListDTO> findByTeamName(String searchTerm);
+    List<Team> findByTeamName(String searchTerm);
 
     List<TeamListDTO> findByArea(String area);
 

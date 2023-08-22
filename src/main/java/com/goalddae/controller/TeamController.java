@@ -62,7 +62,7 @@ public class TeamController {
         return ResponseEntity.ok("정상적으로 삭제되었습니다.");
     }
 
-    @GetMapping(value="/list/teamName")
+    @GetMapping(value="/search/teamName")
     public ResponseEntity<List<Team>> searchTeamName(@RequestParam(value = "searchTerm", required = false, defaultValue = "") String searchTerm ) {
         List<Team> searchResult = teamService.findByTeamName(searchTerm);
         return ResponseEntity.ok(searchResult);
@@ -78,7 +78,7 @@ public class TeamController {
     }
 
     @RequestMapping(value = "/list/recruiting", method = RequestMethod.GET)
-    public List<Team> filterRecruiting(@RequestParam boolean recruiting){
+    public List<Team> filterRecruiting(@RequestParam(required = false) boolean recruiting){
 
         return teamService.findByRecruiting(true);
     }
