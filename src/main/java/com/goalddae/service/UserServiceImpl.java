@@ -7,8 +7,6 @@ import com.goalddae.entity.User;
 import com.goalddae.exception.NotFoundUserException;
 import com.goalddae.repository.UserJPARepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

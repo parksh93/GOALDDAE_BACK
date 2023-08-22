@@ -2,7 +2,7 @@ package com.goalddae.service;
 
 import com.goalddae.repository.MatchIndividualRepository;
 import com.goalddae.repository.MatchTeamRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.goalddae.util.MyBatisUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,12 +20,14 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public void createMatchTeamTable(String matchTeam) {
-        matchTeamRepository.createMatchTeamTable(matchTeam);
+        String safeTable = MyBatisUtil.safeTable(matchTeam);
+        matchTeamRepository.createMatchTeamTable(safeTable);
     }
 
     @Override
     public void createMatchIndividualTable(String matchIndividual) {
-        matchIndividualRepository.createMatchIndividualTable(matchIndividual);
+        String safeTable = MyBatisUtil.safeTable(matchIndividual);
+        matchIndividualRepository.createMatchIndividualTable(safeTable);
     }
 
     // 외래키 추가 코드

@@ -5,7 +5,7 @@ import com.goalddae.repository.TeamApplyRepository;
 import com.goalddae.repository.TeamJPARepository;
 import com.goalddae.repository.TeamMatchResultRepository;
 import com.goalddae.repository.TeamMemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.goalddae.util.MyBatisUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,7 +19,8 @@ public class TeamServiceImpl implements TeamService {
     public TeamServiceImpl(TeamJPARepository teamJPARepository,
                            TeamMemberRepository teamMemberRepository,
                            TeamApplyRepository teamApplyRepository,
-                           TeamMatchResultRepository teamMatchResultRepository) {
+                           TeamMatchResultRepository teamMatchResultRepository,
+                           TeamMatchResultRepository matchResultRepository) {
         this.teamJPARepository = teamJPARepository;
         this.teamMemberRepository = teamMemberRepository;
         this.teamApplyRepository = teamApplyRepository;
@@ -28,17 +29,20 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public void createTeamMemberTable(String teamMember) {
-        teamMemberRepository.createTeamMemberTable(teamMember);
+        String safeTable = MyBatisUtil.safeTable(teamMember);
+        teamMemberRepository.createTeamMemberTable(safeTable);
     }
 
     @Override
     public void createTeamApplyTable(String teamApply) {
-        teamApplyRepository.createTeamApplyTable(teamApply);
+        String safeTable = MyBatisUtil.safeTable(teamApply);
+        teamApplyRepository.createTeamApplyTable(safeTable);
     }
 
     @Override
     public void createTeamMatchResult(String teamMatchResult) {
-        teamMatchResultRepository.createTeamMatchResultTable(teamMatchResult);
+        String safeTable = MyBatisUtil.safeTable(teamMatchResult);
+        teamMatchResultRepository.createTeamMatchResultTable(safeTable);
     }
 
     @Override
