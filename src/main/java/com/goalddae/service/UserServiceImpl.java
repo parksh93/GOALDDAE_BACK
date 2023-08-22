@@ -23,7 +23,6 @@ public class UserServiceImpl implements UserService{
     private final TokenProvider tokenProvider;
     private final FriendService friendService;
 
-    @Autowired
     public UserServiceImpl(UserJPARepository userRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
                            TokenProvider tokenProvider,
@@ -58,11 +57,10 @@ public class UserServiceImpl implements UserService{
         String loginId = newUser.getLoginId();
 
         // 동적 테이블 생성
-        friendService.createFriendAcceptTable("friend_accept_" + loginId);
-        friendService.createFriendAddTable("friend_add_" + loginId);
-        friendService.createFriendBlockTable("friend_block_" + loginId);
-        friendService.createFriendListTable("friend_list_" + loginId);
-
+        friendService.createFriendAcceptTable(loginId);
+        friendService.createFriendAddTable(loginId);
+        friendService.createFriendBlockTable(loginId);
+        friendService.createFriendListTable(loginId);
     }
 
     public static String createUserCode() {

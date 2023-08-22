@@ -1,7 +1,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.goalddae.repository.MatchTeamRepository">
     <update id="createMatchTeamTable">
-        CREATE TABLE ${matchTeam} (
+        CREATE TABLE match_team_${fieldName} (
                                             id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                             team_id VARCHAR(255) NOT NULL,
                                             likes BIGINT default 0 NOT NULL,
@@ -15,8 +15,13 @@
                                             manager_id VARCHAR(255) NOT NULL,
                                             soccer_field_id BIGINT NOT NULL,
                                                FOREIGN KEY (soccer_field_id) REFERENCES soccer_field(id),
-                                            field_reservation_id BIGINT NOT NULL,
-                                                FOREIGN KEY (field_reservation_id) REFERENCES field_reservation(id)
+                                            field_reservation_id BIGINT NOT NULL
         );
+    </update>
+
+    <!-- 외래키 제약 추가 쿼리 작성 -->
+    <update id="addForeignKeyConstraintToMatchTeam" parameterType="java.lang.String">
+        ALTER TABLE match_team_${fieldName}
+            ADD FOREIGN KEY (field_reservation_id) REFERENCES field_reservation_${fieldName}(id)
     </update>
 </mapper>

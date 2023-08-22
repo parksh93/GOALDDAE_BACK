@@ -1,63 +1,29 @@
 package com.goalddae.controller;
 
+import com.goalddae.entity.Team;
 import com.goalddae.service.TeamService;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/team")
 public class TeamController {
 
-    private final TeamService teamService;
+    private TeamService teamService;
 
     public TeamController(TeamService teamService) {
         this.teamService = teamService;
     }
 
-    // 팀멤버 테이블 생성
-    @PostMapping("/team-member/create-table")
-    public ResponseEntity<String> teamMemberCreateTable(@RequestParam("teamMember") String teamMember) {
-        try {
-            String decodedTeamMember = URLDecoder.decode(teamMember, StandardCharsets.UTF_8);
-            teamService.createTeamMemberTable(decodedTeamMember);
-            return new ResponseEntity<>("테이블 생성 완료: " + decodedTeamMember, HttpStatus.OK);
-
-        } catch (Exception e) {
-            return new ResponseEntity<>("테이블 생성 실패: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
-    // 팀가입신청 테이블 생성
-    @PostMapping("/team-apply/create-table")
-    public ResponseEntity<String> teamApplyCreateTable(@RequestParam("teamApply") String teamApply) {
-        try {
-            String decodedTeamApply = URLDecoder.decode(teamApply, StandardCharsets.UTF_8);
-            teamService.createTeamApplyTable(decodedTeamApply);
-            return new ResponseEntity<>("테이블 생성 완료: " + decodedTeamApply, HttpStatus.OK);
-
-        } catch (Exception e) {
-            return new ResponseEntity<>("테이블 생성 실패: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    // 팀경기결과 테이블 생성
-    @PostMapping("/team-match-result/create-table")
-    public ResponseEntity<String> teamMatchResultCreateTable(@RequestParam("teamMatchResult") String teamMatchResult) {
-        try {
-            String decodedTeamMatchResult = URLDecoder.decode(teamMatchResult, StandardCharsets.UTF_8);
-            teamService.createTeamMatchResult(decodedTeamMatchResult);
-            return new ResponseEntity<>("테이블 생성 완료: " + decodedTeamMatchResult, HttpStatus.OK);
-
-        } catch (Exception e) {
-            return new ResponseEntity<>("테이블 생성 실패: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    // 팀 등록
+    @PostMapping(value = "/save")
+    public ResponseEntity<String> teamSave(@RequestBody Team team){
+        teamService.save(team);
+        return ResponseEntity
+                .ok("팀 생성이 완료되었습니다.");
     }
 }

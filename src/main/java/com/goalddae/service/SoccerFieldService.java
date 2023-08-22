@@ -8,21 +8,23 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goalddae.entity.SoccerField;
 import com.goalddae.repository.SoccerFieldRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SoccerFieldService {
 
     private final SoccerFieldRepository soccerFieldRepository;
-    private final TeamService teamService;
     private final FieldReservationService fieldReservationService;
+
+    private final MatchService matchService;
 
     public SoccerFieldService(SoccerFieldRepository soccerFieldRepository,
                               TeamService teamService,
-                              FieldReservationService fieldReservationService) {
+                              FieldReservationService fieldReservationService, MatchService matchService) {
         this.soccerFieldRepository = soccerFieldRepository;
-        this.teamService = teamService;
         this.fieldReservationService = fieldReservationService;
+        this.matchService = matchService;
     }
 
     // 축구장 조회
@@ -50,15 +52,18 @@ public class SoccerFieldService {
         return matchedCityNames;
     }
 
-    // 구장 테이블 추가 시 멤버, 수락, 매치결과 동적테이블 같이 생성되게끔
+    // 구장 테이블 추가 시 개인매치, 팀매치, 구장예약 동적테이블 같이 생성되게끔
     public SoccerField addSoccerField(SoccerField soccerField) {
         SoccerField newSoccerField = soccerFieldRepository.save(soccerField);
         String fieldName = newSoccerField.getFieldName();
 
-        fieldReservationService.createFieldReservationTable("field_reservation_" + fieldName);
-        teamService.createTeamMemberTable("team_member_" + fieldName);
-        teamService.createTeamApplyTable("team_apply_" + fieldName);
-        teamService.createTeamMatchResult("team_match_result_" + fieldName);
+        fieldReservationService.createFieldReservationTable(fieldName);
+        matchService.createMatchIndividualTable(fieldName);
+        matchService.createMatchTeamTable(fieldName);
+
+        // 외래 키 제약 추가
+        matchService.addForeignKeyConstraintToMatchIndividual(fieldName);
+        matchService.addForeignKeyConstraintToMatchTeam(fieldName);
 
         return newSoccerField;
     }

@@ -39,7 +39,7 @@ public class MainController {
     }
 
     // 구장 등록
-    @PostMapping("/api/MainController/addSoccerField")
+    @PostMapping("/addSoccerField")
     public ResponseEntity<SoccerField> addSoccerField(@RequestBody SoccerField soccerField) {
         try {
             SoccerField addedField = soccerFieldService.addSoccerField(soccerField);
