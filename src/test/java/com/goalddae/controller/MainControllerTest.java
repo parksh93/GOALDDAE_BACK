@@ -1,7 +1,7 @@
 package com.goalddae.controller;
 
 import com.goalddae.entity.SoccerField;
-import com.goalddae.service.SoccerFieldService;
+import com.goalddae.service.SoccerFieldServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +29,7 @@ public class MainControllerTest {
     private MockMvc mockMvc;
 
     @Mock
-    private SoccerFieldService soccerFieldService;
+    private SoccerFieldServiceImpl soccerFieldService;
 
     @Test
     @Transactional
