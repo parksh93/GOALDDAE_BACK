@@ -1,15 +1,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.goalddae.repository.TeamMatchResultRepository">
     <update id="createTeamMatchResultTable">
-        CREATE TABLE team_match_Result${teamName} (
+        CREATE TABLE team_match_result_${teamName} (
                                             id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                             team_win VARCHAR(255) NOT NULL,
                                             team_lose VARCHAR(255) NOT NULL,
                                             win_score BIGINT,
                                             lose_score BIGINT,
                                             draw VARCHAR(255) NULL,
-                                            match_team_id BIGINT NOT NULL,
-                                               FOREIGN KEY (match_team_id) REFERENCES match_team(id)
+                                            team_id BIGINT NOT NULL,
+                                            FOREIGN KEY (team_id) REFERENCES team(id)
         );
     </update>
 </mapper>

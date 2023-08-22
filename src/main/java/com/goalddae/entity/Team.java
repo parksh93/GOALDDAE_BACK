@@ -47,6 +47,9 @@ public class Team {
     @Column(nullable = false)
     private String preferredTime;   // 선호 시간
 
+    @Column(nullable = false)
+    private int recruiting; // 모집중 유무
+
     @PrePersist
     public void setInformation() {
         this.teamCreate = LocalDateTime.now();

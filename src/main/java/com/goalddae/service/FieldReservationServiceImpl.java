@@ -1,7 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.repository.FieldReservationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.goalddae.util.MyBatisUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +17,7 @@ public class FieldReservationServiceImpl implements FieldReservationService {
     @Override
     @Transactional
     public void createFieldReservationTable(String fieldReservation) {
-        fieldReservationRepository.createFieldReservationTable(fieldReservation);
+        String safeTable = MyBatisUtil.safeTable(fieldReservation);
+        fieldReservationRepository.createFieldReservationTable(safeTable);
     }
 }

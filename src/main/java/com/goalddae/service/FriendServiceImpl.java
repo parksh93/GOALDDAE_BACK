@@ -4,7 +4,7 @@ import com.goalddae.repository.FriendAcceptRepository;
 import com.goalddae.repository.FriendAddRepository;
 import com.goalddae.repository.FriendBlockRepository;
 import com.goalddae.repository.FriendListRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.goalddae.util.MyBatisUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,12 +41,14 @@ public class FriendServiceImpl implements FriendService{
     @Override
     @Transactional
     public void createFriendAcceptTable(String friendAccept) {
-        friendAcceptRepository.createFriendAcceptTable(friendAccept);
+        String safeTable = MyBatisUtil.safeTable(friendAccept);
+        friendAcceptRepository.createFriendAcceptTable(safeTable);
     }
 
     @Override
     @Transactional
     public void createFriendBlockTable(String friendBlock) {
-        friendBlockRepository.createFriendBlockTable(friendBlock);
+        String safeTable = MyBatisUtil.safeTable(friendBlock);
+        friendBlockRepository.createFriendBlockTable(safeTable);
     }
 }

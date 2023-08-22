@@ -1,26 +1,31 @@
 package com.goalddae.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goalddae.entity.SoccerField;
+import com.goalddae.repository.SoccerFieldRepository;
 import com.goalddae.service.SoccerFieldService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import java.util.Arrays;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class MainControllerTest {
@@ -30,6 +35,9 @@ public class MainControllerTest {
 
     @Mock
     private SoccerFieldService soccerFieldService;
+
+    @Autowired
+    private SoccerFieldRepository soccerFieldRepository;
 
     @Test
     @Transactional
@@ -45,11 +53,36 @@ public class MainControllerTest {
         when(soccerFieldService.searchSoccerFields(any(String.class)))
                 .thenReturn(Arrays.asList(sampleField));
 
-        // /search/soccerField 경로로 GET 요청을 수행하고, 지역과 축구장 이름을 파라미터로 전달
         mockMvc.perform(get("/search/soccerField")
                         .param("region", "성남")
                         .param("fieldName", "모란 풋살장"))
                 .andExpect(status().isOk())
                 .andExpect(result -> print());
     }
+
+    @Test
+    @Transactional
+    @DisplayName("축구장 등록 테스트")
+    public void addSoccerFieldTest() throws Exception {
+        SoccerField soccerField = SoccerField.builder()
+                .region("성남")
+                .fieldName("모란 풋살장")
+                .build();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String soccerFieldJson = objectMapper.writeValueAsString(soccerField);
+
+        mockMvc.perform(post("/api/soccer-fields")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(soccerFieldJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("region").value("성남"))
+                .andExpect(jsonPath("fieldName").value("모란 풋살장"));
+
+        List<SoccerField> soccerFieldList = soccerFieldRepository.findAll();
+        assertThat(soccerFieldList).hasSize(1);
+        assertThat(soccerFieldList.get(0).getRegion()).isEqualTo("성남");
+        assertThat(soccerFieldList.get(0).getFieldName()).isEqualTo("모란 풋살장");
+    }
+
 }

@@ -8,7 +8,6 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goalddae.entity.SoccerField;
 import com.goalddae.repository.SoccerFieldRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
