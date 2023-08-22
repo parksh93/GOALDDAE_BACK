@@ -66,7 +66,7 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public List findByTeamName(String searchTerm) {
+    public List<Team> findByTeamName(String searchTerm) {
         return teamJPARepository.findByTeamName(searchTerm);
     }
 
