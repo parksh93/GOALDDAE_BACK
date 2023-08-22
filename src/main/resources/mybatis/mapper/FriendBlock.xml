@@ -1,13 +1,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.goalddae.repository.FriendBlockRepository">
-    <update id="createFriendBlockTable">
-        CREATE TABLE ${login_id} (
-                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                        block_user_id VARCHAR(255) NOT NULL,
-                                        block_date DATETIME NOT NULL,
+<update id="createFriendBlockTable">
+    CREATE TABLE friend_block_${login_id} (
+                                               id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                               block_user_id VARCHAR(255) NOT NULL,
+                                               block_date DATETIME NOT NULL,
 
-                                        users_id BIGINT NOT NULL,
-                                            FOREIGN KEY (users_id) REFERENCES users(id)
-        );
-    </update>
+                                               users_id BIGINT NOT NULL,
+                                               FOREIGN KEY (users_id) REFERENCES users(id)
+    );
+</update>
 </mapper>

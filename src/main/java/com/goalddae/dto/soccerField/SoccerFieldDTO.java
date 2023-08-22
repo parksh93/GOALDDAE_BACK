@@ -20,7 +20,7 @@ public class SoccerFieldDTO {
     private String fieldImg2;
     private String fieldImg3;
     private int reservationFree;
-    private String inOutStatus;
-    private String grassStatus;
+    private String inOutWhether;
+    private String grassWhether;
     private String region;
 }

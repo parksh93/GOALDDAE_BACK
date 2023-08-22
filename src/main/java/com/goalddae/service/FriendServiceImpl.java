@@ -16,7 +16,6 @@ public class FriendServiceImpl implements FriendService{
     private final FriendAcceptRepository friendAcceptRepository;
     private final FriendBlockRepository friendBlockRepository;
 
-    @Autowired
     public FriendServiceImpl(FriendListRepository friendListRepository ,
                              FriendAddRepository friendAddRepository,
                              FriendAcceptRepository friendAcceptRepository,

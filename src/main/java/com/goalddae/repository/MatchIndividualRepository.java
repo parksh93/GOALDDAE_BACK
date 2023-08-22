@@ -11,9 +11,5 @@ import java.util.List;
 @Mapper
 public interface MatchIndividualRepository {
     void createMatchIndividualTable(String matchIndividual);
-    List<MatchIndividualDTO> findIndividualMatches(@Param("matchIndividualTable") String matchIndividualTable,
-                                                   @Param("recruitStart") LocalDateTime recruitStart,
-                                                   @Param("recruitEnd") LocalDateTime recruitEnd);
-
-
+    void addForeignKeyConstraintToMatchIndividual(String fieldName);
 }

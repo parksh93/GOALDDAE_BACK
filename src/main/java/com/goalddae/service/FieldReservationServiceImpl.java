@@ -10,7 +10,6 @@ public class FieldReservationServiceImpl implements FieldReservationService {
 
     private final FieldReservationRepository fieldReservationRepository;
 
-    @Autowired
     public FieldReservationServiceImpl(FieldReservationRepository fieldReservationRepository) {
         this.fieldReservationRepository = fieldReservationRepository;
     }
