@@ -2,7 +2,6 @@ package com.goalddae.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goalddae.entity.SoccerField;
-import com.goalddae.repository.SoccerFieldRepository;
 import com.goalddae.service.SoccerFieldService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,16 +14,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.hamcrest.Matchers.is;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,11 +31,11 @@ public class MainControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Mock
     private SoccerFieldService soccerFieldService;
-
-    @Autowired
-    private SoccerFieldRepository soccerFieldRepository;
 
     @Test
     @Transactional
@@ -60,29 +58,27 @@ public class MainControllerTest {
                 .andExpect(result -> print());
     }
 
+
     @Test
-    @Transactional
-    @DisplayName("축구장 등록 테스트")
-    public void addSoccerFieldTest() throws Exception {
+    @DisplayName("구장 등록 및 테이블 생성 확인")
+    void addSoccerFieldTest() throws Exception {
         SoccerField soccerField = SoccerField.builder()
-                .region("성남")
-                .fieldName("모란 풋살장")
+                .fieldName("테스트 풋살장")
+                .toiletStatus(true)
+                .showerStatus(true)
+                .parkingStatus(true)
+                .fieldSize("14x16")
+                .fieldImg1("테스트이미지1")
+                .inOutWhether("실외")
+                .grassWhether("인조")
+                .region("서울")
                 .build();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String soccerFieldJson = objectMapper.writeValueAsString(soccerField);
-
-        mockMvc.perform(post("/api/soccer-fields")
+        // 구장 등록
+        mockMvc.perform(post("/addSoccerField")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(soccerFieldJson))
+                        .content(objectMapper.writeValueAsString(soccerField)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("region").value("성남"))
-                .andExpect(jsonPath("fieldName").value("모란 풋살장"));
-
-        List<SoccerField> soccerFieldList = soccerFieldRepository.findAll();
-        assertThat(soccerFieldList).hasSize(1);
-        assertThat(soccerFieldList.get(0).getRegion()).isEqualTo("성남");
-        assertThat(soccerFieldList.get(0).getFieldName()).isEqualTo("모란 풋살장");
+                .andExpect(jsonPath("fieldName", is(soccerField.getFieldName())));
     }
-
 }

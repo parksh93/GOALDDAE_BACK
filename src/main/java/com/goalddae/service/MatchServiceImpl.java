@@ -18,28 +18,68 @@ public class MatchServiceImpl implements MatchService {
         this.matchIndividualRepository = matchIndividualRepository;
     }
 
+    // 동적테이블 생성 - 팀매치
     @Override
-    public void createMatchTeamTable(String matchTeam) {
-        String safeTable = MyBatisUtil.safeTable(matchTeam);
-        matchTeamRepository.createMatchTeamTable(safeTable);
+    public boolean createMatchTeamTable(Long fieldId) {
+        try {
+            String safeTable = MyBatisUtil.safeTable(fieldId);
+            matchTeamRepository.createMatchTeamTable(safeTable);
+            return true;
+        } catch (Exception e) {
+            System.out.println("테이블 생성 중 오류가 발생했습니다: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // 동적테이블 생성 - 개인매치
+    @Override
+    public boolean createMatchIndividualTable(Long fieldId) {
+        try {
+            String safeTable = MyBatisUtil.safeTable(fieldId);
+            matchIndividualRepository.createMatchIndividualTable(safeTable);
+            return true;
+        } catch (Exception e) {
+            System.out.println("테이블 생성 중 오류가 발생했습니다: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // 동적테이블 삭제 - 팀매치
+
+    @Override
+    public boolean dropMatchTeamTable(Long fieldId) {
+        try {
+            String safeTable = MyBatisUtil.safeTable(fieldId);
+            matchTeamRepository.dropMatchTeamTable(safeTable);
+            return true;
+        } catch (Exception e) {
+            System.out.println("테이블 삭제 중 오류가 발생하였습니다: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // 동적 테이블 삭제 - 개인 매치
+
+    @Override
+    public boolean dropMatchIndividualTable(Long fieldId){
+        try{
+            String safeTable = MyBatisUtil.safeTable(fieldId);
+            matchIndividualRepository.dropMatchIndividualTable(safeTable);
+            return true;
+        }catch(Exception e){
+            System.out.println("delete table error : " + e.getMessage());
+            return false;
+        }
+    }
+
+    // 외래 키 추가 코드
+    @Override
+    public void addForeignKeyConstraintToMatchTeam(Long fieldId) {
+        matchTeamRepository.addForeignKeyConstraintToMatchTeam(fieldId);
     }
 
     @Override
-    public void createMatchIndividualTable(String matchIndividual) {
-        String safeTable = MyBatisUtil.safeTable(matchIndividual);
-        matchIndividualRepository.createMatchIndividualTable(safeTable);
-    }
-
-    // 외래키 추가 코드
-    @Override
-    public void addForeignKeyConstraintToMatchTeam(String fieldName) {
-        matchTeamRepository.addForeignKeyConstraintToMatchTeam(fieldName);
-    }
-
-    // 외래키 추가 코드
-    @Override
-    public void addForeignKeyConstraintToMatchIndividual(String fieldName) {
-        matchIndividualRepository.addForeignKeyConstraintToMatchIndividual(fieldName);
+    public void addForeignKeyConstraintToMatchIndividual(Long fieldId) {
+        matchIndividualRepository.addForeignKeyConstraintToMatchIndividual(fieldId);
     }
 }
-

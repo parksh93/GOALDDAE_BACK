@@ -22,7 +22,7 @@ public class SoccerField {
     private String fieldName;   // 구장명
 
     @Column(nullable = false)
-    private boolean ToiletStatus;   // 화장실 여부
+    private boolean toiletStatus;   // 화장실 여부
 
     @Column(nullable = false)
     private boolean showerStatus;   //샤워실 여부
@@ -44,7 +44,7 @@ public class SoccerField {
     private String fieldImg3;
 
     @Column(nullable = false)
-    private int reservationFree;    // 대관비
+    private int reservationFee;    // 대관비
 
     @Column(nullable = false)
     private String inOutWhether;    // 실내외 여부
@@ -54,9 +54,4 @@ public class SoccerField {
 
     @Column(nullable = false)
     private String region;          // 지역
-
-    public SoccerField(String region, String fieldName) {
-        this.region = region;
-        this.fieldName = fieldName;
-    }
 }

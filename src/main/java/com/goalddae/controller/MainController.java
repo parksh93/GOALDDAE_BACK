@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@RequestMapping("/SoccerField")
 public class MainController {
 
     private final SoccerFieldService soccerFieldService;
@@ -18,7 +19,7 @@ public class MainController {
     }
 
     // 구장 검색
-    @GetMapping("/search/soccerField")
+    @GetMapping("/search")
     public List<SoccerField> searchSoccerFields(
             @RequestParam(value = "searchTerm", required = false, defaultValue = "") String searchTerm) {
         return soccerFieldService.searchSoccerFields(searchTerm);
@@ -39,11 +40,23 @@ public class MainController {
     }
 
     // 구장 등록
-    @PostMapping("/addSoccerField")
-    public ResponseEntity<SoccerField> addSoccerField(@RequestBody SoccerField soccerField) {
+    @PostMapping("/save")
+    public ResponseEntity<SoccerField> saveSoccerField(@RequestBody SoccerField soccerField) {
         try {
             SoccerField addedField = soccerFieldService.addSoccerField(soccerField);
             return ResponseEntity.ok(addedField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    // 구장 삭제
+    @PostMapping("/delete")
+    public ResponseEntity<Void> deleteSoccerField(@RequestBody SoccerField soccerField) {
+        try {
+            soccerFieldService.deleteSoccerField(soccerField.getId());
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).build();

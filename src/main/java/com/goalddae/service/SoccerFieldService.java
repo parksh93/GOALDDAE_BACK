@@ -9,13 +9,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goalddae.entity.SoccerField;
 import com.goalddae.repository.SoccerFieldRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SoccerFieldService {
 
     private final SoccerFieldRepository soccerFieldRepository;
     private final FieldReservationService fieldReservationService;
-
     private final MatchService matchService;
 
     public SoccerFieldService(SoccerFieldRepository soccerFieldRepository,
@@ -51,19 +51,41 @@ public class SoccerFieldService {
         return matchedCityNames;
     }
 
-    // 구장 테이블 추가 시 개인매치, 팀매치, 구장예약 동적테이블 같이 생성되게끔
+    // 구장 객체 추가 시 개인매치, 팀매치, 구장예약 동적테이블 같이 생성되게끔
+    // 객체 생성 중 에러가 발생해도 테이블에 객체가 추가되어 안되게끔 @Transactional 추가
+    @Transactional
     public SoccerField addSoccerField(SoccerField soccerField) {
         SoccerField newSoccerField = soccerFieldRepository.save(soccerField);
-        String fieldName = newSoccerField.getFieldName();
+        Long id = newSoccerField.getId();
 
-        fieldReservationService.createFieldReservationTable(fieldName);
-        matchService.createMatchIndividualTable(fieldName);
-        matchService.createMatchTeamTable(fieldName);
+        fieldReservationService.createFieldReservationTable(id);
+        matchService.createMatchIndividualTable(id);
+        matchService.createMatchTeamTable(id);
 
         // 외래 키 제약 추가
-        matchService.addForeignKeyConstraintToMatchIndividual(fieldName);
-        matchService.addForeignKeyConstraintToMatchTeam(fieldName);
+        matchService.addForeignKeyConstraintToMatchIndividual(id);
+        matchService.addForeignKeyConstraintToMatchTeam(id);
 
         return newSoccerField;
+    }
+
+    // 구장 이름으로 조회
+    public SoccerField findSoccerFieldByName(String fieldName) {
+        return soccerFieldRepository.findByFieldName(fieldName);
+    }
+
+    // 구장 삭제
+    public void deleteSoccerField(long id) {
+        SoccerField soccerField = soccerFieldRepository.findById(id).orElse(null);
+
+        // 구장 테이블 삭제 전 동적 테이블 모두 삭제
+        if (soccerField != null) {
+            fieldReservationService.dropFieldReservationTable(id);
+            matchService.dropMatchIndividualTable(id);
+            matchService.dropMatchTeamTable(id);
+        }
+
+        // 구장 테이블에서 해당 구장 삭제
+        soccerFieldRepository.deleteById(id);
     }
 }
