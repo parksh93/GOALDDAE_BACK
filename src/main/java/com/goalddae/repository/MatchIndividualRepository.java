@@ -10,6 +10,10 @@ import java.util.List;
 
 @Mapper
 public interface MatchIndividualRepository {
-    void createMatchIndividualTable(String matchIndividual);
-    void addForeignKeyConstraintToMatchIndividual(String fieldName);
+    void createMatchIndividualTable(String matchIndividualId);
+    void dropMatchIndividualTable(String matchIndividualId);
+
+    // 외래키 추가
+    void addForeignKeyConstraintToMatchIndividual(Long fieldId);
+
 }

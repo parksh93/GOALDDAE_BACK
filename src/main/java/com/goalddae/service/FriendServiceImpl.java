@@ -26,18 +26,21 @@ public class FriendServiceImpl implements FriendService{
         this.friendBlockRepository = friendBlockRepository;
     }
 
+    // 동적테이블 생성 - 친구리스트
     @Override
     @Transactional
     public void createFriendListTable(String friendList) {
         friendListRepository.createFriendListTable(friendList);
     }
 
+    // 동적테이블 생성 - 친구추가
     @Override
     @Transactional
     public void createFriendAddTable(String friendAdd) {
         friendAddRepository.createFriendAddTable(friendAdd);
     }
 
+    // 동적테이블 생성 - 친구수락
     @Override
     @Transactional
     public void createFriendAcceptTable(String friendAccept) {
@@ -45,6 +48,7 @@ public class FriendServiceImpl implements FriendService{
         friendAcceptRepository.createFriendAcceptTable(safeTable);
     }
 
+    // 동적테이블 생성 - 친구차단
     @Override
     @Transactional
     public void createFriendBlockTable(String friendBlock) {

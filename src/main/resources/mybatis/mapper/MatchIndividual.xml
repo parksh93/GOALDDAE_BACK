@@ -1,7 +1,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.goalddae.repository.MatchIndividualRepository">
     <update id="createMatchIndividualTable" parameterType="java.lang.String">
-        CREATE TABLE match_Individual_${fieldName} (
+        CREATE TABLE match_Individual_${id} (
                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                        likes BIGINT default 0 NOT NULL,
                                        views BIGINT default 0 NOT NULL,
@@ -22,7 +22,7 @@
 
     <!-- 외래키 제약 추가 쿼리 작성 -->
     <update id="addForeignKeyConstraintToMatchIndividual" parameterType="java.lang.String">
-        ALTER TABLE match_Individual_${fieldName}
+        ALTER TABLE `match_Individual_${id}`
             ADD FOREIGN KEY (field_reservation_id) REFERENCES field_reservation_${fieldName}(id)
     </update>
 </mapper>
