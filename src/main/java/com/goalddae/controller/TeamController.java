@@ -4,6 +4,7 @@ import com.goalddae.dto.team.TeamListDTO;
 import com.goalddae.entity.Team;
 import com.goalddae.service.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,11 +33,16 @@ public class TeamController {
     }
 
     @GetMapping(value="/detail/{id}")
-    public ResponseEntity<?> teamDetail(@PathVariable Long id){
-
-        Team team = teamService.findTeamById(id);
-        return ResponseEntity
-                .ok(team);
+    public ResponseEntity<?> teamDetail(@PathVariable Long id) {
+        try {
+            Team team = teamService.findTeamById(id);
+            if (team == null) {
+                return ResponseEntity.notFound().build(); // 404 Not Found
+            }
+            return ResponseEntity.ok(team);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 서버에러
+        }
     }
 
     @PostMapping(value = "/save")
