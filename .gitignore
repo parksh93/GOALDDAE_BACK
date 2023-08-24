@@ -40,3 +40,4 @@ application-db.yml
 application-jwt.yml
 application-email.properties
 application-payment.properties
+application-ncloudChat.properties
