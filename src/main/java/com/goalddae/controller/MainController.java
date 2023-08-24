@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/SoccerField")
+@RequestMapping("/soccerField")
 public class MainController {
 
     private final SoccerFieldService soccerFieldService;

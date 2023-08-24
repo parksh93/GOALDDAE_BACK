@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 public class SoccerFieldDTO {
     private long id;
-    private String fieldName;
+    private String  fieldName;
     private int toiletStatus;
     private int showerStatus;
     private int parkingStatus;
