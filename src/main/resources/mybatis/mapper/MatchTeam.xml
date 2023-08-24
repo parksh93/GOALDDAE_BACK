@@ -19,6 +19,11 @@
         );
     </update>
 
+    <!-- 동적 테이블 삭제 쿼리 -->
+    <delete id="dropMatchTeamTable" parameterType="java.lang.Long">
+        DROP TABLE IF EXISTS match_Team_#{id}
+    </delete>
+
     <!-- 외래키 제약 추가 쿼리 작성 -->
     <update id="addForeignKeyConstraintToMatchTeam" parameterType="java.lang.Long">
         ALTER TABLE match_team_#{id}

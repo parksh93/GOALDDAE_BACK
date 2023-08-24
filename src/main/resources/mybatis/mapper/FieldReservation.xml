@@ -11,4 +11,9 @@
                                              FOREIGN KEY (soccer_field_id) REFERENCES soccer_field(id)
         );
     </update>
+
+    <!-- 동적 테이블 삭제 쿼리 -->
+    <delete id="dropFieldReservationTable" parameterType="java.lang.Long">
+        DROP TABLE IF EXISTS field_reservation_#{id}
+    </delete>
 </mapper>
