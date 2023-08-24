@@ -97,7 +97,7 @@ public class UserController {
         return List.of(token);
     }
 
-    @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
+    @RequestMapping(value = "/changePassword", method = RequestMethod.PATCH)
     public List<Boolean> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO,@CookieValue(required = false) String loginIdToken, HttpServletResponse response) {
        changePasswordDTO.setLoginIdToken(loginIdToken);
        boolean changeCheck = userService.changePassword(changePasswordDTO);
