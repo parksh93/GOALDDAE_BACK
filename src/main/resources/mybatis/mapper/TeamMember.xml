@@ -1,7 +1,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.goalddae.repository.TeamMemberRepository">
-    <update id="createTeamMemberTable">
-        CREATE TABLE team_member_${teamName} (
+    <update id="createTeamMemberTable" parameterType="java.lang.Long">
+        CREATE TABLE team_member_#{teamId} (
                                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                         user_join_date DATETIME NOT NULL,
                                         team_manager BIGINT NOT NULL,
