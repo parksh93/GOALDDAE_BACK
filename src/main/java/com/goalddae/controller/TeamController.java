@@ -27,7 +27,7 @@ public class TeamController {
         return team;
     }
 
-    @GetMapping(value = "/list/myTeam")
+    @GetMapping(value = "/list/myTeam/{id}")
     public Team myTeam(@PathVariable Long id){
         return teamService.findTeamById(id);
     }
