@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public void save(User user){
         User newUser = User.builder()
+                .id(user.getId())
                 .loginId(user.getLoginId())
                 .email(user.getEmail())
                 .password(bCryptPasswordEncoder.encode(user.getPassword()))
@@ -52,13 +53,13 @@ public class UserServiceImpl implements UserService{
         userJPARepository.save(newUser);
 
         // 로그인 아이디를 가져와 테이블 생성에 사용
-        String loginId = newUser.getLoginId();
+        Long id = newUser.getId();
 
         // 동적 테이블 생성
-        friendService.createFriendAcceptTable(loginId);
-        friendService.createFriendAddTable(loginId);
-        friendService.createFriendBlockTable(loginId);
-        friendService.createFriendListTable(loginId);
+        friendService.createFriendAcceptTable(id);
+        friendService.createFriendAddTable(id);
+        friendService.createFriendBlockTable(id);
+        friendService.createFriendListTable(id);
     }
 
     public static String createUserCode() {

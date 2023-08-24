@@ -1,7 +1,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.goalddae.repository.FieldReservationRepository">
-    <update id="createFieldReservationTable">
-        CREATE TABLE field_reservation_${id} (
+    <update id="createFieldReservationTable" parameterType="java.lang.Long">
+        CREATE TABLE field_reservation_#{id} (
                                              id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                              reservation_id VARCHAR(255) NOT NULL,
                                              reservation_date DATETIME NOT NULL,

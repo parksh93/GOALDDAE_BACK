@@ -2,6 +2,7 @@ package com.goalddae.service;
 
 import com.goalddae.repository.FieldReservationRepository;
 import com.goalddae.util.MyBatisUtil;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,9 +18,9 @@ public class FieldReservationServiceImpl implements FieldReservationService {
     // 동적테이블 생성 - 구장 예약
     @Override
     @Transactional
-    public boolean createFieldReservationTable(Long fieldId) {
+    public boolean createFieldReservationTable(@Param("fieldId") Long fieldId) {
         try {
-            String safeTable = MyBatisUtil.safeTable(fieldId);
+            Long safeTable = MyBatisUtil.safeTable(fieldId);
             fieldReservationRepository.createFieldReservationTable(safeTable);
             return true;
         } catch (Exception e) {
@@ -31,9 +32,9 @@ public class FieldReservationServiceImpl implements FieldReservationService {
     // 동적테이블 삭제 - 구장 예약
     @Override
     @Transactional
-    public boolean dropFieldReservationTable(Long fieldId) {
+    public boolean dropFieldReservationTable(@Param("fieldId") Long fieldId) {
         try {
-            String safeTable = MyBatisUtil.safeTable(fieldId);
+            Long safeTable = MyBatisUtil.safeTable(fieldId);
             fieldReservationRepository.dropFieldReservationTable(safeTable);
             return true;
         } catch (Exception e) {

@@ -1,6 +1,8 @@
 package com.goalddae.service;
 
+import org.apache.ibatis.annotations.Param;
+
 public interface FieldReservationService {
-    boolean createFieldReservationTable(Long fieldReservationId);
-    boolean dropFieldReservationTable(Long fieldReservationId);
+    boolean dropFieldReservationTable(@Param("fieldId") Long fieldId);
+    boolean createFieldReservationTable(@Param("fieldId") Long fieldId);
 }

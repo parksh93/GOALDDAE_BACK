@@ -22,7 +22,7 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public boolean createMatchTeamTable(Long fieldId) {
         try {
-            String safeTable = MyBatisUtil.safeTable(fieldId);
+            Long safeTable = MyBatisUtil.safeTable(fieldId);
             matchTeamRepository.createMatchTeamTable(safeTable);
             return true;
         } catch (Exception e) {
@@ -35,7 +35,7 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public boolean createMatchIndividualTable(Long fieldId) {
         try {
-            String safeTable = MyBatisUtil.safeTable(fieldId);
+            Long safeTable = MyBatisUtil.safeTable(fieldId);
             matchIndividualRepository.createMatchIndividualTable(safeTable);
             return true;
         } catch (Exception e) {
@@ -45,11 +45,10 @@ public class MatchServiceImpl implements MatchService {
     }
 
     // 동적테이블 삭제 - 팀매치
-
     @Override
     public boolean dropMatchTeamTable(Long fieldId) {
         try {
-            String safeTable = MyBatisUtil.safeTable(fieldId);
+            Long safeTable = MyBatisUtil.safeTable(fieldId);
             matchTeamRepository.dropMatchTeamTable(safeTable);
             return true;
         } catch (Exception e) {
@@ -59,11 +58,10 @@ public class MatchServiceImpl implements MatchService {
     }
 
     // 동적 테이블 삭제 - 개인 매치
-
     @Override
     public boolean dropMatchIndividualTable(Long fieldId){
         try{
-            String safeTable = MyBatisUtil.safeTable(fieldId);
+            Long safeTable = MyBatisUtil.safeTable(fieldId);
             matchIndividualRepository.dropMatchIndividualTable(safeTable);
             return true;
         }catch(Exception e){
