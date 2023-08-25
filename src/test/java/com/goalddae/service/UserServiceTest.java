@@ -97,22 +97,31 @@ public class UserServiceTest {
     @DisplayName("유저정보 수정 테스트")
     public void updateTest() {
         // given
-        String loginId = "수정아이디";
+        String loginId = "aura0211";
         String nickname = "수정닉네임";
-        String email = "abc@abc.com";
+        String email = "aura0211@naver.com";
+        String phoneNumber = "01048394849";
+        String preferredCity = "부산";
+        String preferredArea = "경남";
+        int activityClass = 10;
 
         GetUserInfoDTO getUserInfoDTO = GetUserInfoDTO.builder()
                 .loginId(loginId)
-                        .nickname(nickname)
-                                .email(email)
-                                        .build();
+                .nickname(nickname)
+                .email(email)
+                .phoneNumber(phoneNumber)
+                .preferredCity(preferredCity)
+                .preferredArea(preferredArea)
+                .activityClass(activityClass)
+                .build();
 
         // when
         userService.update(getUserInfoDTO);
 
         // then
         User updatedUser = userJPARepository.findByLoginId(loginId);
-        assertEquals("abc@abc.com", updatedUser.getEmail());
+        assertEquals("aura0211@naver.com", updatedUser.getEmail());
+        assertEquals("부산", updatedUser.getPreferredCity());
         assertEquals("수정닉네임", updatedUser.getNickname());
     }
     @Test

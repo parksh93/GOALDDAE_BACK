@@ -23,7 +23,7 @@ public class UsedTransactionBoardRepositoryTest {
     @DisplayName("자유게시판에 쓴 글 조회 테스트")
     public void findPostByIdTest(){
         // given
-        long userId = 1;
+        String userId = "dd";
 
         // when
         List<UsedTransactionBoard>usedTransactionBoardList = usedTransactionBoardRepository.findByUserId(userId);

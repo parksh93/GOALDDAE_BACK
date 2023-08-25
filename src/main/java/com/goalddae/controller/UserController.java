@@ -78,6 +78,9 @@ public class UserController {
 
     @RequestMapping(value = "/checkNickname", method = RequestMethod.POST)
     public List<Boolean> checkNickname(@RequestBody CheckNicknameDTO checkNicknameDTO){
+
+        System.out.println(checkNicknameDTO.toString());
+
         return List.of(userService.checkNickname(checkNicknameDTO));
     }
 
