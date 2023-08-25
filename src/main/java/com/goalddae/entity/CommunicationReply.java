@@ -23,7 +23,7 @@ public class CommunicationReply {
     private long boardId;
 
     @Column(nullable = false)
-    private String userId;  // 작성자 (id)
+    private long userId;  // 작성자 (유저id)
 
     @Column(nullable = false)
     private String writer; // 작성자 (닉네임)
