@@ -1,11 +1,11 @@
 package com.goalddae.service;
 
+import com.goalddae.dto.soccerField.SoccerFieldInfoDTO;
 import com.goalddae.entity.SoccerField;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SoccerFieldServiceTest {
 
     @Autowired
-    private SoccerFieldService soccerFieldService;
+    private SoccerFieldServiceImpl soccerFieldService;
 
     @Test
     @Transactional
@@ -40,5 +40,15 @@ public class SoccerFieldServiceTest {
 
         // 검색된 축구장 목록에 해당 축구장 이름이 포함되어 있는지 확인
         assertTrue(soccerFields.stream().anyMatch(soccerField -> soccerField.getFieldName().equals(fieldName)));
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("구장 정보 가져오기")
+    public void findById() {
+        long id = 1;
+        SoccerFieldInfoDTO soccerFieldInfoDTO = soccerFieldService.findById(1);
+
+        assertEquals("테스트 구장", soccerFieldInfoDTO.getFieldName());
     }
 }
