@@ -192,10 +192,8 @@ public class UserServiceImpl implements UserService{
 
         if (user != null) {
             ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
-            changeUserInfoDTO.setEmail(getUserInfoDTO.getEmail());
             changeUserInfoDTO.setNickname(getUserInfoDTO.getNickname());
             changeUserInfoDTO.setPhoneNumber(getUserInfoDTO.getPhoneNumber());
-            changeUserInfoDTO.setBirth(getUserInfoDTO.getBirth());
             changeUserInfoDTO.setPreferredCity(getUserInfoDTO.getPreferredCity());
             changeUserInfoDTO.setPreferredArea(getUserInfoDTO.getPreferredArea());
             changeUserInfoDTO.setActivityClass(getUserInfoDTO.getActivityClass());
