@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CommunicationBoardRepository extends JpaRepository<CommunicationBoard, String> {
-    List<CommunicationBoard> findByUserId(String userId);
+    List<CommunicationBoard> findByUserId(long userId);
 }

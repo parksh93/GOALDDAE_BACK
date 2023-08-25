@@ -99,7 +99,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/posts/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<?> viewUserPosts(@PathVariable String userId) {
+    public ResponseEntity<?> viewUserPosts(@PathVariable long userId) {
 
         List<CommunicationBoard> communicationBoardsList = userService.getUserCommunicationBoardPosts(userId);
         List<UsedTransactionBoard> usedTransactionBoardList = userService.getUserUsedTransactionBoardPosts(userId);

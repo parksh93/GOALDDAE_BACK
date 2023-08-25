@@ -22,8 +22,8 @@ public interface UserService {
     public boolean checkEmail(SendEmailDTO checkEmailDTO);
     public boolean checkNickname(CheckNicknameDTO checkNicknameDTO);
     public void update(GetUserInfoDTO getUserInfoDTO);
-    public List<CommunicationBoard> getUserCommunicationBoardPosts(String userId);
-    public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(String userId);
+    public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId);
+    public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(long userId);
     public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO);
     public String checkLoginIdAndEmail(RequestFindPasswordDTO requestFindPasswordDTO);
     public boolean changePassword(ChangePasswordDTO changePasswordDTO);
