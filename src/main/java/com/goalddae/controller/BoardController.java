@@ -39,7 +39,7 @@ public class BoardController {
                                                     @RequestParam(required = false, defaultValue = "1") Integer page) {
 
         final int PAGE_SIZE = 10;
-        final int PAGE_BTN_NUM = 5;
+        final int PAGE_BTN_NUM = 10;
 
         Page<BoardListDTO> pageInfo;
 
