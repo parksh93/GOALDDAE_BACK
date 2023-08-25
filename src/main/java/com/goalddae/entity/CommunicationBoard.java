@@ -18,10 +18,10 @@ public class CommunicationBoard {
     private long id;
 
     @Column(nullable = false)
-    private long userId;  // 작성자 (유저id)
+    private String userId;  // 작성자 (id)
 
     @Column(nullable = false)
-    private String writer;  // 작성자 (닉네임)
+    private String writer; // 작성자 (닉네임)
 
     @Column(nullable = false)
     private String title;   // 제목
