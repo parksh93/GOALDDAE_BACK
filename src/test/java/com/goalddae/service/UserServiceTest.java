@@ -142,7 +142,7 @@ public class UserServiceTest {
     @DisplayName("중고거래게시판에 쓴 글 조회 테스트")
     public void getUserUsedTransactionBoardPostsTest() {
         // given
-        String userId = "쀼";
+        long userId = 1;
 
         // when
         List<UsedTransactionBoard> usedTransactionBoardList = userService.getUserUsedTransactionBoardPosts(userId);

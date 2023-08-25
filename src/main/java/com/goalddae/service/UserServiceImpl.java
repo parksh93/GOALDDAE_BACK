@@ -205,12 +205,12 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<CommunicationBoard> getUserCommunicationBoardPosts(String userId) {
+    public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId) {
         return communicationBoardRepository.findByUserId(userId);
     }
 
     @Override
-    public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(String userId) {
+    public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(long userId) {
         return usedTransactionBoardRepository.findByUserId(userId);
     }
 
