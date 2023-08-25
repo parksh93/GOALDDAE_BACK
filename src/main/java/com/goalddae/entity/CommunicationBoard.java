@@ -53,10 +53,17 @@ public class CommunicationBoard {
     @Column(nullable = false)
     private int boardSortation;    // 게시판 구분
 
+    @Column(nullable = false)
+    private long count; // 조회수
+
     @PrePersist
     public void setTime() {
         this.writeDate = LocalDateTime.now();
         this.updateDate = LocalDateTime.now();
+    }
+
+    public void viewCountUp() {
+        this.count++;
     }
 
 

@@ -17,7 +17,6 @@ import com.goalddae.entity.User;
 import com.goalddae.exception.NotFoundUserException;
 import com.goalddae.repository.UserJPARepository;
 
-import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -38,7 +37,6 @@ public class UserServiceImpl implements UserService{
     private final UsedTransactionBoardRepository usedTransactionBoardRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
-
 
     @Autowired
     public UserServiceImpl(UserJPARepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, TokenProvider tokenProvider,
@@ -66,7 +64,6 @@ public class UserServiceImpl implements UserService{
                 .activityClass(user.getActivityClass())
                 .authority(user.getAuthority())
                 .userCode(createUserCode())
-                .profileImgUrl(user.getProfileImgUrl())
                 .build();
 
         userJPARepository.save(newUser);
@@ -150,6 +147,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+
     @Override
     public boolean checkNickname(CheckNicknameDTO checkNicknameDTO){
         int checkNicknameCnt = userJPARepository.countByNickname(checkNicknameDTO.getNickname());
@@ -161,6 +159,8 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+
+    @Override
     public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO){
         String loginId = userJPARepository.findLoginIdByEmailAndName(requestFindLoginIdDTO.getEmail(), requestFindLoginIdDTO.getName());
 
