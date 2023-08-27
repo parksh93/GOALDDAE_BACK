@@ -55,6 +55,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Date birth; // 생년월일
 
+    @Column
+    private Long teamId; // 가입 팀 id
+
     @Column(nullable = false)
     private int matchesCnt;  // 매치 경기수
 

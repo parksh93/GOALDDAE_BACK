@@ -27,10 +27,11 @@ public class TeamController {
         return team;
     }
 
-    @GetMapping(value = "/list/myTeam/{id}")
+    @GetMapping(value = {"/myTeam/{id}", "/myTeamDetail/{id}"})
     public Team myTeam(@PathVariable Long id){
         return teamService.findTeamById(id);
     }
+
 
     @GetMapping(value="/detail/{id}")
     public ResponseEntity<?> teamDetail(@PathVariable Long id) {
@@ -45,8 +46,8 @@ public class TeamController {
         }
     }
 
-    @PostMapping(value = "/save")
-    public ResponseEntity<String> teamSave(@RequestBody Team team){
+    @PostMapping(value = "/teamCreate")
+    public ResponseEntity<String> teamCreate(@RequestBody Team team){
 
         teamService.save(team);
         return ResponseEntity
@@ -60,6 +61,8 @@ public class TeamController {
         return ResponseEntity
                 .ok("팀 수정이 완료되었습니다.");
     }
+
+
 
     @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     public ResponseEntity<String> teamDelete(@PathVariable Long id){

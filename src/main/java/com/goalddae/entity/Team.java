@@ -29,6 +29,9 @@ public class Team {
     @Column(nullable = false)
     private boolean recruiting; // 모집중
 
+    @Column
+    private String teamIntroduce;    // 팀 소개글
+
     @Column(nullable = false)
     private int entryFee;  // 입단비
 
@@ -39,7 +42,7 @@ public class Team {
     private LocalDateTime teamCreate;   // 팀생성일
 
     @Column(nullable = false)
-    private String teamProfileImgUrl;  // 팀프로필
+    private String teamProfileImgUrl;  // 팀프로필 이미지
 
     @Column(nullable = false)
     private LocalDateTime teamProfileUpdate;    // 팀프로필 업데이트일
