@@ -1,6 +1,7 @@
 package com.goalddae.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.goalddae.dto.soccerField.SoccerFieldDTO;
 import com.goalddae.entity.SoccerField;
 import com.goalddae.repository.SoccerFieldRepository;
 import org.springframework.context.annotation.Primary;
@@ -78,34 +79,24 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
 
     // 구장 수정
     @Override
-    public SoccerField update(SoccerField soccerField) {
-        // 아이디에 해당하는 축구장이 존재하지 않는 경우 예외 발생
-        SoccerField existingSoccerField = soccerFieldRepository.findById(soccerField.getId())
-                .orElseThrow(() -> new RuntimeException("ID에 해당하는 축구장을 찾을 수 없습니다: " + soccerField.getId()));
+    @Transactional
+    public SoccerField update(SoccerFieldDTO soccerFieldDto) {
+        // 먼저 이전에 저장된 SoccerField 객체를 찾습니다.
+        SoccerField soccerField = soccerFieldRepository.findById(soccerFieldDto.getId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 구장이 존재하지 않습니다. id=" + soccerFieldDto.getId()));
 
-        // 기존 엔티티의 필드를 제공된 객체에서 업데이트
-        SoccerField updateSoccerFiled = SoccerField.builder()
-                .fieldName(nullCheckOrDefault(soccerField.getFieldName(), existingSoccerField.getFieldName()))
-                .toiletStatus(nullCheckOrDefault(soccerField.getToiletStatus(), existingSoccerField.getToiletStatus()))
-                .showerStatus(nullCheckOrDefault(soccerField.getShowerStatus(), existingSoccerField.getShowerStatus()))
-                .parkingStatus(nullCheckOrDefault(soccerField.getParkingStatus(), existingSoccerField.getParkingStatus()))
-                .fieldSize(nullCheckOrDefault(soccerField.getFieldSize(), existingSoccerField.getFieldSize()))
-                .fieldImg1(nullCheckOrDefault(soccerField.getFieldImg1(), existingSoccerField.getFieldImg1()))
-                .fieldImg2(nullCheckOrDefault(soccerField.getFieldImg2(), existingSoccerField.getFieldImg2()))
-                .fieldImg3(nullCheckOrDefault(soccerField.getFieldImg3(), existingSoccerField.getFieldImg3()))
-                .reservationFee(nullCheckOrDefault(soccerField.getReservationFee(), existingSoccerField.getReservationFee()))
-                .region(nullCheckOrDefault(soccerField.getRegion(), existingSoccerField.getRegion()))
-                .build();
+        // 찾은 SoccerField 객체의 필드를 DTO로부터 받은 값으로 업데이트 합니다.
+        soccerField.changeFieldName(soccerFieldDto.getFieldName());
+        soccerField.changeFacilityStatus(soccerFieldDto.getToiletStatus(), soccerFieldDto.getShowerStatus(), soccerFieldDto.getParkingStatus());
+        soccerField.changeFieldSize(soccerFieldDto.getFieldSize());
+        soccerField.changeImages(soccerFieldDto.getFieldImg1(), soccerFieldDto.getFieldImg2(), soccerFieldDto.getFieldImg3());
+        soccerField.changeReservationFee(soccerFieldDto.getReservationFee());
+        soccerField.changeInOutWhether(soccerFieldDto.getInOutWhether());
+        soccerField.changegrassWhether(soccerFieldDto.getGrassWhether());
+        soccerField.changeRegion(soccerFieldDto.getRegion());
 
-        return soccerFieldRepository.save(updateSoccerFiled);
+        return soccerField;
     }
-
-    // 수정 입력칸이 null 인 경우 기존값 사용, null이 아닌 경우 변경
-    private <T> T nullCheckOrDefault(T inputValue, T defaultValue) {
-        return inputValue != null ? inputValue : defaultValue;
-    }
-
-
 
     // 구장 이름으로 조회
     @Override

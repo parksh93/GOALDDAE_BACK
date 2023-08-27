@@ -57,7 +57,7 @@ public class SoccerFieldRepositoryTest {
 
     @Test
     @Transactional
-    @DisplayName("구장 객체 정보 수정 테스트")
+    @DisplayName("구장 객체 정보 수정 레포지토리 테스트")
     public void updateSoccerFieldTest() {
         // Given: 기존에 저장되어 있는 Soccer Field 정보와 업데이트 할 정보 생성
         Long soccerFiledId = 1L;

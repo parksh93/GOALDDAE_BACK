@@ -1,5 +1,6 @@
 package com.goalddae.service;
 
+import com.goalddae.dto.soccerField.SoccerFieldDTO;
 import com.goalddae.entity.SoccerField;
 import com.goalddae.repository.SoccerFieldRepository;
 import jakarta.transaction.Transactional;
@@ -110,7 +111,7 @@ public class SoccerFieldServiceTest {
                 "인조",
                 "인천");
 
-        SoccerField update = new SoccerField(
+        SoccerFieldDTO updateDto = new SoccerFieldDTO(
                 1L,
                 "테스트 구장",
                 0,
@@ -126,13 +127,14 @@ public class SoccerFieldServiceTest {
                 "테스트 지역");
 
         when(soccerFieldRepository.findById(anyLong())).thenReturn(Optional.of(existing));
-        when(soccerFieldRepository.save(any(SoccerField.class))).thenReturn(update);
+        when(soccerFieldRepository.save(any(SoccerField.class))).thenReturn(existing);
 
         // When: 서비스 메소드 호출
-        SoccerField result = soccerFieldService.update(update);
+        SoccerField result = soccerFieldService.update(updateDto);
 
         // Then: 결과 확인
-        assertThat(result).isEqualTo(update);
+        assertThat(result.getFieldName()).isEqualTo(updateDto.getFieldName());
+        assertThat(result.getToiletStatus()).isEqualTo(updateDto.getToiletStatus());
     }
 
     @Test

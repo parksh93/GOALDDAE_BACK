@@ -1,5 +1,6 @@
 package com.goalddae.dto.soccerField;
 
+import com.goalddae.entity.SoccerField;
 import lombok.*;
 
 @Getter
@@ -14,13 +15,14 @@ public class SoccerFieldDTO {
     private int toiletStatus;
     private int showerStatus;
     private int parkingStatus;
-    private String requirements;
     private String fieldSize;
     private String fieldImg1;
     private String fieldImg2;
     private String fieldImg3;
-    private int reservationFree;
+    private int reservationFee;
     private String inOutWhether;
     private String grassWhether;
     private String region;
+
+
 }
