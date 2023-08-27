@@ -43,8 +43,20 @@ public class MainController {
     @PostMapping("/save")
     public ResponseEntity<SoccerField> saveSoccerField(@RequestBody SoccerField soccerField) {
         try {
-            SoccerField addedField = soccerFieldService.addSoccerField(soccerField);
-            return ResponseEntity.ok(addedField);
+            SoccerField addSoccerField = soccerFieldService.save(soccerField);
+            return ResponseEntity.ok(addSoccerField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    // 구장 수정
+    @PutMapping("/update")
+    public ResponseEntity<SoccerField> updateSoccerField(@RequestBody SoccerField soccerField) {
+        try {
+            SoccerField updatedSoccerField = soccerFieldService.update(soccerField);
+            return ResponseEntity.ok(updatedSoccerField);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).build();
@@ -55,7 +67,7 @@ public class MainController {
     @PostMapping("/delete")
     public ResponseEntity<Void> deleteSoccerField(@RequestBody SoccerField soccerField) {
         try {
-            soccerFieldService.deleteSoccerField(soccerField.getId());
+            soccerFieldService.delete(soccerField.getId());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             e.printStackTrace();

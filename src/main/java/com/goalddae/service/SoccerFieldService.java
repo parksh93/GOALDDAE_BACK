@@ -7,12 +7,9 @@ import java.util.List;
 public interface SoccerFieldService {
 
     List<SoccerField> searchSoccerFields(String searchTerm);
-
     List<String> searchCityNames(String searchTerm) throws IOException;
-
-    SoccerField addSoccerField(SoccerField soccerField);
-
+    SoccerField save(SoccerField soccerField);
+    SoccerField update(SoccerField soccerField);
     SoccerField findSoccerFieldByName(String fieldName);
-
-    void deleteSoccerField(long id);
+    void delete(long id);
 }

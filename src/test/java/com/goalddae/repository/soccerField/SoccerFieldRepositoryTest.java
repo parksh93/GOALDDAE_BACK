@@ -1,76 +1,120 @@
 package com.goalddae.repository.soccerField;
 
 import com.goalddae.entity.SoccerField;
-import com.goalddae.service.FieldReservationService;
+import com.goalddae.repository.FieldReservationRepository;
+import com.goalddae.repository.SoccerFieldRepository;
 import com.goalddae.service.MatchService;
-import com.goalddae.service.SoccerFieldService;
-import org.junit.jupiter.api.AfterEach;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import java.util.Optional;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-@Import(SoccerFieldService.class)
 public class SoccerFieldRepositoryTest {
 
     @Autowired
-    private SoccerFieldService soccerFieldService;
+    SoccerFieldRepository soccerFieldRepository;
 
-    @MockBean
-    private FieldReservationService fieldReservationService;
+    @Autowired
+    FieldReservationRepository fieldReservationRepository;
 
-    @MockBean
-    private MatchService matchService;
+    @Autowired
+    MatchService matchService;
 
     private SoccerField soccerField;
 
-    @BeforeEach
-    public void createSoccerFieldTest() {
-        // 구장 객체 생성
+    @Test
+    @Transactional
+    @DisplayName("구장 객체 생성 테스트")
+    public void saveSoccerFieldTest() {
+        // 구장 객체 생성 및 저장
         soccerField = SoccerField.builder()
-                .fieldName("테스트 구장")
-                .toiletStatus(true)
-                .showerStatus(true)
-                .parkingStatus(true)
-                .fieldSize("5인용")
-                .fieldImg1("이미지1.png")
-                .reservationFee(10000)
+                .fieldName("테스트구장")
+                .toiletStatus(1)
+                .showerStatus(1)
+                .parkingStatus(1)
+                .fieldSize("14x16")
+                .fieldImg1("이미지1")
+                .reservationFee(8000)
                 .inOutWhether("실내")
-                .grassWhether("잔디")
-                .region("서울")
+                .grassWhether("천연")
+                .region("인천")
                 .build();
+
+        // 저장 후 반환된 객체 받기
+        SoccerField saveSoccerField = soccerFieldRepository.save(soccerField);
+
+        // 저장된 구장 객체 검증
+        assertThat(saveSoccerField).isNotNull();
+        assertThat(saveSoccerField.getFieldName()).isEqualTo(soccerField.getFieldName());
     }
 
     @Test
-    @DisplayName("구장 동적 테이블 생성 테스트")
-    public void dynamicTableTest() {
-        // 생성한 구장 객체를 저장하고 동적 테이블 생성 메서드들을 호출
-//        when(fieldReservationService.createFieldReservationTable(any(String.class))).thenReturn(true);
-//        when(matchService.createMatchIndividualTable(any(String.class))).thenReturn(true);
-//        when(matchService.createMatchTeamTable(any(String.class))).thenReturn(true);
-//
-//        SoccerField newSoccerField = soccerFieldService.addSoccerField(soccerField);
-//
-//        // 동적 테이블 생성 확인
-//        assertThat(fieldReservationService.createFieldReservationTable(newSoccerField.getFieldName())).isTrue();
-//        assertThat(matchService.createMatchIndividualTable(newSoccerField.getFieldName())).isTrue();
-//        assertThat(matchService.createMatchTeamTable(newSoccerField.getFieldName())).isTrue();
+    @Transactional
+    @DisplayName("구장 객체 정보 수정 테스트")
+    public void updateSoccerFieldTest() {
+        // Given: 기존에 저장되어 있는 Soccer Field 정보와 업데이트 할 정보 생성
+        Long soccerFiledId = 1L;
+        String updateSoccerFieldName = "수정된 축구장A";
+
+        SoccerField soccerField = SoccerField.builder()
+                .fieldName(updateSoccerFieldName)
+                .toiletStatus(1)
+                .showerStatus(1)
+                .parkingStatus(1)
+                .fieldSize("기존 사이즈")
+                .fieldImg1("기존 이미지1")
+                .fieldImg2("기존 이미지2")
+                .fieldImg3("기존 이미지3")
+                .reservationFee(4000)
+                .inOutWhether("실외")
+                .grassWhether("천연")
+                .region("용인")
+                .build();
+
+        // When
+        SoccerField existingSoccerField = soccerFieldRepository.findById(soccerFiledId).orElse(null);
+
+        if (existingSoccerField != null) {
+            SoccerField saveSoccerField = soccerFieldRepository.save(soccerField);
+
+            // Then
+            assertThat(saveSoccerField.getFieldName()).isEqualTo(updateSoccerFieldName);
+        }
     }
 
-    @AfterEach
-    public void dropSoccerFieldTest() {
-        // 테스트 후 해당 구장을 삭제
-        SoccerField foundSoccerField = soccerFieldService.findSoccerFieldByName(soccerField.getFieldName());
-        if (foundSoccerField != null) {
-            soccerFieldService.deleteSoccerField(foundSoccerField.getId());
-        }
+    @Test
+    @Transactional
+    @DisplayName("구장 객체 삭제 테스트")
+    public void deleteSoccerFieldTest() {
+        // Given: 새로운 Soccer Field 생성 및 저장
+        SoccerField soccerField = SoccerField.builder()
+                .fieldName("테스트구장")
+                .toiletStatus(1)
+                .showerStatus(1)
+                .parkingStatus(1)
+                .fieldSize("14x16")
+                .fieldImg1("이미지1")
+                .reservationFee(8000)
+                .inOutWhether("실내")
+                .grassWhether("천연")
+                .region("인천")
+                .build();
+
+        soccerField = soccerFieldRepository.save(soccerField);
+
+        // When: 저장된 Soccer Field 삭제
+        soccerFieldRepository.deleteById(soccerField.getId());
+
+        // Then: 해당 ID의 Soccer Field가 없어졌는지 확인
+        Optional<SoccerField> deletedSoccerFiled = soccerFieldRepository.findById(soccerField.getId());
+
+        assertThat(deletedSoccerFiled).isEmpty();
     }
 }
