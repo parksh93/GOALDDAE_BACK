@@ -1,5 +1,6 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.soccerField.SoccerFieldDTO;
 import com.goalddae.entity.SoccerField;
 import com.goalddae.service.SoccerFieldService;
 import org.springframework.http.ResponseEntity;
@@ -53,9 +54,9 @@ public class MainController {
 
     // 구장 수정
     @PutMapping("/update")
-    public ResponseEntity<SoccerField> updateSoccerField(@RequestBody SoccerField soccerField) {
+    public ResponseEntity<SoccerField> updateSoccerField(@RequestBody SoccerFieldDTO soccerFieldDTO) {
         try {
-            SoccerField updatedSoccerField = soccerFieldService.update(soccerField);
+            SoccerField updatedSoccerField = soccerFieldService.update(soccerFieldDTO);
             return ResponseEntity.ok(updatedSoccerField);
         } catch (Exception e) {
             e.printStackTrace();

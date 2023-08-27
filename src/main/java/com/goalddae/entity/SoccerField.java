@@ -54,4 +54,40 @@ public class SoccerField {
 
     @Column(nullable = false)
     private String region;          // 지역
+
+    public void changeFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
+
+    public void changeFacilityStatus(int toiletStatus, int showerStatus, int parkingStatus) {
+        this.toiletStatus = toiletStatus;
+        this.showerStatus = showerStatus;
+        this.parkingStatus = parkingStatus;
+    }
+
+    public void changeFieldSize(String fieldSize) {
+        this.fieldSize = fieldSize;
+    }
+
+    public void changeImages(String fieldImg1, String fieldImg2, String fieldImg3) {
+        this.fieldImg1 = fieldImg1;
+        this.fieldImg2 = fieldImg2;
+        this.fieldImg3 = fieldImg3;
+    }
+
+    public void changeReservationFee(int reservationFee) {
+        this.reservationFee = reservationFee;
+    }
+
+    public void changeInOutWhether(String inOutWhether){
+        this.inOutWhether=inOutWhether;
+    }
+
+    public void changegrassWhether(String grassWhether){
+        this.grassWhether=grassWhether;
+    }
+
+    public void changeRegion(String region){
+        this.region=region;
+    }
 }
