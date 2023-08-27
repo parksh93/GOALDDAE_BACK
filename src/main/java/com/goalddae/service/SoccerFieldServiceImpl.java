@@ -81,11 +81,11 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
     @Override
     @Transactional
     public SoccerField update(SoccerFieldDTO soccerFieldDto) {
-        // 먼저 이전에 저장된 SoccerField 객체를 찾습니다.
+        // 먼저 이전에 저장된 SoccerField 객체를 탐색
         SoccerField soccerField = soccerFieldRepository.findById(soccerFieldDto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 구장이 존재하지 않습니다. id=" + soccerFieldDto.getId()));
 
-        // 찾은 SoccerField 객체의 필드를 DTO로부터 받은 값으로 업데이트 합니다.
+        // 찾은 SoccerField 객체의 필드를 DTO로부터 받은 값으로 업데이트
         soccerField.changeFieldName(soccerFieldDto.getFieldName());
         soccerField.changeFacilityStatus(soccerFieldDto.getToiletStatus(), soccerFieldDto.getShowerStatus(), soccerFieldDto.getParkingStatus());
         soccerField.changeFieldSize(soccerFieldDto.getFieldSize());
