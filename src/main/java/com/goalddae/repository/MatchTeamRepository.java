@@ -7,7 +7,4 @@ import org.apache.ibatis.annotations.Param;
 public interface MatchTeamRepository {
     void createMatchTeamTable(@Param("id") Long matchTeamId);
     void dropMatchTeamTable(@Param("id") Long matchTeamId);
-
-    // 외래키 추가
-    void addForeignKeyConstraintToMatchTeam(Long fieldId);
 }

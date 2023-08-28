@@ -69,15 +69,4 @@ public class MatchServiceImpl implements MatchService {
             return false;
         }
     }
-
-    // 외래 키 추가 코드
-    @Override
-    public void addForeignKeyConstraintToMatchTeam(Long fieldId) {
-        matchTeamRepository.addForeignKeyConstraintToMatchTeam(fieldId);
-    }
-
-    @Override
-    public void addForeignKeyConstraintToMatchIndividual(Long fieldId) {
-        matchIndividualRepository.addForeignKeyConstraintToMatchIndividual(fieldId);
-    }
 }

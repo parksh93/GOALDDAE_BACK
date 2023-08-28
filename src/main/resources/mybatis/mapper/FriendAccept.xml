@@ -6,9 +6,7 @@
                                         from_user VARCHAR(255) NOT NULL,
                                         accept_date DATETIME NOT NULL,
                                         accept BIGINT NOT NULL,
-
-                                        users_id BIGINT NOT NULL,
-                                          FOREIGN KEY (users_id) REFERENCES users(id)
+                                        users_id BIGINT NOT NULL
         );
     </update>
 </mapper>

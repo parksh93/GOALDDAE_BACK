@@ -55,11 +55,15 @@ public class SoccerField {
     @Column(nullable = false)
     private String region;          // 지역
 
+
+    // 구장 수정을 위한 캡슐화
     public void changeFieldName(String fieldName) {
         this.fieldName = fieldName;
     }
 
-    public void changeFacilityStatus(int toiletStatus, int showerStatus, int parkingStatus) {
+    public void changeFacilityStatus(int toiletStatus,
+                                     int showerStatus,
+                                     int parkingStatus) {
         this.toiletStatus = toiletStatus;
         this.showerStatus = showerStatus;
         this.parkingStatus = parkingStatus;
@@ -83,7 +87,7 @@ public class SoccerField {
         this.inOutWhether=inOutWhether;
     }
 
-    public void changegrassWhether(String grassWhether){
+    public void changeGrassWhether(String grassWhether){
         this.grassWhether=grassWhether;
     }
 

@@ -5,9 +5,7 @@
                                                id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                                block_user_id VARCHAR(255) NOT NULL,
                                                block_date DATETIME NOT NULL,
-
-                                               users_id BIGINT NOT NULL,
-                                               FOREIGN KEY (users_id) REFERENCES users(id)
+                                               users_id BIGINT NOT NULL
     );
 </update>
 </mapper>
