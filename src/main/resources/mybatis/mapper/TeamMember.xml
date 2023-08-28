@@ -5,11 +5,8 @@
                                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                         user_join_date DATETIME NOT NULL,
                                         team_manager BIGINT NOT NULL,
-
                                         users_id BIGINT NOT NULL,
-                                            FOREIGN KEY (users_id) REFERENCES users(id),
-                                        team_id BIGINT NOT NULL,
-                                            FOREIGN KEY (team_id) REFERENCES team(id)
+                                        team_id BIGINT NOT NULL
         );
     </update>
 </mapper>

@@ -4,9 +4,7 @@
         CREATE TABLE friend_list_#{id} (
                                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                         friend_id VARCHAR(255) NOT NULL,
-
-                                        users_id BIGINT NOT NULL,
-                                            FOREIGN KEY (users_id) REFERENCES users(id)
-        );
+                                        users_id BIGINT NOT NULL
+                                       );
     </update>
 </mapper>

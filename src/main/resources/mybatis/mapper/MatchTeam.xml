@@ -14,7 +14,6 @@
                                             recruit_end DATETIME NOT NULL,
                                             manager_id VARCHAR(255) NOT NULL,
                                             soccer_field_id BIGINT NOT NULL,
-                                               FOREIGN KEY (soccer_field_id) REFERENCES soccer_field(id),
                                             field_reservation_id BIGINT NOT NULL
         );
     </update>
@@ -23,10 +22,4 @@
     <delete id="dropMatchTeamTable" parameterType="java.lang.Long">
         DROP TABLE IF EXISTS match_Team_#{id}
     </delete>
-
-    <!-- 외래키 제약 추가 쿼리 작성 -->
-    <update id="addForeignKeyConstraintToMatchTeam" parameterType="java.lang.Long">
-        ALTER TABLE match_team_#{id}
-            ADD FOREIGN KEY (field_reservation_id) REFERENCES field_reservation_#{fieldName}(id)
-    </update>
 </mapper>

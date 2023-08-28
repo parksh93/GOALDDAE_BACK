@@ -70,10 +70,6 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
         matchService.createMatchIndividualTable(id);
         matchService.createMatchTeamTable(id);
 
-        // 외래 키 제약 추가
-        matchService.addForeignKeyConstraintToMatchIndividual(id);
-        matchService.addForeignKeyConstraintToMatchTeam(id);
-
         return newSoccerField;
     }
 
@@ -92,7 +88,7 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
         soccerField.changeImages(soccerFieldDto.getFieldImg1(), soccerFieldDto.getFieldImg2(), soccerFieldDto.getFieldImg3());
         soccerField.changeReservationFee(soccerFieldDto.getReservationFee());
         soccerField.changeInOutWhether(soccerFieldDto.getInOutWhether());
-        soccerField.changegrassWhether(soccerFieldDto.getGrassWhether());
+        soccerField.changeGrassWhether(soccerFieldDto.getGrassWhether());
         soccerField.changeRegion(soccerFieldDto.getRegion());
 
         return soccerField;

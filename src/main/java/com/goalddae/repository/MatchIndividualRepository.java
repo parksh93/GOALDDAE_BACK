@@ -13,7 +13,4 @@ import java.util.List;
 public interface MatchIndividualRepository {
     void createMatchIndividualTable(@Param("id") Long matchIndividualId);
     void dropMatchIndividualTable(@Param("id") Long matchIndividualId);
-
-    // 외래키 추가
-    void addForeignKeyConstraintToMatchIndividual(Long fieldId);
 }
