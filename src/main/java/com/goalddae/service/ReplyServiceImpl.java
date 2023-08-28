@@ -61,7 +61,7 @@ public class ReplyServiceImpl implements ReplyService{
                     .boardId(topReply.getBoardId())
                     .content(topReply.getContent())
                     .writer(topReply.getWriter())
-//                    .userId(topReply.getUserId())
+                    .userId(topReply.getUserId())
                     .writeDate(topReply.getReplyWriteDate())
                     .updateDate(topReply.getReplyUpdateDate())
                     .status(topReply.getStatus())
@@ -72,6 +72,23 @@ public class ReplyServiceImpl implements ReplyService{
         }
 
         return resultList;
+    }
+
+    @Override
+    public long replyCount(List<ReplyListDTO> replyListDTOs) {
+
+        long count = 0;
+
+        for(ReplyListDTO reply : replyListDTOs){
+            if(reply.getStatus() == 0){
+                count++;
+            }
+            for(CommunicationReply rr : reply.getChildren()){
+                count++;
+            }
+        }
+
+        return count;
     }
 
     @Transactional
