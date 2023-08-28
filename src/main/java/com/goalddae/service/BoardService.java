@@ -11,11 +11,8 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface BoardService {
-    Page<BoardListDTO> findAllBoardListDTO(Integer page, Integer Size);
 
-    Page<BoardListDTO> findAllBoardListDTOByWriter(Integer page, Integer Size, String name);
-
-    Page<BoardListDTO> findAllBoardListDTOByTitle(Integer page, Integer Size, String name);
+    Page<BoardListDTO> findAllBoardListDTOs(Integer page, String type, String name);
 
     CommunicationBoard findById(Long boardId);
 

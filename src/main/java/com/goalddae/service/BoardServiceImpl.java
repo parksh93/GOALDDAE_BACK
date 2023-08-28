@@ -38,24 +38,20 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public Page<BoardListDTO> findAllBoardListDTO(Integer page, Integer size) {
+    public Page<BoardListDTO> findAllBoardListDTOs(Integer page, String type, String name) {
 
-        Pageable pageable = PageRequest.of(getCalibratedPno(page), size, Sort.by("id").descending());
-        return getBoardListWithCounts(boardJPARepository.findAllBoardListDTO(pageable));
-    }
+        final int PAGE_SIZE = 10;
 
-    @Override
-    public Page<BoardListDTO> findAllBoardListDTOByWriter(Integer page, Integer size, String name) {
+        Pageable pageable = PageRequest.of(getCalibratedPno(page), PAGE_SIZE, Sort.by("id").descending());
 
-        Pageable pageable = PageRequest.of(getCalibratedPno(page), size, Sort.by("id").descending());
-        return getBoardListWithCounts(boardJPARepository.findAllBoardListDTOByWriter(name, pageable));
-    }
+        if(Objects.equals(type, "writer")){
+            return getBoardListWithCounts(boardJPARepository.findAllBoardListDTOByWriter(name, pageable));
+        } else if(Objects.equals(type, "title")){
+            return getBoardListWithCounts(boardJPARepository.findAllBoardListDTOByTitle(name, pageable));
+        } else {
+            return getBoardListWithCounts(boardJPARepository.findAllBoardListDTO(pageable));
+        }
 
-    @Override
-    public Page<BoardListDTO> findAllBoardListDTOByTitle(Integer page, Integer size, String name) {
-
-        Pageable pageable = PageRequest.of(getCalibratedPno(page), size, Sort.by("id").descending());
-        return getBoardListWithCounts(boardJPARepository.findAllBoardListDTOByTitle(name, pageable));
     }
 
     public Page<BoardListDTO> getBoardListWithCounts(Page<BoardListDTO> pagedBoardList) {
