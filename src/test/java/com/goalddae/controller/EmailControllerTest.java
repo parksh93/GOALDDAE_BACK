@@ -36,6 +36,7 @@ public class EmailControllerTest {
     @Test
     @Transactional
     @DisplayName("이메일 발송")
+
     public void sendEmailSignupTest() throws Exception{
         SendEmailDTO sendEmailDTO = SendEmailDTO.builder()
                 .email("jsap50@naver.com")

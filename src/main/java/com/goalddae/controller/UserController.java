@@ -1,5 +1,12 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.post.UserPostsResponse;
+import com.goalddae.dto.user.*;
+import com.goalddae.entity.CommunicationBoard;
+import com.goalddae.entity.UsedTransactionBoard;
+import com.goalddae.entity.User;
+import com.goalddae.exception.NotFoundMatchException;
+import com.goalddae.exception.NotFoundPostException;
 import com.goalddae.dto.user.*;
 import com.goalddae.entity.User;
 import com.goalddae.service.UserServiceImpl;
@@ -8,10 +15,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -28,6 +37,7 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<Boolean> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response) {
         String token = userService.generateTokenFromLogin(loginDTO);
+
         if(!token.equals("")){
             Cookie cookie = new Cookie("token", token);
             cookie.setHttpOnly(true);
@@ -68,6 +78,9 @@ public class UserController {
 
     @RequestMapping(value = "/checkNickname", method = RequestMethod.POST)
     public List<Boolean> checkNickname(@RequestBody CheckNicknameDTO checkNicknameDTO){
+
+        System.out.println(checkNicknameDTO.toString());
+
         return List.of(userService.checkNickname(checkNicknameDTO));
     }
 
@@ -76,10 +89,32 @@ public class UserController {
         userService.save(user);
     }
 
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    public ResponseEntity<String> updateUserInfo(@RequestBody GetUserInfoDTO getUserInfoDTO) {
+
+        System.out.println(getUserInfoDTO.toString());
+
+        userService.update(getUserInfoDTO);
+        return ResponseEntity.ok("수정 되었습니다.");
+    }
+
+    @RequestMapping(value = "/posts/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<?> viewUserPosts(@PathVariable long userId) {
+
+        List<CommunicationBoard> communicationBoardsList = userService.getUserCommunicationBoardPosts(userId);
+        List<UsedTransactionBoard> usedTransactionBoardList = userService.getUserUsedTransactionBoardPosts(userId);
+
+        List<Object> combinedList = new ArrayList<>();
+        combinedList.addAll(communicationBoardsList);
+        combinedList.addAll(usedTransactionBoardList);
+
+        return ResponseEntity.ok(combinedList);
+    }
+
     @RequestMapping(value = "/findLoginId", method = RequestMethod.POST)
     public ResponseEntity<ResponseFindLoginIdDTO> findLoginId(@RequestBody RequestFindLoginIdDTO requestFindLoginIdDTO){
         ResponseFindLoginIdDTO findLoginIdDTO = userService.getLoginIdByEmailAndName(requestFindLoginIdDTO);
-      
+
         return ResponseEntity.ok(findLoginIdDTO);
     }
 
