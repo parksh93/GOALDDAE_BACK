@@ -9,24 +9,17 @@ import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.entity.User;
 import com.goalddae.exception.NotFoundUserException;
 import com.goalddae.repository.CommunicationBoardRepository;
-import com.goalddae.repository.MatchRepository;
 import com.goalddae.repository.UsedTransactionBoardRepository;
-import com.goalddae.repository.UserJPARepository;
-
-import com.goalddae.entity.User;
-import com.goalddae.exception.NotFoundUserException;
 import com.goalddae.repository.UserJPARepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.List;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Random;
 
