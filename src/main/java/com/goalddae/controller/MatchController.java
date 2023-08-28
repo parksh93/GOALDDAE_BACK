@@ -1,15 +1,16 @@
 package com.goalddae.controller;
 
+import com.fasterxml.jackson.databind.deser.DataFormatReaders;
+import com.goalddae.dto.match.MatchIndividualDTO;
 import com.goalddae.service.MatchService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import retrofit2.http.Path;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -46,4 +47,11 @@ public class MatchController {
             return new ResponseEntity<>("테이블 생성 실패: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-}
+
+        // 신청한 매치리스트 보기
+        @GetMapping("/match-individual/{userId}")
+        public ResponseEntity<List<MatchIndividualDTO>> findAllByUserId(@PathVariable String userId) {
+            List<MatchIndividualDTO> matchList = matchService.findAllByUserId(userId);
+            return ResponseEntity.ok().body(matchList);
+        }
+    }
