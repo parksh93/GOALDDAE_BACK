@@ -1,3 +1,4 @@
+#application.yml
 spring:
   datasource:
     url: ${url}
@@ -18,5 +19,3 @@ jwt:
   issuer: ${issuer}
   secret_key: ${secret_key}
 
-mybatis:
-  mapper-locations: classpath:mybatis/mapper/**/**.xml

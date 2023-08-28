@@ -1,0 +1,13 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goalddae.repository.TeamApplyRepository">
+    <update id="createTeamApplyTable">
+        CREATE TABLE ${teamApply} (
+                                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                       team_apply_date DATETIME NOT NULL,
+                                       team_accept_status BIGINT NOT NULL,
+
+                                       team_id BIGINT NOT NULL,
+                                            FOREIGN KEY (team_id) REFERENCES team(id)
+        );
+    </update>
+</mapper>

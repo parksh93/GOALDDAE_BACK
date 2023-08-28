@@ -97,7 +97,7 @@ public class BoardJPARepositoryTest {
 
 
         CommunicationBoard newPost = CommunicationBoard.builder()
-                .userId(userId)
+//                .userId(userId)
                 .writer(writer)
                 .title(title)
                 .content(content)

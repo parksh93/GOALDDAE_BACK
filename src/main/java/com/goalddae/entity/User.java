@@ -1,7 +1,14 @@
 package com.goalddae.entity;
 
 import jakarta.persistence.*;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import lombok.*;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +20,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -39,8 +47,7 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String name;    // 사용자 이름
-    
-    @Column(unique = true)
+
     private String nickname;    // 닉네임
 
     @Column(nullable = false)
@@ -90,12 +97,13 @@ public class User implements UserDetails {
 
     @Builder
     public User(long id, String loginId, String email, String password, String userCode, String name, String nickname, String gender, String profileImgUrl,
-                String phoneNumber, Date birth, int matchesCnt, String level,
+                String phoneNumber, Date birth, int matchesCnt, LocalDateTime signupDate, LocalDateTime profileUpdateDate, String level,
                 boolean accountSuspersion, int noShowCnt, String preferredCity,
-                String preferredArea, int activityClass, String authority,
-                LocalDateTime signupDate, LocalDateTime profileUpdateDate){
+                String preferredArea, int activityClass, String authority){
+
         this.id = id;
         this.loginId = loginId;
+        this.name = name;
         this.email = email;
         this.password = password;
         this.userCode = userCode;
@@ -107,6 +115,8 @@ public class User implements UserDetails {
         this.birth = birth;
         this.matchesCnt = matchesCnt;
         this.level = level;
+        this.signupDate = signupDate;
+        this.profileUpdateDate = profileUpdateDate;
         this.accountSuspersion = accountSuspersion;
         this.noShowCnt = noShowCnt;
         this.preferredCity = preferredCity;

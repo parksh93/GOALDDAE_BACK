@@ -1,0 +1,12 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goalddae.repository.FriendListRepository">
+    <update id="createFriendListTable">
+        CREATE TABLE ${friendList} (
+                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                        friend_id VARCHAR(255) NOT NULL,
+
+                                        users_id BIGINT NOT NULL,
+                                            FOREIGN KEY (users_id) REFERENCES users(id)
+        );
+    </update>
+</mapper>
