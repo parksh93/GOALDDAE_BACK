@@ -61,7 +61,7 @@ public class ReplyServiceImpl implements ReplyService{
                     .boardId(topReply.getBoardId())
                     .content(topReply.getContent())
                     .writer(topReply.getWriter())
-//                    .userId(topReply.getUserId())
+                    .userId(topReply.getUserId())
                     .writeDate(topReply.getReplyWriteDate())
                     .updateDate(topReply.getReplyUpdateDate())
                     .status(topReply.getStatus())
