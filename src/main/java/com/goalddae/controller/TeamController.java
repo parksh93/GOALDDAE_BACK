@@ -46,8 +46,8 @@ public class TeamController {
         }
     }
 
-    @PostMapping(value = "/teamCreate")
-    public ResponseEntity<String> teamCreate(@RequestBody Team team){
+    @PostMapping(value = "/teamSave")
+    public ResponseEntity<String> teamSave(@RequestBody Team team){
 
         teamService.save(team);
         return ResponseEntity
