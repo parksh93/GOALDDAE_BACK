@@ -55,7 +55,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Date birth; // 생년월일
 
-    @Column
+    @Column(nullable = true)
     private Long teamId; // 가입 팀 id
 
     @Column(nullable = false)
@@ -93,7 +93,7 @@ public class User implements UserDetails {
 
     @Builder
     public User(long id, String loginId, String email, String password, String userCode, String name, String nickname, String gender, String profileImgUrl,
-                String phoneNumber, Date birth, int matchesCnt, String level,
+                String phoneNumber, Date birth,Long teamId, int matchesCnt, String level,
                 boolean accountSuspersion, int noShowCnt, String preferredCity,
                 String preferredArea, int activityClass, String authority,
                 LocalDateTime signupDate, LocalDateTime profileUpdateDate){
@@ -108,6 +108,7 @@ public class User implements UserDetails {
         this.profileImgUrl = profileImgUrl;
         this.phoneNumber = phoneNumber;
         this.birth = birth;
+        this.teamId = teamId;
         this.matchesCnt = matchesCnt;
         this.level = level;
         this.accountSuspersion = accountSuspersion;

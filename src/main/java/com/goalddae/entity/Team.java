@@ -24,7 +24,7 @@ public class Team {
     private String area;    // 지역
 
     @Column(nullable = false)
-    private int averageAge; // 나이대
+    private int averageAge; // 평균나이
 
     @Column(nullable = false)
     private boolean recruiting; // 모집중
