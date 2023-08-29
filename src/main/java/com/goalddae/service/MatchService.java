@@ -8,3 +8,4 @@ public interface MatchService {
     boolean dropMatchTeamTable(@Param("fieldId") Long fieldId);
     boolean dropMatchIndividualTable(@Param("fieldId") Long fieldId);
 }
+

@@ -67,9 +67,9 @@ public class SoccerFieldServiceTest {
         // Given
         soccerField = SoccerField.builder()
                 .fieldName("테스트구장")
-                .toiletStatus(1)
-                .showerStatus(1)
-                .parkingStatus(1)
+                .toiletStatus(true)
+                .showerStatus(true)
+                .parkingStatus(true)
                 .fieldSize("14x16")
                 .fieldImg1("이미지1")
                 .reservationFee(8000)
@@ -99,9 +99,9 @@ public class SoccerFieldServiceTest {
         SoccerField existing = new SoccerField(
                 1L,
                 "인천 풋살장",
-                1,
-                1,
-                1,
+                 true,
+                true,
+                true,
                 "14x15",
                 "img1",
                 "img2",
@@ -114,9 +114,9 @@ public class SoccerFieldServiceTest {
         SoccerFieldDTO updateDto = new SoccerFieldDTO(
                 1L,
                 "테스트 구장",
-                0,
-                0,
-                0,
+                false,
+                false,
+                false,
                 "15x16",
                 "변경이미지1",
                 "변경이미지2",
@@ -134,7 +134,7 @@ public class SoccerFieldServiceTest {
 
         // Then: 결과 확인
         assertThat(result.getFieldName()).isEqualTo(updateDto.getFieldName());
-        assertThat(result.getToiletStatus()).isEqualTo(updateDto.getToiletStatus());
+        assertThat(result.isToiletStatus()).isEqualTo(updateDto.isToiletStatus());
     }
 
     @Test

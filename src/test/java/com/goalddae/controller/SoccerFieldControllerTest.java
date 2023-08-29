@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goalddae.entity.SoccerField;
 import com.goalddae.repository.SoccerFieldRepository;
 import com.goalddae.service.SoccerFieldService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -26,6 +26,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.context.WebApplicationContext;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -51,13 +56,13 @@ public class SoccerFieldControllerTest {
         SoccerField sampleField = SoccerField.builder()
                 .id(1L)
                 .region("성남")
-                .fieldName("모란 풋살장")
+                .fieldName("테스트구장")
                 .build();
 
         when(soccerFieldService.searchSoccerFields(any(String.class)))
                 .thenReturn(Arrays.asList(sampleField));
 
-        mockMvc.perform(get("/search/soccerField")
+        mockMvc.perform(get("/field/search")
                         .param("region", "성남")
                         .param("fieldName", "모란 풋살장"))
                 .andExpect(status().isOk())
@@ -70,9 +75,9 @@ public class SoccerFieldControllerTest {
     void saveSoccerFieldTest() throws Exception {
         SoccerField soccerField = SoccerField.builder()
                 .fieldName("테스트 풋살장")
-                .toiletStatus(1)
-                .showerStatus(1)
-                .parkingStatus(1)
+                .toiletStatus(true)
+                .showerStatus(true)
+                .parkingStatus(true)
                 .fieldSize("14x16")
                 .fieldImg1("테스트이미지1")
                 .inOutWhether("실외")
@@ -85,7 +90,7 @@ public class SoccerFieldControllerTest {
                 .thenReturn(soccerField);
 
         // 구장 등록
-        mockMvc.perform(post("/soccerField/save")
+        mockMvc.perform(post("/field/save")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(soccerField)))
                 .andExpect(status().isOk())
@@ -110,7 +115,7 @@ public class SoccerFieldControllerTest {
                 "\"deleteStatus\" : 0 " +
                 "}";
 
-        mockMvc.perform(put("/soccerField/update")
+        mockMvc.perform(put("/field/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonContent))
                 .andExpect(status().isOk());
@@ -118,14 +123,14 @@ public class SoccerFieldControllerTest {
 
     @Test
     @DisplayName("구장 객체 삭제 테스트")
-    public void deleteSoccerfieldTest() {
+    public void deleteSoccerFieldTest() {
         // Given
         SoccerField soccerField = SoccerField.builder()
                 .id(1L)
                 .fieldName("테스트 풋살장")
-                .toiletStatus(1)
-                .showerStatus(1)
-                .parkingStatus(1)
+                .toiletStatus(true)
+                .showerStatus(true)
+                .parkingStatus(true)
                 .fieldSize("14x16")
                 .fieldImg1("테스트이미지1")
                 .inOutWhether("실외")
@@ -141,5 +146,19 @@ public class SoccerFieldControllerTest {
 
         // Then
         verify(soccerFieldService, times(1)).delete(anyLong());
+
     }
-}
+
+        @Test
+        @Transactional
+        @DisplayName("구장 정보 가져오기")
+        public void getFieldInfo() throws Exception{
+            String url = "/field/getFieldInfo/1";
+
+            ResultActions result = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
+
+            result.andExpect(status().isOk())
+                    .andExpect(jsonPath("$.fieldName").value("테스트 구장"));
+
+        }
+    }

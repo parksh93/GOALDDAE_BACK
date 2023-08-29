@@ -22,13 +22,13 @@ public class SoccerField {
     private String fieldName;   // 구장명
 
     @Column(nullable = false)
-    private int toiletStatus;   // 화장실 여부
+    private boolean toiletStatus;   // 화장실 여부
 
     @Column(nullable = false)
-    private int showerStatus;   //샤워실 여부
+    private boolean showerStatus;   //샤워실 여부
 
     @Column(nullable = false)
-    private int parkingStatus;  // 주차장 여부
+    private boolean parkingStatus;  // 주차장 여부
 
     @Column(nullable = false)
     private String fieldSize ;   // 구장 크기
@@ -61,9 +61,9 @@ public class SoccerField {
         this.fieldName = fieldName;
     }
 
-    public void changeFacilityStatus(int toiletStatus,
-                                     int showerStatus,
-                                     int parkingStatus) {
+    public void changeFacilityStatus(boolean toiletStatus,
+                                     boolean showerStatus,
+                                     boolean parkingStatus) {
         this.toiletStatus = toiletStatus;
         this.showerStatus = showerStatus;
         this.parkingStatus = parkingStatus;

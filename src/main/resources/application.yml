@@ -6,7 +6,7 @@ spring:
     password: ${password}
     driver-class-name: ${driver-class-name}
   profiles:
-    active: db, jwt
+    active: db, jwt, payment
   jpa:
     hibernate:
       ddl-auto: update
