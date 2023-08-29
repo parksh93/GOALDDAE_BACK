@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService{
     private final UsedTransactionBoardRepository usedTransactionBoardRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
+
 
     @Autowired
     public UserServiceImpl(UserJPARepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, TokenProvider tokenProvider,
@@ -190,6 +193,7 @@ public class UserServiceImpl implements UserService{
             changeUserInfoDTO.setPreferredCity(getUserInfoDTO.getPreferredCity());
             changeUserInfoDTO.setPreferredArea(getUserInfoDTO.getPreferredArea());
             changeUserInfoDTO.setActivityClass(getUserInfoDTO.getActivityClass());
+            changeUserInfoDTO.setProfileUpdateDate(LocalDateTime.now());
 
             User updateduser = changeUserInfoDTO.toEntity();
 
@@ -207,7 +211,7 @@ public class UserServiceImpl implements UserService{
         return usedTransactionBoardRepository.findByUserId(userId);
     }
 
-
+    @Override
     public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
         try {
             String loginId = tokenProvider.getLoginId(changePasswordDTO.getLoginIdToken());
@@ -225,3 +229,4 @@ public class UserServiceImpl implements UserService{
         return true;
     }
 }
+

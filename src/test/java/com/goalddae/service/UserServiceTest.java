@@ -129,7 +129,7 @@ public class UserServiceTest {
     @DisplayName("자유게시판에 쓴 글 조회 테스트")
     public void getUserCommunicationBoardPostsTest() {
         // given
-        String userId = "뀨";
+        long userId = 1;
 
         // when
         List<CommunicationBoard> communicationBoardList = userService.getUserCommunicationBoardPosts(userId);

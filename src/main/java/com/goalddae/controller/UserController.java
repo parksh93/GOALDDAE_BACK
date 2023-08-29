@@ -1,28 +1,20 @@
 package com.goalddae.controller;
 
-import com.goalddae.dto.post.UserPostsResponse;
 import com.goalddae.dto.user.*;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.entity.User;
-import com.goalddae.exception.NotFoundMatchException;
-import com.goalddae.exception.NotFoundPostException;
-import com.goalddae.dto.user.*;
-import com.goalddae.entity.User;
 import com.goalddae.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 @RestController
 @RequestMapping("/user")
@@ -145,4 +137,5 @@ public class UserController {
 
         return List.of(changeCheck);
     }
+
 }

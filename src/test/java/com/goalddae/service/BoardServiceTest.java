@@ -138,7 +138,6 @@ public class BoardServiceTest {
         BoardUpdateDTO boardUpdateDTO = BoardUpdateDTO.builder()
                 .id(id)
 //                .userId(userId)
-                .writer(writer)
                 .title(title)
                 .content(content)
                 .img1(null)

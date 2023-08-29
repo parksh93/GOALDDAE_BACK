@@ -12,6 +12,7 @@ import java.util.List;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
 import com.goalddae.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
     public void save(User user);
@@ -27,5 +28,4 @@ public interface UserService {
     public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO);
     public String checkLoginIdAndEmail(RequestFindPasswordDTO requestFindPasswordDTO);
     public boolean changePassword(ChangePasswordDTO changePasswordDTO);
-
 }
