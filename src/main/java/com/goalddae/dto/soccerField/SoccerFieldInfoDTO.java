@@ -21,7 +21,7 @@ public class SoccerFieldInfoDTO {
     private String fieldImg1;
     private String fieldImg2;
     private String fieldImg3;
-    private int reservationFree;
+    private int reservationFee;
     private String inOutWhether;
     private String grassWhether;
     private String region;
@@ -36,7 +36,7 @@ public class SoccerFieldInfoDTO {
         this.fieldImg1 = soccerField.getFieldImg1();
         this.fieldImg2 = soccerField.getFieldImg2();
         this.fieldImg3 = soccerField.getFieldImg3();
-        this.reservationFree = soccerField.getReservationFree();
+        this.reservationFee = soccerField.getReservationFee();
         this.inOutWhether = soccerField.getInOutWhether();
         this.grassWhether = soccerField.getGrassWhether();
         this.region = soccerField.getRegion();
@@ -55,7 +55,7 @@ public class SoccerFieldInfoDTO {
                 .fieldSize(fieldSize)
                 .inOutWhether(inOutWhether)
                 .grassWhether(grassWhether)
-                .reservationFree(reservationFree)
+                .reservationFee(reservationFee)
                 .region(region)
                 .build();
     }

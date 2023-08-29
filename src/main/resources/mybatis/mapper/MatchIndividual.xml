@@ -1,23 +1,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.goalddae.repository.MatchIndividualRepository">
-    <update id="createMatchIndividualTable">
-        CREATE TABLE ${matchIndividual} (
-                                            id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                            likes BIGINT default 0 NOT NULL,
-                                            views BIGINT default 0 NOT NULL,
-                                            gender VARCHAR(255) NOT NULL,
-                                            minimum BIGINT NOT NULL,
-                                            maximum BIGINT NOT NULL,
-                                            player_number BIGINT NOT NULL,
-                                            recruit_start DATETIME NOT NULL,
-                                            recruit_end DATETIME NOT NULL,
-                                            manager_id VARCHAR(255) NOT NULL,
-                                            users_id BIGINT NOT NULL,
-                                            FOREIGN KEY (users_id) REFERENCES users(id),
-                                            soccer_field_id BIGINT NOT NULL,
-                                            FOREIGN KEY (soccer_field_id) REFERENCES soccer_field(id),
-                                            field_reservation_id BIGINT NOT NULL,
-                                            FOREIGN KEY (field_reservation_id) REFERENCES field_reservation(id)
+    <update id="createMatchIndividualTable" parameterType="java.lang.Long">
+        CREATE TABLE match_individual_#{id} (
+                                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                       likes BIGINT default 0 NOT NULL,
+                                       views BIGINT default 0 NOT NULL,
+                                       gender VARCHAR(255) NOT NULL,
+                                       minimum BIGINT NOT NULL,
+                                       maximum BIGINT NOT NULL,
+                                       player_number BIGINT NOT NULL,
+                                       recruit_start DATETIME NOT NULL,
+                                       recruit_end DATETIME NOT NULL,
+                                       manager_id VARCHAR(255) NOT NULL,
+                                       users_id BIGINT NOT NULL,
+                                       soccer_field_id BIGINT NOT NULL,
+                                       field_reservation_id BIGINT NOT NULL
         );
     </update>
+
+    <!-- 동적 테이블 삭제 쿼리 -->
+    <delete id="dropMatchIndividualTable" parameterType="java.lang.Long">
+        DROP TABLE IF EXISTS match_individual_#{id}
+    </delete>
 </mapper>
