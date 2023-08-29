@@ -42,24 +42,25 @@ public class User implements UserDetails {
     private String password;    // 비밀번호
                                 // 소셜 로그인을 대비해 null 허용
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private String userCode;    // 유저코드
 
     @Column(nullable = false)
     private String name;    // 사용자 이름
 
+    @Column(nullable = true)
     private String nickname;    // 닉네임
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String gender;  // 성별
 
     @Column(nullable = false)
     private String profileImgUrl;   // 프로필사진 주소
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String phoneNumber; // 전화번호
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Date birth; // 생년월일
 
     @Column(nullable = false)
@@ -91,7 +92,7 @@ public class User implements UserDetails {
     @Column
     private int activityClass;   // 활동 반경
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String authority;  // 권한 등급
                             // 일반 유저 : user / 매니저 : manager / 관리자 : admin
 
@@ -129,7 +130,7 @@ public class User implements UserDetails {
 
     @PrePersist
     public void setInformation() {
-        this.profileImgUrl = "./userProfileImg/goalddae_default_profile.Webp";
+        this.profileImgUrl = "./img/userProfileImg/goalddae_default_profile.Webp";
         this.matchesCnt = 0;
         this.level = "유망주";
         this.signupDate = LocalDateTime.now();

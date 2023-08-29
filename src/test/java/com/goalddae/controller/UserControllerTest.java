@@ -147,7 +147,7 @@ public class UserControllerTest {
     @DisplayName("내가 쓴 게시글 조회 테스트")
     public void getUserPostsTest() throws Exception {
         // given
-        String userId = "뀨";
+        long userId = 1;
         List<CommunicationBoard> communicationBoardPosts = new ArrayList<>();
         List<UsedTransactionBoard> usedTransactionBoardPosts = new ArrayList<>();
 

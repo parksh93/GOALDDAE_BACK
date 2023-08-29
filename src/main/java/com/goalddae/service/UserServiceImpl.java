@@ -39,10 +39,10 @@ public class UserServiceImpl implements UserService{
     private final TokenProvider tokenProvider;
 
     @Autowired
-    public UserServiceImpl(UserJPARepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, TokenProvider tokenProvider,
+    public UserServiceImpl(UserJPARepository userRepository, TokenProvider tokenProvider,
                            CommunicationBoardRepository communicationBoardRepository, UsedTransactionBoardRepository usedTransactionBoardRepository){
         this.userJPARepository = userRepository;
-        this.bCryptPasswordEncoder =bCryptPasswordEncoder;
+        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.tokenProvider = tokenProvider;
         this.communicationBoardRepository = communicationBoardRepository;
         this.usedTransactionBoardRepository = usedTransactionBoardRepository;
@@ -205,6 +205,26 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public void updateSocialSignup(GetUserInfoDTO getUserInfoDTO){
+        User user = userJPARepository.findByEmail(getUserInfoDTO.getEmail());
+
+        if(user != null){
+            ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
+            changeUserInfoDTO.setNickname(getUserInfoDTO.getNickname());
+            changeUserInfoDTO.setPhoneNumber(getUserInfoDTO.getPhoneNumber());
+            changeUserInfoDTO.setBirth(getUserInfoDTO.getBirth());
+            changeUserInfoDTO.setGender(getUserInfoDTO.getGender());
+            changeUserInfoDTO.setPreferredCity(getUserInfoDTO.getPreferredCity());
+            changeUserInfoDTO.setPreferredArea(getUserInfoDTO.getPreferredArea());
+            changeUserInfoDTO.setActivityClass(getUserInfoDTO.getActivityClass());
+
+            user = changeUserInfoDTO.toEntity();
+
+            userJPARepository.save(user);
+        }
+    }
+
+    @Override
     public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId) {
         return communicationBoardRepository.findByUserId(userId);
     }
@@ -230,5 +250,10 @@ public class UserServiceImpl implements UserService{
             return false;
         }
         return true;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userJPARepository.findByEmail(email);
     }
 }

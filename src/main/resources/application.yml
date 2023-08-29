@@ -6,7 +6,7 @@ spring:
     password: ${password}
     driver-class-name: ${driver-class-name}
   profiles:
-    active: db, jwt, payment
+    active: db, jwt, payment, oauth2
   jpa:
     hibernate:
       ddl-auto: update
@@ -14,6 +14,14 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${google-client-id}
+            client-secret: ${google-client-secret}
+            scope: email, profile
 
 jwt:
   issuer: ${issuer}
