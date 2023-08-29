@@ -2,9 +2,9 @@ package com.goalddae.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goalddae.dto.soccerField.SoccerFieldDTO;
+import com.goalddae.dto.soccerField.SoccerFieldInfoDTO;
 import com.goalddae.entity.SoccerField;
 import com.goalddae.repository.SoccerFieldRepository;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,7 +83,7 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
 
         // 찾은 SoccerField 객체의 필드를 DTO로부터 받은 값으로 업데이트
         soccerField.changeFieldName(soccerFieldDto.getFieldName());
-        soccerField.changeFacilityStatus(soccerFieldDto.getToiletStatus(), soccerFieldDto.getShowerStatus(), soccerFieldDto.getParkingStatus());
+        soccerField.changeFacilityStatus(soccerFieldDto.isToiletStatus(), soccerFieldDto.isShowerStatus(), soccerFieldDto.isParkingStatus());
         soccerField.changeFieldSize(soccerFieldDto.getFieldSize());
         soccerField.changeImages(soccerFieldDto.getFieldImg1(), soccerFieldDto.getFieldImg2(), soccerFieldDto.getFieldImg3());
         soccerField.changeReservationFee(soccerFieldDto.getReservationFee());
@@ -114,5 +114,11 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
 
         // 구장 테이블에서 해당 구장 삭제
         soccerFieldRepository.deleteById(id);
+    }
+
+    @Override
+    public SoccerFieldInfoDTO findById(long id) {
+        SoccerField soccerField = soccerFieldRepository.findById(id).get();
+        return new SoccerFieldInfoDTO(soccerField);
     }
 }

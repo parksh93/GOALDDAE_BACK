@@ -12,9 +12,9 @@ import lombok.*;
 public class SoccerFieldDTO {
     private long id;
     private String  fieldName;
-    private int toiletStatus;
-    private int showerStatus;
-    private int parkingStatus;
+    private boolean toiletStatus;
+    private boolean showerStatus;
+    private boolean parkingStatus;
     private String fieldSize;
     private String fieldImg1;
     private String fieldImg2;

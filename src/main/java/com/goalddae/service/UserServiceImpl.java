@@ -3,38 +3,54 @@ package com.goalddae.service;
 import com.goalddae.config.jwt.TokenProvider;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
+
+import com.goalddae.entity.CommunicationBoard;
+import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.entity.User;
 import com.goalddae.exception.NotFoundUserException;
+import com.goalddae.repository.CommunicationBoardRepository;
+import com.goalddae.repository.UsedTransactionBoardRepository;
 import com.goalddae.repository.UserJPARepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.List;
+
 import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
 public class UserServiceImpl implements UserService{
     private final UserJPARepository userJPARepository;
+    private final CommunicationBoardRepository communicationBoardRepository;
+    private final UsedTransactionBoardRepository usedTransactionBoardRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
     private final FriendService friendService;
 
+
+    @Autowired
     public UserServiceImpl(UserJPARepository userRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
                            TokenProvider tokenProvider,
+                           CommunicationBoardRepository communicationBoardRepository,
+                           UsedTransactionBoardRepository usedTransactionBoardRepository,
                            FriendService friendService){
         this.userJPARepository = userRepository;
         this.bCryptPasswordEncoder =bCryptPasswordEncoder;
         this.tokenProvider = tokenProvider;
+        this.communicationBoardRepository = communicationBoardRepository;
+        this.usedTransactionBoardRepository = usedTransactionBoardRepository;
         this.friendService = friendService;
     }
 
     @Override
     public void save(User user){
         User newUser = User.builder()
-                .id(user.getId())
                 .loginId(user.getLoginId())
                 .email(user.getEmail())
                 .password(bCryptPasswordEncoder.encode(user.getPassword()))
@@ -84,7 +100,6 @@ public class UserServiceImpl implements UserService{
 
         return code.toString();
     }
-
     @Override
     public User getByCredentials(String loginId){
         return userJPARepository.findByLoginId(loginId);
@@ -110,11 +125,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public GetUserInfoDTO getUserInfo(String token){
         if(tokenProvider.validToken(token)){
-           User user = userJPARepository.findById(tokenProvider.getUserId(token)).get();
+            User user = userJPARepository.findById(tokenProvider.getUserId(token)).get();
 
-           GetUserInfoDTO userInfoDTO = new GetUserInfoDTO(user);
+            GetUserInfoDTO userInfoDTO = new GetUserInfoDTO(user);
 
-           return userInfoDTO;
+            return userInfoDTO;
         }
         return null;
     }
@@ -181,15 +196,43 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public void update(GetUserInfoDTO getUserInfoDTO) {
+        User user = userJPARepository.findByLoginId(getUserInfoDTO.getLoginId());
+
+        if (user != null) {
+            ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
+            changeUserInfoDTO.setNickname(getUserInfoDTO.getNickname());
+            changeUserInfoDTO.setPhoneNumber(getUserInfoDTO.getPhoneNumber());
+            changeUserInfoDTO.setPreferredCity(getUserInfoDTO.getPreferredCity());
+            changeUserInfoDTO.setPreferredArea(getUserInfoDTO.getPreferredArea());
+            changeUserInfoDTO.setActivityClass(getUserInfoDTO.getActivityClass());
+
+            User updateduser = changeUserInfoDTO.toEntity();
+
+            userJPARepository.save(updateduser);
+        }
+    }
+
+    @Override
+    public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId) {
+        return communicationBoardRepository.findByUserId(userId);
+    }
+
+    @Override
+    public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(long userId) {
+        return usedTransactionBoardRepository.findByUserId(userId);
+    }
+
+
     public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
         try {
             String loginId = tokenProvider.getLoginId(changePasswordDTO.getLoginIdToken());
             User user = userJPARepository.findByLoginId(loginId);
 
-           ChangeUserInfoDTO userInfoDTO = new ChangeUserInfoDTO(user);
-           userInfoDTO.setPassword(bCryptPasswordEncoder.encode(changePasswordDTO.getPassword()));
-           userInfoDTO.setProfileUpdateDate(LocalDateTime.now());
-           User updateUser = userInfoDTO.toEntity();
+            ChangeUserInfoDTO userInfoDTO = new ChangeUserInfoDTO(user);
+            userInfoDTO.setPassword(bCryptPasswordEncoder.encode(changePasswordDTO.getPassword()));
+            userInfoDTO.setProfileUpdateDate(LocalDateTime.now());
+            User updateUser = userInfoDTO.toEntity();
 
             userJPARepository.save(updateUser);
         }catch (Exception e){

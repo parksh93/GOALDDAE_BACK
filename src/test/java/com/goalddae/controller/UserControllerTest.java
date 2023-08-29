@@ -1,7 +1,14 @@
 package com.goalddae.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.goalddae.dto.user.CheckLoginIdDTO;
+import com.goalddae.dto.user.CheckNicknameDTO;
+import com.goalddae.dto.user.LoginDTO;
+import com.goalddae.entity.CommunicationBoard;
+import com.goalddae.entity.UsedTransactionBoard;
+import com.goalddae.service.UserServiceImpl;
+import com.goalddae.entity.User;
+import com.goalddae.repository.UserJPARepository;
 import com.goalddae.dto.user.*;
 import com.goalddae.dto.user.CheckLoginIdDTO;
 import com.goalddae.dto.user.CheckNicknameDTO;
@@ -16,8 +23,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class UserControllerTest {
     @Autowired
-    UserService userService;
+    UserServiceImpl userService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -95,6 +109,60 @@ public class UserControllerTest {
 
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(false));
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("유저정보 수정 테스트")
+    public void updateUserInfoTest() throws Exception {
+        // given
+        String nickname = "코로그졸귀";
+        String level = "프로";
+
+        User user = User.builder()
+                .nickname(nickname)
+                .level(level)
+                .build();
+
+        String url = "http://localhost:8080//updateUserInfo";
+        String url2 = "/user/0/all"; // findAll 메서드 작성후, 테스트 적용 예정
+
+        final String requestBody = objectMapper.writeValueAsString(user);
+
+        // when
+        mockMvc.perform(put(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody));
+
+        // then
+        final ResultActions result = mockMvc.perform(get(url2)
+                .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].nickname").value(nickname))
+                .andExpect(jsonPath("$[0].level").value(level));
+    }
+    @Test
+    @Transactional
+    @DisplayName("내가 쓴 게시글 조회 테스트")
+    public void getUserPostsTest() throws Exception {
+        // given
+        long userId = 123;
+        List<CommunicationBoard> communicationBoardPosts = new ArrayList<>();
+        List<UsedTransactionBoard> usedTransactionBoardPosts = new ArrayList<>();
+
+        // when
+        when(userService.getUserCommunicationBoardPosts(userId)).thenReturn(communicationBoardPosts);
+        when(userService.getUserUsedTransactionBoardPosts(userId)).thenReturn(usedTransactionBoardPosts);
+
+        ResultActions resultActions = mockMvc.perform(get("/posts/{userId}", userId)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.communicationBoardPosts").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.usedTransactionBoardPosts").isArray());
     }
 
     @Test

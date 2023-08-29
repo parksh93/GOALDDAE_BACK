@@ -5,7 +5,6 @@ import com.goalddae.repository.FieldReservationRepository;
 import com.goalddae.repository.SoccerFieldRepository;
 import com.goalddae.service.MatchService;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
 public class SoccerFieldRepositoryTest {
@@ -36,9 +36,9 @@ public class SoccerFieldRepositoryTest {
         // 구장 객체 생성 및 저장
         soccerField = SoccerField.builder()
                 .fieldName("테스트구장")
-                .toiletStatus(1)
-                .showerStatus(1)
-                .parkingStatus(1)
+                .toiletStatus(true)
+                .showerStatus(true)
+                .parkingStatus(true)
                 .fieldSize("14x16")
                 .fieldImg1("이미지1")
                 .reservationFee(8000)
@@ -57,7 +57,7 @@ public class SoccerFieldRepositoryTest {
 
     @Test
     @Transactional
-    @DisplayName("구장 객체 정보 수정 레포지토리 테스트")
+    @DisplayName("구장 객체 정보 수정 테스트")
     public void updateSoccerFieldTest() {
         // Given: 기존에 저장되어 있는 Soccer Field 정보와 업데이트 할 정보 생성
         Long soccerFiledId = 1L;
@@ -65,9 +65,9 @@ public class SoccerFieldRepositoryTest {
 
         SoccerField soccerField = SoccerField.builder()
                 .fieldName(updateSoccerFieldName)
-                .toiletStatus(1)
-                .showerStatus(1)
-                .parkingStatus(1)
+                .toiletStatus(true)
+                .showerStatus(true)
+                .parkingStatus(true)
                 .fieldSize("기존 사이즈")
                 .fieldImg1("기존 이미지1")
                 .fieldImg2("기존 이미지2")
@@ -96,9 +96,9 @@ public class SoccerFieldRepositoryTest {
         // Given: 새로운 Soccer Field 생성 및 저장
         SoccerField soccerField = SoccerField.builder()
                 .fieldName("테스트구장")
-                .toiletStatus(1)
-                .showerStatus(1)
-                .parkingStatus(1)
+                .toiletStatus(true)
+                .showerStatus(true)
+                .parkingStatus(true)
                 .fieldSize("14x16")
                 .fieldImg1("이미지1")
                 .reservationFee(8000)
@@ -112,9 +112,20 @@ public class SoccerFieldRepositoryTest {
         // When: 저장된 Soccer Field 삭제
         soccerFieldRepository.deleteById(soccerField.getId());
 
-        // Then: 해당 ID의 Soccer Field가 없어졌는지 확인
+        // Then: 해당 ID의 SoccerField가 없어졌는지 확인
         Optional<SoccerField> deletedSoccerFiled = soccerFieldRepository.findById(soccerField.getId());
 
         assertThat(deletedSoccerFiled).isEmpty();
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("구장 정보 가져오기")
+    public void findByIdTest(){
+        long id = 1;
+
+        SoccerField soccerField = soccerFieldRepository.findById(id).get();
+
+        assertEquals("테스트 구장", soccerField.getFieldName());
     }
 }
