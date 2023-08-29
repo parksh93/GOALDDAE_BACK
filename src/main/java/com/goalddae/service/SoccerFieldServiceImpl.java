@@ -18,21 +18,21 @@ import java.util.List;
 public class SoccerFieldServiceImpl implements SoccerFieldService {
 
     private final SoccerFieldRepository soccerFieldRepository;
-    private final FieldReservationService fieldReservationService;
-    private final MatchService matchService;
 
-    public SoccerFieldServiceImpl(SoccerFieldRepository soccerFieldRepository,
-                                  FieldReservationService fieldReservationService,
-                                  MatchService matchService) {
+    public SoccerFieldServiceImpl(SoccerFieldRepository soccerFieldRepository) {
         this.soccerFieldRepository = soccerFieldRepository;
-        this.fieldReservationService = fieldReservationService;
-        this.matchService = matchService;
     }
 
     // 구장 조회
     @Override
     public List<SoccerField> searchSoccerFields(String searchTerm) {
         return soccerFieldRepository.findByRegionContainingOrFieldNameContaining(searchTerm, searchTerm);
+    }
+
+    // 구장 이름으로 조회
+    @Override
+    public SoccerField findSoccerFieldByName(String fieldName) {
+        return soccerFieldRepository.findByFieldName(fieldName);
     }
 
     // 지역 조회
@@ -57,19 +57,13 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
         return matchedCityNames;
     }
 
+    // 수정 필요 - 구장 생성 시 동적테이블 생성x
     // 구장 객체 추가 시 개인매치, 팀매치, 구장예약 동적테이블 같이 생성되게끔
     // 객체 생성 중 에러가 발생해도 테이블에 객체가 추가되어 안되게끔 @Transactional 추가
     @Override
     @Transactional
     public SoccerField save(SoccerField soccerField) {
         SoccerField newSoccerField = soccerFieldRepository.save(soccerField);
-        Long id = newSoccerField.getId();
-
-        // 동적테이블 생성
-        fieldReservationService.createFieldReservationTable(id);
-        matchService.createMatchIndividualTable(id);
-        matchService.createMatchTeamTable(id);
-
         return newSoccerField;
     }
 
@@ -94,24 +88,9 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
         return soccerField;
     }
 
-    // 구장 이름으로 조회
-    @Override
-    public SoccerField findSoccerFieldByName(String fieldName) {
-        return soccerFieldRepository.findByFieldName(fieldName);
-    }
-
     // 구장 객체 삭제
     @Override
     public void delete(long id) {
-        SoccerField soccerField = soccerFieldRepository.findById(id).orElse(null);
-
-        // 구장 테이블 삭제 전 동적 테이블 모두 삭제
-        if (soccerField != null) {
-            fieldReservationService.dropFieldReservationTable(id);
-            matchService.dropMatchIndividualTable(id);
-            matchService.dropMatchTeamTable(id);
-        }
-
         // 구장 테이블에서 해당 구장 삭제
         soccerFieldRepository.deleteById(id);
     }
