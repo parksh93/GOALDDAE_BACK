@@ -8,25 +8,22 @@ import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.service.UserServiceImpl;
 import com.goalddae.entity.User;
-import com.goalddae.repository.UserJPARepository;
 import com.goalddae.dto.user.*;
-import com.goalddae.dto.user.CheckLoginIdDTO;
-import com.goalddae.dto.user.CheckNicknameDTO;
 import com.goalddae.dto.user.RequestFindLoginIdDTO;
-import com.goalddae.dto.user.LoginDTO;
-import com.goalddae.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-import java.sql.Date;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +39,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerTest {
     @Autowired
     UserServiceImpl userService;
+    @Autowired
+    FileUploadServiceImpl fileUploadService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -147,7 +146,7 @@ public class UserControllerTest {
     @DisplayName("내가 쓴 게시글 조회 테스트")
     public void getUserPostsTest() throws Exception {
         // given
-        String userId = "뀨";
+        long userId = 1;
         List<CommunicationBoard> communicationBoardPosts = new ArrayList<>();
         List<UsedTransactionBoard> usedTransactionBoardPosts = new ArrayList<>();
 
