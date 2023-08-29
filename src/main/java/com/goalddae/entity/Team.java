@@ -36,7 +36,7 @@ public class Team {
     private LocalDateTime teamCreate;   // 팀생성일
 
     @Column(nullable = false)
-    private String teamProfileImgUrl;  // 팀프로필
+    private String teamProfileImgUrl;  // 팀프로필 이미지
 
     @Column(nullable = false)
     private LocalDateTime teamProfileUpdate;    // 팀프로필 업데이트일

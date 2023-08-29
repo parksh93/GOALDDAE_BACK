@@ -1,7 +1,8 @@
 package com.goalddae.controller;
 
-import com.goalddae.entity.Team;
+import com.goalddae.dto.team.TeamSaveDTO;
 import com.goalddae.service.TeamService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,9 +21,12 @@ public class TeamController {
 
     // 팀 등록
     @PostMapping(value = "/save")
-    public ResponseEntity<String> teamSave(@RequestBody Team team){
-        teamService.save(team);
-        return ResponseEntity
-                .ok("팀 생성이 완료되었습니다.");
+    public ResponseEntity<String> saveTeam(@RequestBody TeamSaveDTO teamSaveDTO) {
+        try {
+            teamService.save(teamSaveDTO);
+            return ResponseEntity.ok("팀 생성이 완료되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
