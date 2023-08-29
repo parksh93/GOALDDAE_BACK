@@ -51,8 +51,8 @@ public class SoccerFieldController {
     @PostMapping("/save")
     public ResponseEntity<SoccerField> saveSoccerField(@RequestBody SoccerField soccerField) {
         try {
-            SoccerField addSoccerField = soccerFieldService.save(soccerField);
-            return ResponseEntity.ok(addSoccerField);
+            SoccerField saveSoccerField = soccerFieldService.save(soccerField);
+            return ResponseEntity.ok(saveSoccerField);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).build();
