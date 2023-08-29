@@ -9,24 +9,17 @@ import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.entity.User;
 import com.goalddae.exception.NotFoundUserException;
 import com.goalddae.repository.CommunicationBoardRepository;
-import com.goalddae.repository.MatchRepository;
 import com.goalddae.repository.UsedTransactionBoardRepository;
-import com.goalddae.repository.UserJPARepository;
-
-import com.goalddae.entity.User;
-import com.goalddae.exception.NotFoundUserException;
 import com.goalddae.repository.UserJPARepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.List;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -37,15 +30,22 @@ public class UserServiceImpl implements UserService{
     private final UsedTransactionBoardRepository usedTransactionBoardRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
+    private final FriendService friendService;
+
 
     @Autowired
-    public UserServiceImpl(UserJPARepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, TokenProvider tokenProvider,
-                           CommunicationBoardRepository communicationBoardRepository, UsedTransactionBoardRepository usedTransactionBoardRepository){
+    public UserServiceImpl(UserJPARepository userRepository,
+                           BCryptPasswordEncoder bCryptPasswordEncoder,
+                           TokenProvider tokenProvider,
+                           CommunicationBoardRepository communicationBoardRepository,
+                           UsedTransactionBoardRepository usedTransactionBoardRepository,
+                           FriendService friendService){
         this.userJPARepository = userRepository;
         this.bCryptPasswordEncoder =bCryptPasswordEncoder;
         this.tokenProvider = tokenProvider;
         this.communicationBoardRepository = communicationBoardRepository;
         this.usedTransactionBoardRepository = usedTransactionBoardRepository;
+        this.friendService = friendService;
     }
 
     @Override
@@ -67,6 +67,15 @@ public class UserServiceImpl implements UserService{
                 .build();
 
         userJPARepository.save(newUser);
+
+        // 로그인 아이디를 가져와 테이블 생성에 사용
+        Long id = newUser.getId();
+
+        // 동적 테이블 생성
+        friendService.createFriendAcceptTable(id);
+        friendService.createFriendAddTable(id);
+        friendService.createFriendBlockTable(id);
+        friendService.createFriendListTable(id);
     }
 
     public static String createUserCode() {
@@ -116,11 +125,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public GetUserInfoDTO getUserInfo(String token){
         if(tokenProvider.validToken(token)){
-           User user = userJPARepository.findById(tokenProvider.getUserId(token)).get();
+            User user = userJPARepository.findById(tokenProvider.getUserId(token)).get();
 
-           GetUserInfoDTO userInfoDTO = new GetUserInfoDTO(user);
+            GetUserInfoDTO userInfoDTO = new GetUserInfoDTO(user);
 
-           return userInfoDTO;
+            return userInfoDTO;
         }
         return null;
     }
@@ -220,10 +229,10 @@ public class UserServiceImpl implements UserService{
             String loginId = tokenProvider.getLoginId(changePasswordDTO.getLoginIdToken());
             User user = userJPARepository.findByLoginId(loginId);
 
-           ChangeUserInfoDTO userInfoDTO = new ChangeUserInfoDTO(user);
-           userInfoDTO.setPassword(bCryptPasswordEncoder.encode(changePasswordDTO.getPassword()));
-           userInfoDTO.setProfileUpdateDate(LocalDateTime.now());
-           User updateUser = userInfoDTO.toEntity();
+            ChangeUserInfoDTO userInfoDTO = new ChangeUserInfoDTO(user);
+            userInfoDTO.setPassword(bCryptPasswordEncoder.encode(changePasswordDTO.getPassword()));
+            userInfoDTO.setProfileUpdateDate(LocalDateTime.now());
+            User updateUser = userInfoDTO.toEntity();
 
             userJPARepository.save(updateUser);
         }catch (Exception e){

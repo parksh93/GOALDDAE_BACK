@@ -24,10 +24,10 @@ public class Team {
     private String area;    // 지역
 
     @Column(nullable = false)
-    private int averageAge; // 나이대
+    private int averageAge; // 평균나이
 
     @Column(nullable = false)
-    private int entryFree;  // 입단비
+    private int entryFee;  // 입단비
 
     @Column(nullable = false)
     private String entryGender; // 입단 가능 성별
@@ -46,6 +46,9 @@ public class Team {
 
     @Column(nullable = false)
     private String preferredTime;   // 선호 시간
+
+    @Column(nullable = false)
+    private int recruiting; // 모집중 유무
 
     @PrePersist
     public void setInformation() {
