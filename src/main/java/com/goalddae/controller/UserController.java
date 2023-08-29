@@ -9,6 +9,7 @@ import com.goalddae.exception.NotFoundMatchException;
 import com.goalddae.exception.NotFoundPostException;
 import com.goalddae.dto.user.*;
 import com.goalddae.entity.User;
+import com.goalddae.exception.NotFoundTokenException;
 import com.goalddae.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -54,8 +55,9 @@ public class UserController {
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.POST)
     public ResponseEntity<?> getUserInfo(@CookieValue(required = false) String token){
         if(token == null){
-            return ResponseEntity.badRequest().body("");
+            throw new NotFoundTokenException("토큰 미발급");
         }
+
         GetUserInfoDTO userInfoDTO = userService.getUserInfo(token);
 
         return ResponseEntity.ok(userInfoDTO);
@@ -87,6 +89,11 @@ public class UserController {
     @PostMapping("/signup")
     public void signup(@RequestBody User user){
         userService.save(user);
+    }
+
+    @PostMapping("/socialSignup")
+    public void socialSignup(@RequestBody GetUserInfoDTO getUserInfoDTO){
+        userService.updateSocialSignup(getUserInfoDTO);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
