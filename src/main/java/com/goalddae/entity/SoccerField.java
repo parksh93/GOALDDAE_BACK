@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @Entity
 @Getter
 @Builder
@@ -22,6 +25,9 @@ public class SoccerField {
     private String fieldName;   // 구장명
 
     @Column(nullable = false)
+    private int playerCapacity; // 플레이어수
+
+    @Column(nullable = false)
     private boolean toiletStatus;   // 화장실 여부
 
     @Column(nullable = false)
@@ -31,7 +37,13 @@ public class SoccerField {
     private boolean parkingStatus;  // 주차장 여부
 
     @Column(nullable = false)
-    private String fieldSize ;   // 구장 크기
+    private String fieldSize;   // 구장 크기
+
+    @Column(nullable = false)
+    private LocalTime operatingHours; // 운영 시작 시간
+
+    @Column(nullable = false)
+    private LocalTime closingTime; // 운영 종료 시간
 
     // 이미지의 경우 최소 하나 이상 최대 3개이하로 저장 가능
     @Column(nullable = false)

@@ -6,71 +6,7 @@ insert into users values (
     now(), now(),"zxczxcxz"
     );
 
-/* 검색 테스트용 구장 더미테이블 */
-insert into soccer_field values (
-    null, "img1", "img2", "img3", "야탑풋살장",
-    "14x15", "인조", "실내", 1, "성남", 1, 1, 1
-	);
-
-insert into soccer_field values (
-    null, "img1", "img2", "img3", "모란 풋살장",
-    "14x15", "인조", "실내", 1, "성남", 1, 1, 1
-	);
-
-insert into soccer_field values (
-    null, "img1", "img2", "img3", "서현 풋살장",
-    "14x15", "인조", "실내", 1, "성남", 1, 1, 1
-	);
-
-insert into soccer_field values (
-    null, "img1", "img2", "img3", "마포 풋살장",
-    "14x15", "인조", "실내", 1, "성남", 1, 1, 1
-	);
-
-insert into soccer_field values (
-    null, "img1", "img2", "img3", "인천 풋살장",
-    "14x15", "인조", "실내", 1, "성남", 1, 1, 1
-	);
-
-insert into soccer_field values (
-    null, "img1", "img2", "img3", "시흥 풋살장",
-    "14x15", "인조", "실내", 1, "성남", 1, 1, 1
-	);
-
-
 /* Like연산자: 여러 조건에 따라 검색 결과를 반환함
    예로 들어 '성' 입력하면 db에 있는 '성남'으로 검색됨*/
 SELECT * FROM soccer_field
 WHERE field_name LIKE '%검색어%';
-
-/* 구장 예약 테이블 생성 */
-CREATE TABLE field_Reservation (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    reservation_id VARCHAR(255) NOT NULL,
-    reservation_data DATETIME NOT NULL,
-    reservation_team_Whether VARCHAR(255) NOT NULL,
-    reservation_team_id VARCHAR(255) NULL,
-
-    soccer_field bigint NOT NULL,
-        FOREIGN KEY (soccer_field) REFERENCES soccer_field(id)
-);
-
-/* 개인매치 테이블 생성 */
-CREATE TABLE individual_match (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    likes INT NOT NULL default 0,
-    individual_gender ENUM('M', 'F') NOT NULL,
-    individual_minimum BIGINT NOT NULL,
-    individual_maximum BIGINT NOT NULL,
-    individual_number BIGINT NOT NULL,
-    recruit_start DATETIME NOT NULL,
-    recruit_end DATETIME NOT NULL,
-    manager_id VARCHAR(255) NOT NULL,
-
-    soccer_field bigint NOT NULL,
-		FOREIGN KEY (soccer_field) REFERENCES soccer_field(id),
-    field_reservation bigint NOT NULL,
-		FOREIGN KEY (field_reservation) REFERENCES field_reservation(id),
-    users bigint NOT NULL,
-		FOREIGN KEY (users) REFERENCES users(id)
-);
