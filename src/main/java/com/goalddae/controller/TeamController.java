@@ -1,8 +1,10 @@
 package com.goalddae.controller;
 
 import com.goalddae.dto.team.TeamListDTO;
+import com.goalddae.dto.team.TeamUpdateDTO;
 import com.goalddae.entity.Team;
 import com.goalddae.service.TeamServiceImpl;
+import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,17 +56,16 @@ public class TeamController {
                 .ok("팀 생성이 완료되었습니다.");
     }
 
-    @RequestMapping(value="/update", method= {RequestMethod.PUT, RequestMethod.PATCH})
-    public ResponseEntity<String> teamUpdate(@RequestBody Team team){
+    @RequestMapping(value="/teamUpdate", method= {RequestMethod.PUT, RequestMethod.PATCH})
+    public ResponseEntity<String> teamUpdate(@RequestBody TeamUpdateDTO teamUpdateDTO){
 
-        teamService.update(team);
+        teamService.update(teamUpdateDTO);
         return ResponseEntity
                 .ok("팀 수정이 완료되었습니다.");
     }
 
 
-
-    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<String> teamDelete(@PathVariable Long id){
 
         teamService.deleteTeamById(id);
@@ -73,12 +74,13 @@ public class TeamController {
 
     @GetMapping(value="/search/teamName")
     public ResponseEntity<List<Team>> searchTeamName(@RequestParam(value = "searchTerm", required = false, defaultValue = "") String searchTerm ) {
+
         List<Team> searchResult = teamService.findByTeamName(searchTerm);
         return ResponseEntity.ok(searchResult);
     }
 
-    @RequestMapping(value = "/list/area", method = RequestMethod.GET)
-    public List<Team> filterArea(@RequestParam String area){
+    @GetMapping(value = "/list/area")
+    public List<TeamListDTO> filterArea(@RequestParam String area){
 
         if(area == "모든지역"){
             return teamService.findAll();
@@ -86,14 +88,14 @@ public class TeamController {
         return teamService.findByArea(area);
     }
 
-    @RequestMapping(value = "/list/recruiting", method = RequestMethod.GET)
-    public List<Team> filterRecruiting(@RequestParam(required = false) boolean recruiting){
+    @GetMapping(value = "/list/recruiting")
+    public List<TeamListDTO> filterRecruiting(@RequestParam(required = false) boolean recruiting){
 
         return teamService.findByRecruiting(true);
     }
 
-    @RequestMapping(value = "/list/areaAndRecruiting", method = RequestMethod.GET)
-    public List<Team> filterAreaAndRecruiting(@RequestParam(required = false) String area,
+    @GetMapping(value = "/list/areaAndRecruiting")
+    public List<TeamListDTO> filterAreaAndRecruiting(@RequestParam(required = false) String area,
                                               @RequestParam(required = false) boolean recruiting){
         return teamService.findByAreaAndRecruiting(area, true);
     }
