@@ -1,12 +1,16 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.team.TeamListDTO;
+import com.goalddae.dto.team.TeamUpdateDTO;
 import com.goalddae.entity.Team;
 import com.goalddae.repository.TeamJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamServiceImpl implements TeamService{
@@ -30,35 +34,28 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     public void save(Team team) {
-        Team newTeam = Team.builder()
-                .teamName(team.getTeamName())
-                .area(team.getArea())
-                .averageAge(team.getAverageAge())
-                .teamIntroduce(team.getTeamIntroduce())
-                .entryFee(team.getEntryFee())
-                .entryGender(team.getEntryGender())
-                .teamProfileImgUrl(team.getTeamProfileImgUrl())
-                .preferredDay(team.getPreferredDay())
-                .preferredTime(team.getPreferredTime())
-                .build();
-        teamJPARepository.save(newTeam);
+        teamJPARepository.save(team);
     }
 
     @Override
-    public void update(Team team) {
-        Team newTeam = teamJPARepository.findTeamById(team.getId());
+    public void update(TeamUpdateDTO teamUpdateDTO) {
+        Team newTeam = teamJPARepository.findTeamById(teamUpdateDTO.getId());
 
         newTeam = Team.builder()
-                .teamName(team.getTeamName())
-                .area(team.getArea())
-                .averageAge(team.getAverageAge())
-                .teamIntroduce(team.getTeamIntroduce())
-                .entryFee(team.getEntryFee())
-                .entryGender(team.getEntryGender())
-                .teamProfileImgUrl(team.getTeamProfileImgUrl())
-                .preferredDay(team.getPreferredDay())
-                .preferredTime(team.getPreferredTime())
+                .id(newTeam.getId())
+                .teamName(teamUpdateDTO.getTeamName())
+                .area(teamUpdateDTO.getArea())
+                .averageAge(teamUpdateDTO.getAverageAge())
+                .teamIntroduce(teamUpdateDTO.getTeamIntroduce())
+                .entryFee(teamUpdateDTO.getEntryFee())
+                .entryGender(teamUpdateDTO.getEntryGender())
+                .teamProfileImgUrl(teamUpdateDTO.getTeamProfileImgUrl())
+                .preferredDay(teamUpdateDTO.getPreferredDay())
+                .preferredTime(teamUpdateDTO.getPreferredTime())
+                .teamCreate(newTeam.getTeamCreate())
+                .teamProfileUpdate(LocalDateTime.now())
                 .build();
+
         teamJPARepository.save(newTeam);
     }
 
@@ -73,17 +70,30 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public List findByArea(String area) {
-        return teamJPARepository.findByArea(area);
+    public List<TeamListDTO> findByArea(String area) {
+        List<Team> result = teamJPARepository.findByArea(area);
+
+        return result.stream()
+                .map(TeamListDTO::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List findByRecruiting(boolean recruiting) {
-        return teamJPARepository.findByRecruiting(recruiting);
+    public List<TeamListDTO> findByRecruiting(boolean recruiting) {
+        List<Team> result = teamJPARepository.findByRecruiting(recruiting);
+
+        return result.stream()
+                .map(TeamListDTO::toDTO)
+                .collect(Collectors.toList());
     }
 
+
     @Override
-    public List findByAreaAndRecruiting(String area, boolean recruiting) {
-        return teamJPARepository.findByAreaAndRecruiting(area, recruiting);
+    public List<TeamListDTO> findByAreaAndRecruiting(String area, boolean recruiting) {
+        List<Team> result = teamJPARepository.findByAreaAndRecruiting(area, recruiting);
+
+        return result.stream()
+                .map(TeamListDTO::toDTO)
+                .collect(Collectors.toList());
     }
 }

@@ -2,6 +2,7 @@ package com.goalddae.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -55,7 +56,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Date birth; // 생년월일
 
-    @Column(nullable = true)
+    @Column
     private Long teamId; // 가입 팀 id
 
     @Column(nullable = false)
@@ -130,6 +131,7 @@ public class User implements UserDetails {
         this.profileUpdateDate = LocalDateTime.now();
         this.accountSuspersion = false;
         this.noShowCnt = 0;
+        this.teamId = -1L;
     }
 
     @Override
@@ -166,4 +168,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

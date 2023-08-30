@@ -1,6 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.team.TeamListDTO;
+import com.goalddae.dto.team.TeamUpdateDTO;
 import com.goalddae.entity.Team;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface TeamService {
 
     void save(Team team);
 
-    void update(Team team);
+    void update(TeamUpdateDTO teamUpdateDTO);
 
     void deleteTeamById(Long id);
 
