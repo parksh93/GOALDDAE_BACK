@@ -49,7 +49,7 @@ public class TokenProvider {
                 .setIssuer(jwtProperties.getIssuer())
                 .setIssuedAt(now)
                 .setExpiration(expiry)
-                .setSubject(user.getLoginId())
+                .setSubject(user.getEmail())
                 .claim("id", user.getId())
                 .claim("auth", auth)
                 .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
@@ -70,8 +70,6 @@ public class TokenProvider {
                 .compact();
     }
 
-
-
     // 토큰의 유효성 검증 *
     // 발급된 토큰을 입력받았을때, 유효하면 true, 아니면 false 리턴
     public boolean validToken(String token) {
@@ -87,19 +85,19 @@ public class TokenProvider {
 
     // 토큰 기반으로 인증 정보를 리턴
     public Authentication getAuthentication(String token) {
-
         Claims claims = getClaims(token);
         String auth = claims.get("auth", String.class);
 
         Set<SimpleGrantedAuthority> authorities =
                 Collections.singleton(new SimpleGrantedAuthority(auth));
 
-        return new UsernamePasswordAuthenticationToken(
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
                 new org.springframework.security.core.userdetails.User(claims.getSubject(),
                         "",authorities
                 ),
                 token, authorities
         );
+        return authentication;
     }
 
     // 토큰 기반으로 유저번호를 가져오게 하는 메서드
@@ -113,9 +111,14 @@ public class TokenProvider {
         return claims.get("loginId", String.class);
     }
 
+    public Date getDuration(String token){
+        Claims claims = getClaims(token);
+        return claims.getExpiration();
+    }
+
     // 토큰 입력시 클레임을 리턴하도록 해 주는 메서드
     private Claims getClaims(String token){
-        return  Jwts.parser()
+        return Jwts.parser()
                 .setSigningKey(jwtProperties.getSecretKey())
                 .parseClaimsJws(token)
                 .getBody();

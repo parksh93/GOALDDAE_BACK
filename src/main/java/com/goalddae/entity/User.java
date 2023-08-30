@@ -35,7 +35,7 @@ public class User implements UserDetails {
     private String loginId; // 로그인 아이디
                             // 소셜 로그인을 대비해 null 허용
     
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;   // 이메일
 
     @Column

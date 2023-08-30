@@ -4,29 +4,24 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.util.SerializationUtils;
-
-import java.io.*;
 import java.util.Base64;
 
 public class CookieUtil {
-    public static void addCookie(HttpServletResponse response, String name, String value, int maxAge){
+    public static void addCookie(HttpServletResponse response, String name, String value){
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        cookie.setMaxAge(maxAge);
+        cookie.setSecure(true);
         response.addCookie(cookie);
     }
 
     public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name){
-        System.out.println("======================="+ name);
-
         Cookie[] cookies = request.getCookies();
         if(cookies == null){
             return;
         }
 
         for(Cookie cookie: cookies){
-            System.out.println("쿠키 이름" + cookie.getName());
             if(name.equals(cookie.getName())){
                 cookie.setValue("");
                 cookie.setPath("/");

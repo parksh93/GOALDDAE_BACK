@@ -22,9 +22,9 @@ import java.time.Duration;
 @Component
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
-    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(2);
-    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(2);
+    public static final String ACCESS_TOKEN_COOKIE_NAME = "token";
+    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofSeconds(60);
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofSeconds(30);
     public static final String REDIRECT_PATH = "http://localhost:3000";
 
     private final TokenProvider tokenProvider;
@@ -40,17 +40,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
 
-        saveRefreshToken(user.getId(), refreshToken); // 토큰을 디비에 저장
-//        addRefreshTokenToCookie(request, response, refreshToken);   // 사용자측에 보내기 위한 쿠키 적재
+        saveRefreshToken(user.getId(), refreshToken);
 
-        // 전달된 리프레시토큰을 이용해 억세스토큰 생성 및 활용
         String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
-        String targetUrl = getTargetUrl(accessToken);
-
-        Cookie cookie = new Cookie("token", accessToken);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        response.addCookie(cookie);
+        CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE_NAME, accessToken);
 
         // 인증 관련 설정값, 쿠키 제거
         clearAuthenticationAttributes(request, response);
@@ -70,24 +63,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         refreshTokenRepository.save(refreshToken);
     }
 
-//    private void addRefreshTokenToCookie(HttpServletRequest request, HttpServletResponse response, String refreshToken){
-//        int cookieMaxAge = (int) REFRESH_TOKEN_DURATION.toSeconds();
-//        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN_COOKIE_NAME);
-//        CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken, cookieMaxAge);
-//    }
-
-    // 액세스토큰을 소셜로그인 경로에 파라미터로 추가
-    private String getTargetUrl(String token){
-        return UriComponentsBuilder.fromUriString(REDIRECT_PATH)
-                .queryParam("token", token)
-                .build()
-                .toUriString();
-    }
-
     // 전달 완료 후 인증 관련 설정값, 쿠키 제거
     private void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response){
-        // 상속 전 부모 클래스쪽에 정의된 메서드는 request에 대해서만 소거가 처리되므로, 쿠키 제거를 위해 reponse 부분도 추가 처리
-        // 메서드 명칭은 부모쪽 메서드와 같지만 파라미터 종류가 다르므로 오버로딩
         super.clearAuthenticationAttributes(request);
         oAuth2AuthorizationRequestBaseOnCookRepository.removeAuthorizationRequestCookies(request,response);
     }

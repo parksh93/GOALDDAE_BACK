@@ -4,21 +4,24 @@ import com.goalddae.config.jwt.TokenProvider;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
 
-import com.goalddae.entity.CommunicationBoard;
-import com.goalddae.entity.UsedTransactionBoard;
-import com.goalddae.entity.User;
+import com.goalddae.entity.*;
+import com.goalddae.exception.NotFoundTokenException;
 import com.goalddae.exception.NotFoundUserException;
-import com.goalddae.repository.CommunicationBoardRepository;
-import com.goalddae.repository.MatchRepository;
-import com.goalddae.repository.UsedTransactionBoardRepository;
-import com.goalddae.repository.UserJPARepository;
+import com.goalddae.exception.UnValidTokenException;
+import com.goalddae.repository.*;
 
 import com.goalddae.entity.User;
 import com.goalddae.exception.NotFoundUserException;
 import com.goalddae.repository.UserJPARepository;
 
+import com.goalddae.util.CookieUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,15 +36,20 @@ import java.util.Random;
 @Service
 public class UserServiceImpl implements UserService{
     private final UserJPARepository userJPARepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final CommunicationBoardRepository communicationBoardRepository;
     private final UsedTransactionBoardRepository usedTransactionBoardRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
+    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofSeconds(60);
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofSeconds(30);
+    public static final String ACCESS_TOKEN_COOKIE_NAME = "token";
 
     @Autowired
-    public UserServiceImpl(UserJPARepository userRepository, TokenProvider tokenProvider,
+    public UserServiceImpl(UserJPARepository userRepository, RefreshTokenRepository refreshTokenRepository, TokenProvider tokenProvider,
                            CommunicationBoardRepository communicationBoardRepository, UsedTransactionBoardRepository usedTransactionBoardRepository){
         this.userJPARepository = userRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.tokenProvider = tokenProvider;
         this.communicationBoardRepository = communicationBoardRepository;
@@ -97,32 +105,76 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String generateTokenFromLogin(LoginDTO loginDTO){
-        try {
-            User userInfo = getByCredentials(loginDTO.getLoginId());
+    public boolean generateTokenFromLogin(LoginDTO loginDTO, HttpServletResponse response){
+        User userInfo = getByCredentials(loginDTO.getLoginId());
 
-            if (bCryptPasswordEncoder.matches(loginDTO.getPassword(), userInfo.getPassword())) {
-                String token = tokenProvider.generateToken(userInfo, Duration.ofHours(2));
+        if (bCryptPasswordEncoder.matches(loginDTO.getPassword(), userInfo.getPassword())) {
+            String refreshToken = tokenProvider.generateToken(userInfo, REFRESH_TOKEN_DURATION);
+            saveRefreshToken(userInfo.getId(), refreshToken);
 
-                return token;
-            } else {
-                throw new NotFoundUserException("login fail");
+            String token = tokenProvider.generateToken(userInfo,ACCESS_TOKEN_DURATION);
+
+            if(!token.equals("")){
+               CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE_NAME, token);
+                return true;
+            }else{
+                return false;
             }
-        } catch (Exception e) {
-            return "";
+        } else {
+            throw new NotFoundUserException("login fail");
         }
+    }
+
+    private void saveRefreshToken(Long userId, String newRefreshToken){
+        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId);
+
+        if(refreshToken != null){
+            refreshToken.update(newRefreshToken);
+        }else{
+            refreshToken = new RefreshToken(userId, newRefreshToken);
+        }
+
+        refreshTokenRepository.save(refreshToken);
+    }
+
+    @Override
+    public boolean validToken(String token, HttpServletResponse response){
+        if(token != null){
+            boolean validToken = tokenProvider.validToken(token);
+
+            if(validToken){
+                System.out.println(tokenProvider.getDuration(token));
+                return true;
+            }else {
+//                Long userId = tokenProvider.getUserId(token);
+                RefreshToken refreshToken = refreshTokenRepository.findByUserId(1L);
+
+                if(refreshToken != null){
+                    boolean validRefreshToken = tokenProvider.validToken(refreshToken.getRefreshToken());
+                    if(validRefreshToken){
+                        System.out.println("토큰 재발급");
+                        User user = userJPARepository.findById(1L).get();
+                        String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
+                        CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE_NAME, accessToken);
+
+                        return true;
+                    }else{
+                        throw new UnValidTokenException("유효하지 않은 Refresh Token");
+                    }
+                }else {
+                    throw new NotFoundTokenException("Refresh Token 존재하지 않음");
+                }
+            }
+        }
+        throw new NotFoundTokenException("토큰 미발급");
     }
 
     @Override
     public GetUserInfoDTO getUserInfo(String token){
-        if(tokenProvider.validToken(token)){
            User user = userJPARepository.findById(tokenProvider.getUserId(token)).get();
-
            GetUserInfoDTO userInfoDTO = new GetUserInfoDTO(user);
 
            return userInfoDTO;
-        }
-        return null;
     }
 
     @Override
@@ -159,11 +211,9 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-
     @Override
     public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO){
         String loginId = userJPARepository.findLoginIdByEmailAndName(requestFindLoginIdDTO.getEmail(), requestFindLoginIdDTO.getName());
-
         String star = "**";
 
         if(loginId != null){
@@ -177,13 +227,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String checkLoginIdAndEmail(RequestFindPasswordDTO findPasswordDTO) {
+    public boolean checkLoginIdAndEmail(RequestFindPasswordDTO findPasswordDTO, HttpServletResponse response) {
         int userCnt = userJPARepository.countByLoginIdAndEmail(findPasswordDTO.getLoginId(), findPasswordDTO.getEmail());
+
         if(userCnt == 1){
-            return tokenProvider.generateLoinIdToken(findPasswordDTO.getLoginId(), Duration.ofMinutes(5));
-        }else{
-            return "";
+            String token = tokenProvider.generateLoinIdToken(findPasswordDTO.getLoginId(), Duration.ofMinutes(5));
+            if(!token.equals("")) {
+                CookieUtil.addCookie(response, "loginIdToken", token);
+
+                return true;
+            }
         }
+
+        return false;
     }
 
     @Override
@@ -233,7 +289,6 @@ public class UserServiceImpl implements UserService{
     public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(long userId) {
         return usedTransactionBoardRepository.findByUserId(userId);
     }
-
 
     public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
         try {
