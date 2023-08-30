@@ -1,6 +1,5 @@
 package com.goalddae.dto.soccerField;
 
-import com.goalddae.entity.SoccerField;
 import lombok.*;
 
 @Getter
@@ -23,6 +22,4 @@ public class SoccerFieldDTO {
     private String inOutWhether;
     private String grassWhether;
     private String region;
-
-
 }
