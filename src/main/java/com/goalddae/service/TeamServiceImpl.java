@@ -1,5 +1,6 @@
 package com.goalddae.service;
 
+import com.goalddae.dto.team.TeamSaveDTO;
 import com.goalddae.entity.Team;
 import com.goalddae.repository.TeamApplyRepository;
 import com.goalddae.repository.TeamJPARepository;
@@ -8,6 +9,8 @@ import com.goalddae.repository.TeamMemberRepository;
 import com.goalddae.util.MyBatisUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class TeamServiceImpl implements TeamService {
@@ -70,21 +73,23 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public void save(Team team) {
+    public void save(TeamSaveDTO teamSaveDTO) {
         Team newTeam = Team.builder()
-                .id(team.getId())
-                .teamName(team.getTeamName())
-                .area(team.getArea())
-                .averageAge(team.getAverageAge())
-                .entryFee(team.getEntryFee())
-                .entryGender(team.getEntryGender())
-                .teamProfileImgUrl(team.getTeamProfileImgUrl())
-                .preferredDay(team.getPreferredDay())
-                .preferredTime(team.getPreferredTime())
+                .teamName(teamSaveDTO.getTeamName())
+                .area(teamSaveDTO.getArea())
+                .entryFee(teamSaveDTO.getEntryFee())
+                .preferredDay(teamSaveDTO.getPreferredDay())
+                .preferredTime(teamSaveDTO.getPreferredTime())
+                .averageAge(teamSaveDTO.getAverageAge())
+                .entryGender(teamSaveDTO.getEntryGender())
+                .recruiting(teamSaveDTO.getRecruiting())
+                .teamCreate(LocalDateTime.now())
+                .teamProfileImgUrl("default_profile_img_url")
                 .build();
+
         teamJPARepository.save(newTeam);
 
-        // 팀 ID 필드를 가져와 테이블 생성에 사용
+        // 팀 ID 필드를 가져와 테이블 생성에 F사용
         Long id = newTeam.getId();
 
         // 동적테이블 생성
