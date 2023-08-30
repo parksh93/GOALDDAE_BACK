@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Builder
@@ -20,15 +18,13 @@ public class IndividualMatchRequest {
     @Column(updatable = false)
     private long id;
 
-    // 개인매치 ID
-    @Column(nullable = false)
-    private long IndividualMatchId;
+    // 외래키 형성 - 매치 신청한 유저
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
 
-    // 매치 신청한 유저
-    @Column(nullable = false)
-    private long userId;
-
-    // 매치 신청한 일정
-    @Column(nullable = false)
-    private LocalDateTime requestDate;
+    // 외래키 형성 - 개인 매치
+    @ManyToOne
+    @JoinColumn(name="individual_match_id")
+    private IndividualMatch individualMatch;
 }

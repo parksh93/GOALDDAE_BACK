@@ -1,9 +1,7 @@
 package com.goalddae.repository.soccerField;
 
 import com.goalddae.entity.SoccerField;
-import com.goalddae.repository.FieldReservationRepository;
 import com.goalddae.repository.SoccerFieldRepository;
-import com.goalddae.service.MatchService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,18 +19,13 @@ public class SoccerFieldRepositoryTest {
     @Autowired
     SoccerFieldRepository soccerFieldRepository;
 
-    @Autowired
-    FieldReservationRepository fieldReservationRepository;
-
-    @Autowired
-    MatchService matchService;
-
     private SoccerField soccerField;
 
     @Test
     @Transactional
     @DisplayName("구장 객체 생성 테스트")
     public void saveSoccerFieldTest() {
+
         // 구장 객체 생성 및 저장
         soccerField = SoccerField.builder()
                 .fieldName("테스트구장")
