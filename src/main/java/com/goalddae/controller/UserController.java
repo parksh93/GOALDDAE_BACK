@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -37,27 +38,22 @@ public class UserController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<Boolean> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response) {
-        String token = userService.generateTokenFromLogin(loginDTO);
+        boolean checkUser = userService.generateTokenFromLogin(loginDTO, response);
 
-        if(!token.equals("")){
-            Cookie cookie = new Cookie("token", token);
-            cookie.setHttpOnly(true);
-            cookie.setPath("/");
-            cookie.setSecure(true);
-
-            response.addCookie(cookie);
+        if(checkUser){
             return ResponseEntity.ok(true);
-        }else{
-            return ResponseEntity.badRequest().body(false);
         }
+        return ResponseEntity.badRequest().body(false);
+    }
+
+    @RequestMapping(value = "/validToken", method = RequestMethod.GET)
+    public List<Boolean> validToken(@CookieValue(required = false) String token, HttpServletResponse response){
+        boolean valid = userService.validToken(token, response);
+        return List.of(valid);
     }
 
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.POST)
     public ResponseEntity<?> getUserInfo(@CookieValue(required = false) String token){
-        if(token == null){
-            throw new NotFoundTokenException("토큰 미발급");
-        }
-
         GetUserInfoDTO userInfoDTO = userService.getUserInfo(token);
 
         return ResponseEntity.ok(userInfoDTO);
@@ -80,9 +76,6 @@ public class UserController {
 
     @RequestMapping(value = "/checkNickname", method = RequestMethod.POST)
     public List<Boolean> checkNickname(@RequestBody CheckNicknameDTO checkNicknameDTO){
-
-        System.out.println(checkNicknameDTO.toString());
-
         return List.of(userService.checkNickname(checkNicknameDTO));
     }
 
@@ -98,10 +91,8 @@ public class UserController {
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseEntity<String> updateUserInfo(@RequestBody GetUserInfoDTO getUserInfoDTO) {
-
-        System.out.println(getUserInfoDTO.toString());
-
         userService.update(getUserInfoDTO);
+
         return ResponseEntity.ok("수정 되었습니다.");
     }
 
@@ -126,17 +117,10 @@ public class UserController {
     }
 
     @RequestMapping(value = "/findPassword", method = RequestMethod.POST)
-    public List<String> findPassword(@RequestBody RequestFindPasswordDTO findPasswordDTO, HttpServletResponse response){
-        String token = userService.checkLoginIdAndEmail(findPasswordDTO);
-        if(!token.equals("")) {
-            Cookie cookie = new Cookie("loginIdToken", token);
-            cookie.setPath("/");
-            cookie.setHttpOnly(true);
-            cookie.setSecure(true);
+    public List<Boolean> findPassword(@RequestBody RequestFindPasswordDTO findPasswordDTO, HttpServletResponse response){
+        boolean checkUser = userService.checkLoginIdAndEmail(findPasswordDTO, response);
 
-            response.addCookie(cookie);
-        }
-        return List.of(token);
+        return List.of(checkUser);
     }
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.PATCH)
