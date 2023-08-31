@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/individual")
+@RequestMapping("/match")
 public class IndividualMatchController {
 
     private final IndividualMatchService individualMatchService;
@@ -24,7 +24,7 @@ public class IndividualMatchController {
     }
 
     // 개인매치리스트 조회
-    @GetMapping("/match")
+    @GetMapping("/individual")
     public List<IndividualMatchDTO> getMatches(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return individualMatchService.getMatchesByDate(date);
     }
