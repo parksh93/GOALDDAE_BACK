@@ -62,6 +62,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Date birth; // 생년월일
 
+    @Column
+    private Long teamId; // 가입 팀 id
+
     @Column(nullable = false)
     private int matchesCnt;  // 매치 경기수
 
@@ -97,9 +100,8 @@ public class User implements UserDetails {
 
     @Builder
     public User(long id, String loginId, String email, String password, String userCode, String name, String nickname, String gender, String profileImgUrl,
-                String phoneNumber, Date birth, int matchesCnt, LocalDateTime signupDate, LocalDateTime profileUpdateDate, String level,
-                boolean accountSuspersion, int noShowCnt, String preferredCity,
-                String preferredArea, int activityClass, String authority){
+                String phoneNumber, Date birth, Long teamId, int matchesCnt, LocalDateTime signupDate, LocalDateTime profileUpdateDate, String level,
+                boolean accountSuspersion, int noShowCnt, String preferredCity, String preferredArea, int activityClass, String authority){
 
         this.id = id;
         this.loginId = loginId;
@@ -113,6 +115,7 @@ public class User implements UserDetails {
         this.profileImgUrl = profileImgUrl;
         this.phoneNumber = phoneNumber;
         this.birth = birth;
+        this.teamId = teamId;
         this.matchesCnt = matchesCnt;
         this.level = level;
         this.signupDate = signupDate;
@@ -136,6 +139,7 @@ public class User implements UserDetails {
         this.profileUpdateDate = LocalDateTime.now();
         this.accountSuspersion = false;
         this.noShowCnt = 0;
+        this.teamId = -1L;
     }
 
     @Override
@@ -172,4 +176,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
