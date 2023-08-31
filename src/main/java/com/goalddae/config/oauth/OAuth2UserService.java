@@ -20,14 +20,27 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User user = super.loadUser(userRequest);
-        saveOrUpdate(user);
+
+        saveOrUpdate(user, userRequest);
         return user;
     }
 
-    public User saveOrUpdate(OAuth2User oAuth2User) {
-        Map<String, Object> attirbutes = oAuth2User.getAttributes();
-        String email = (String) attirbutes.get("email");
-        String name = (String) attirbutes.get("name");
+    public User saveOrUpdate(OAuth2User oAuth2User, OAuth2UserRequest userRequest) {
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+        String email = "";
+        String name = "";
+
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        if(registrationId.equals("google")){
+            email = (String) attributes.get("email");
+            name = (String) attributes.get("name");
+
+        }else if(registrationId.equals("naver")){
+            Map<String, Object> attribute = (Map)attributes.get("response");
+            email = (String) attribute.get("email");
+            name = (String) attribute.get("name");
+        }
+
         User user = userJPARepository.findByEmail(email);
 
         if(user == null){

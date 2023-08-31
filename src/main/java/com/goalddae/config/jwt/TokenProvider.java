@@ -111,11 +111,6 @@ public class TokenProvider {
         return claims.get("loginId", String.class);
     }
 
-    public Date getDuration(String token){
-        Claims claims = getClaims(token);
-        return claims.getExpiration();
-    }
-
     // 토큰 입력시 클레임을 리턴하도록 해 주는 메서드
     private Claims getClaims(String token){
         return Jwts.parser()

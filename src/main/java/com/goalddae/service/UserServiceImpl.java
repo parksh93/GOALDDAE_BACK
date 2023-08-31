@@ -39,18 +39,22 @@ public class UserServiceImpl implements UserService{
     private final RefreshTokenRepository refreshTokenRepository;
     private final CommunicationBoardRepository communicationBoardRepository;
     private final UsedTransactionBoardRepository usedTransactionBoardRepository;
+    private final RefreshTokenService refreshTokenService;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
-    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofSeconds(60);
-    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofSeconds(30);
+    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(2);
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofSeconds(10);
     public static final String ACCESS_TOKEN_COOKIE_NAME = "token";
+    public static final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
 
     @Autowired
-    public UserServiceImpl(UserJPARepository userRepository, RefreshTokenRepository refreshTokenRepository, TokenProvider tokenProvider,
+    public UserServiceImpl(UserJPARepository userRepository, RefreshTokenRepository refreshTokenRepository, RefreshTokenService refreshTokenService, TokenProvider tokenProvider,
                            CommunicationBoardRepository communicationBoardRepository, UsedTransactionBoardRepository usedTransactionBoardRepository){
         this.userJPARepository = userRepository;
         this.refreshTokenRepository = refreshTokenRepository;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        this.refreshTokenService = refreshTokenService;
         this.tokenProvider = tokenProvider;
         this.communicationBoardRepository = communicationBoardRepository;
         this.usedTransactionBoardRepository = usedTransactionBoardRepository;
@@ -108,66 +112,70 @@ public class UserServiceImpl implements UserService{
     public boolean generateTokenFromLogin(LoginDTO loginDTO, HttpServletResponse response){
         User userInfo = getByCredentials(loginDTO.getLoginId());
 
-        if (bCryptPasswordEncoder.matches(loginDTO.getPassword(), userInfo.getPassword())) {
-            String refreshToken = tokenProvider.generateToken(userInfo, REFRESH_TOKEN_DURATION);
-            saveRefreshToken(userInfo.getId(), refreshToken);
+        if(userInfo != null){
+            if (bCryptPasswordEncoder.matches(loginDTO.getPassword(), userInfo.getPassword())) {
+                String refreshToken = tokenProvider.generateToken(userInfo, REFRESH_TOKEN_DURATION);
+                refreshTokenService.saveRefreshToken(userInfo.getId(), refreshToken);
 
-            String token = tokenProvider.generateToken(userInfo,ACCESS_TOKEN_DURATION);
+                String token = tokenProvider.generateToken(userInfo,ACCESS_TOKEN_DURATION);
 
-            if(!token.equals("")){
-               CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE_NAME, token);
-                return true;
-            }else{
-                return false;
-            }
-        } else {
-            throw new NotFoundUserException("login fail");
-        }
-    }
-
-    private void saveRefreshToken(Long userId, String newRefreshToken){
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId);
-
-        if(refreshToken != null){
-            refreshToken.update(newRefreshToken);
-        }else{
-            refreshToken = new RefreshToken(userId, newRefreshToken);
-        }
-
-        refreshTokenRepository.save(refreshToken);
-    }
-
-    @Override
-    public boolean validToken(String token, HttpServletResponse response){
-        if(token != null){
-            boolean validToken = tokenProvider.validToken(token);
-
-            if(validToken){
-                System.out.println(tokenProvider.getDuration(token));
-                return true;
-            }else {
-//                Long userId = tokenProvider.getUserId(token);
-                RefreshToken refreshToken = refreshTokenRepository.findByUserId(1L);
-
-                if(refreshToken != null){
-                    boolean validRefreshToken = tokenProvider.validToken(refreshToken.getRefreshToken());
-                    if(validRefreshToken){
-                        System.out.println("토큰 재발급");
-                        User user = userJPARepository.findById(1L).get();
-                        String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
-                        CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE_NAME, accessToken);
-
-                        return true;
-                    }else{
-                        throw new UnValidTokenException("유효하지 않은 Refresh Token");
-                    }
-                }else {
-                    throw new NotFoundTokenException("Refresh Token 존재하지 않음");
+                if(!token.equals("")){
+                   CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE_NAME, token);
+                   CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken);
+                    return true;
                 }
+                throw new NotFoundTokenException("fail generateToken");
             }
         }
-        throw new NotFoundTokenException("토큰 미발급");
+
+        throw new NotFoundUserException("login fail");
     }
+
+//    private void saveRefreshToken(Long userId, String newRefreshToken){
+//        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId);
+//
+//        if(refreshToken != null){
+//            refreshToken.update(newRefreshToken);
+//        }else{
+//            refreshToken = new RefreshToken(userId, newRefreshToken);
+//        }
+//
+//        refreshTokenRepository.save(refreshToken);
+//    }
+
+//    @Override
+//    public boolean validToken(String token, String refreshTokenCookie, HttpServletResponse response){
+//        if(token != null){
+//            boolean validToken = tokenProvider.validToken(token);
+//
+//            if(validToken){
+//                return true;
+//            }else {
+//                Long userId = tokenProvider.getUserId(refreshTokenCookie);
+//                RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId);
+//
+//                if(refreshToken != null){
+//                    boolean validRefreshToken = tokenProvider.validToken(refreshToken.getRefreshToken());
+//                    if(validRefreshToken && refreshTokenCookie.equals(refreshToken.getRefreshToken())){
+//                        System.out.println("=========토큰 재발급==========");
+//                        User user = userJPARepository.findById(userId).get();
+//                        String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
+//                        String newRefreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
+//                        saveRefreshToken(userId, newRefreshToken);
+//                        CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE_NAME, accessToken);
+//                        CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, newRefreshToken);
+//
+//                        return true;
+//                    }else{
+//                        throw new UnValidTokenException("유효하지 않은 Refresh Token");
+//                    }
+//                }else {
+//                    throw new NotFoundTokenException("Refresh Token 존재하지 않음");
+//                }
+//            }
+//        }
+//        throw new NotFoundTokenException("토큰 미발급");
+//    }
 
     @Override
     public GetUserInfoDTO getUserInfo(String token){
@@ -269,6 +277,7 @@ public class UserServiceImpl implements UserService{
             changeUserInfoDTO.setNickname(getUserInfoDTO.getNickname());
             changeUserInfoDTO.setPhoneNumber(getUserInfoDTO.getPhoneNumber());
             changeUserInfoDTO.setBirth(getUserInfoDTO.getBirth());
+            changeUserInfoDTO.setUserCode(createUserCode());
             changeUserInfoDTO.setGender(getUserInfoDTO.getGender());
             changeUserInfoDTO.setPreferredCity(getUserInfoDTO.getPreferredCity());
             changeUserInfoDTO.setPreferredArea(getUserInfoDTO.getPreferredArea());
