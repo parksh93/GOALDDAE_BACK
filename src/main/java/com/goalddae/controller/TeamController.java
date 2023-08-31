@@ -4,7 +4,6 @@ import com.goalddae.dto.team.TeamListDTO;
 import com.goalddae.dto.team.TeamUpdateDTO;
 import com.goalddae.entity.Team;
 import com.goalddae.service.TeamServiceImpl;
-import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +29,16 @@ public class TeamController {
     }
 
     @GetMapping(value = {"/myTeam/{id}", "/myTeamDetail/{id}"})
-    public Team myTeam(@PathVariable Long id){
-        return teamService.findTeamById(id);
+    public ResponseEntity<?> myTeam(@PathVariable Long id){
+        try {
+            Team team = teamService.findTeamById(id);
+            if (team == null) {
+                return ResponseEntity.notFound().build(); // 404 Not Found
+            }
+            return ResponseEntity.ok(team);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 서버에러
+        }
     }
 
 
