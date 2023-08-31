@@ -21,13 +21,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class TeamServiceImpl implements TeamService{
+public class TeamServiceImpl implements TeamService {
 
     private final TeamJPARepository teamJPARepository;
     private final TeamMemberRepository teamMemberRepository;
     private final TeamApplyRepository teamApplyRepository;
     private final TeamMatchResultRepository teamMatchResultRepository;
-  
+
     public TeamServiceImpl(TeamJPARepository teamJPARepository,
                            TeamMemberRepository teamMemberRepository,
                            TeamApplyRepository teamApplyRepository,
@@ -111,11 +111,11 @@ public class TeamServiceImpl implements TeamService{
         return result.stream()
                 .map(TeamListDTO::toDTO)
                 .collect(Collectors.toList());
+    }
 
-      
     // 동적테이블 생성 - 팀 멤버
     @Override
-    public boolean createTeamMemberTable(@Param("teamId") Long teamId) {
+    public boolean createTeamMemberTable (@Param("teamId") Long teamId){
         try {
             Long safeTable = MyBatisUtil.safeTable(teamId);
             teamMemberRepository.createTeamMemberTable(safeTable);
@@ -129,7 +129,7 @@ public class TeamServiceImpl implements TeamService{
 
     // 동적테이블 생성 - 팀 수락
     @Override
-    public boolean createTeamApplyTable(@Param("teamId") Long teamId) {
+    public boolean createTeamApplyTable (@Param("teamId") Long teamId){
         try {
             Long safeTable = MyBatisUtil.safeTable(teamId);
             teamApplyRepository.createTeamApplyTable(safeTable);
@@ -143,7 +143,7 @@ public class TeamServiceImpl implements TeamService{
 
     // 동적테이블 생성 - 팀 경기 결과
     @Override
-    public boolean createTeamMatchResult(@Param("teamId") Long teamId) {
+    public boolean createTeamMatchResult (@Param("teamId") Long teamId){
         try {
             Long safeTable = MyBatisUtil.safeTable(teamId);
             teamMatchResultRepository.createTeamMatchResultTable(safeTable);
@@ -156,7 +156,7 @@ public class TeamServiceImpl implements TeamService{
     }
 
     @Override
-    public void save(TeamSaveDTO teamSaveDTO) {
+    public void save (TeamSaveDTO teamSaveDTO){
         Team newTeam = Team.builder()
                 .teamName(teamSaveDTO.getTeamName())
                 .area(teamSaveDTO.getArea())
