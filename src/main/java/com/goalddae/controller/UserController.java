@@ -46,11 +46,11 @@ public class UserController {
         return ResponseEntity.badRequest().body(false);
     }
 
-    @RequestMapping(value = "/validToken", method = RequestMethod.GET)
-    public List<Boolean> validToken(@CookieValue(required = false) String token, HttpServletResponse response){
-        boolean valid = userService.validToken(token, response);
-        return List.of(valid);
-    }
+//    @RequestMapping(value = "/validToken", method = RequestMethod.GET)
+//    public List<Boolean> validToken(@CookieValue(required = false) String token, @CookieValue(required = false) String refreshToken, HttpServletResponse response){
+//        boolean valid = userService.validToken(token, refreshToken, response);
+//        return List.of(valid);
+//    }
 
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.POST)
     public ResponseEntity<?> getUserInfo(@CookieValue(required = false) String token){

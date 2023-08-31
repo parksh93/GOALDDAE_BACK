@@ -5,8 +5,12 @@ import com.goalddae.config.oauth.OAuth2AuthorizationRequestBaseOnCookRepository;
 import com.goalddae.config.oauth.OAuth2SuccessHandler;
 import com.goalddae.config.oauth.OAuth2UserService;
 import com.goalddae.repository.RefreshTokenRepository;
+import com.goalddae.repository.UserJPARepository;
+import com.goalddae.service.RefreshTokenService;
 import com.goalddae.service.UserService;
+import com.goalddae.util.CookieUtil;
 import jakarta.servlet.DispatcherType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,21 +26,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final UserService userService;
     private final TokenProvider tokenProvider;
     private final OAuth2UserService oAuth2UserService;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final UserJPARepository userJPARepository;
+    private final RefreshTokenService refreshTokenService;
 
-    @Autowired
-    public SecurityConfig(UserDetailsService userDetailsService, UserService userService, TokenProvider tokenProvider, OAuth2UserService oAuth2UserService, RefreshTokenRepository refreshTokenRepository){
-        this.userDetailsService = userDetailsService;
-        this.userService = userService;
-        this.tokenProvider = tokenProvider;
-        this.oAuth2UserService = oAuth2UserService;
-        this.refreshTokenRepository = refreshTokenRepository;
-    }
 
     @Bean
     public WebSecurityCustomizer configure(){
@@ -96,7 +95,7 @@ public class SecurityConfig {
 
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter(){
-        return new TokenAuthenticationFilter(tokenProvider);
+        return new TokenAuthenticationFilter(tokenProvider, userJPARepository, refreshTokenService);
     }
 
     @Bean

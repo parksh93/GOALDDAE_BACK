@@ -19,7 +19,7 @@ public interface UserService {
     public void save(User user);
     public User getByCredentials(String loginId);
     public boolean generateTokenFromLogin(LoginDTO loginDTO, HttpServletResponse response);
-    public boolean validToken(String token, HttpServletResponse response);
+//    public boolean validToken(String token, String refreshTokenCookie, HttpServletResponse response);
     public GetUserInfoDTO getUserInfo(String token);
     public boolean checkLoginId(CheckLoginIdDTO checkLoginIdDTO);
     public boolean checkEmail(SendEmailDTO checkEmailDTO);
