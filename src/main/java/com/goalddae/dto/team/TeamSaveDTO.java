@@ -16,5 +16,5 @@ public class TeamSaveDTO {
         private String preferredTime;
         private int averageAge;
         private String entryGender;
-        private int recruiting;
+        private boolean recruiting;
 }

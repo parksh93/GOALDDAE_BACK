@@ -21,12 +21,13 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
         this.individualMatchJPARepository = individualMatchJPARepository;
     }
 
+    // 매치 조회하여 유저에게 필요한 정보만 공개
     @Override
     public List<IndividualMatchDTO> getMatchesByDate(LocalDate date) {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.plusDays(1).atStartOfDay();
 
-        List<IndividualMatch> matches = individualMatchJPARepository.findByStartTimeBetween(startOfDay, endOfDay);
+        List<IndividualMatch> matches = individualMatchJPARepository.findByStartTimeBetweenOrderByStartTimeAsc(startOfDay, endOfDay);
 
         return matches.stream()
                 .map(match -> new IndividualMatchDTO(
@@ -38,6 +39,7 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
                         match.getPlayerNumber(),
                         match.getGender()
                 ))
+                .limit(10)
                 .collect(Collectors.toList());
     }
 

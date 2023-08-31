@@ -48,7 +48,7 @@ public class Team {
     private String preferredTime;   // 선호 시간
 
     @Column(nullable = false)
-    private int recruiting; // 모집중 유무
+    private boolean recruiting; // 모집중 유무
 
     @PrePersist
     public void setInformation() {

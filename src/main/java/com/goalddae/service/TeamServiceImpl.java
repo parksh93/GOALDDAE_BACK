@@ -80,16 +80,14 @@ public class TeamServiceImpl implements TeamService {
                 .entryFee(teamSaveDTO.getEntryFee())
                 .preferredDay(teamSaveDTO.getPreferredDay())
                 .preferredTime(teamSaveDTO.getPreferredTime())
-                .averageAge(teamSaveDTO.getAverageAge())
                 .entryGender(teamSaveDTO.getEntryGender())
-                .recruiting(teamSaveDTO.getRecruiting())
                 .teamCreate(LocalDateTime.now())
                 .teamProfileImgUrl("default_profile_img_url")
                 .build();
 
         teamJPARepository.save(newTeam);
 
-        // 팀 ID 필드를 가져와 테이블 생성에 F사용
+        // 팀 ID 필드를 가져와 테이블 생성에 사용
         Long id = newTeam.getId();
 
         // 동적테이블 생성
