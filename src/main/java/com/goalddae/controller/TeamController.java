@@ -21,8 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/team")
 public class TeamController {
 
-    private final TeamServiceImpl teamService;
-    private TeamService teamService;
+    private final TeamService teamService;
 
     public TeamController(TeamService teamService) {
         this.teamService = teamService;
