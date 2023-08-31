@@ -55,7 +55,6 @@ public class Team {
     @Column(nullable = false)
     private String preferredTime;   // 선호 시간
 
-
     public Team(Long id, String teamName, String area, int averageAge, int entryFee, String entryGender,
                 String teamProfileImgUrl, String preferredDay, String preferredTime) {
         this.id = id;
@@ -95,8 +94,6 @@ public class Team {
                 .preferredTime(teamUpdateDTO.getPreferredTime())
                 .build();
     }
-
-
 
     @PrePersist
     public void setInformation() {

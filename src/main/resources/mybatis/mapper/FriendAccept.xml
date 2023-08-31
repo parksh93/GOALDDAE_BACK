@@ -1,0 +1,12 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.goalddae.repository.FriendAcceptRepository">
+    <update id="createFriendAcceptTable" parameterType="java.lang.Long">
+        CREATE TABLE friend_accept_#{id} (
+                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                        from_user VARCHAR(255) NOT NULL,
+                                        accept_date DATETIME NOT NULL,
+                                        accept BIGINT NOT NULL,
+                                        users_id BIGINT NOT NULL
+        );
+    </update>
+</mapper>

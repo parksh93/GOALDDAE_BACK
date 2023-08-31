@@ -5,20 +5,26 @@ import com.goalddae.dto.team.TeamUpdateDTO;
 import com.goalddae.entity.Team;
 import com.goalddae.service.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import com.goalddae.dto.team.TeamSaveDTO;
+import com.goalddae.service.TeamService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/team")
 public class TeamController {
 
     private final TeamServiceImpl teamService;
+    private TeamService teamService;
 
-    @Autowired
-    public TeamController(TeamServiceImpl teamService){
+    public TeamController(TeamService teamService) {
         this.teamService = teamService;
     }
 
@@ -63,6 +69,19 @@ public class TeamController {
                 .ok("팀 생성이 완료되었습니다.");
     }
 
+      // 팀 등록
+    @PostMapping(value = "/save")
+    public ResponseEntity<String> saveTeam(@RequestBody TeamSaveDTO teamSaveDTO) {
+        try {
+            teamService.save(teamSaveDTO);
+            return ResponseEntity.ok("팀 생성이 완료되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+  
+  
+  
     @RequestMapping(value="/teamUpdate", method= {RequestMethod.PUT, RequestMethod.PATCH})
     public ResponseEntity<String> teamUpdate(@RequestBody TeamUpdateDTO teamUpdateDTO){
 

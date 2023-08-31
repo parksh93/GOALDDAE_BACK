@@ -83,7 +83,7 @@ public class ReplyServiceTest {
         CommunicationReply updatedReply = CommunicationReply.builder()
                 .boardId(boardId)
                 .parentId(parentId)
-                .userId(userId)
+//                .userId(userId)
                 .writer(writer)
                 .content(content)
                 .build();

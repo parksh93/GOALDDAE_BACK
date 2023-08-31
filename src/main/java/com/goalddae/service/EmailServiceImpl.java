@@ -30,6 +30,7 @@ public class EmailServiceImpl implements EmailService{
         msg+= "<div style='margin:100px;'>";
         msg+= "<h1> 안녕하세요 GOALDDAE입니다. </h1>";
         msg+= "<br>";
+        msg+= "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
         msg+= "<p>화면으로 돌아가 아래 코드를 입력해주세요<p>";
         msg+= "<br>";
         msg+= "<p>감사합니다!<p>";
@@ -127,5 +128,4 @@ public class EmailServiceImpl implements EmailService{
             throw new IllegalArgumentException();
         }
     }
-
 }
