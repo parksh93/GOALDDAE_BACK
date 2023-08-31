@@ -26,7 +26,7 @@ public class CommunicationBoard {
     @Column(nullable = false)
     private String title;   // 제목
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 5000)
     private String content; // 본문
 
     @Column(nullable = false)

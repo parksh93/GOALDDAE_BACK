@@ -4,7 +4,7 @@ import com.goalddae.entity.User;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -17,6 +17,7 @@ public class GetUserInfoDTO {
     private String loginId;
     private String name;
     private String nickname;
+    private String email;
     private String userCode;
     private String gender;
     private String profileImgUrl;
@@ -36,6 +37,7 @@ public class GetUserInfoDTO {
         this.loginId = user.getLoginId();
         this.name = user.getName();
         this.nickname = user.getNickname();
+        this.email = user.getEmail();
         this.userCode = user.getUserCode();
         this.gender = user.getGender();
         this.profileImgUrl = user.getProfileImgUrl();

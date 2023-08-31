@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
+@Builder
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
@@ -82,6 +83,5 @@ public class ChangeUserInfoDTO {
                 .activityClass(activityClass)
                 .authority(authority)
                 .build();
-
     }
 }
