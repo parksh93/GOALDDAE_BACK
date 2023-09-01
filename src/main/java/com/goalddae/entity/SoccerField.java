@@ -57,6 +57,8 @@ public class SoccerField {
     @Column(nullable = false)
     private boolean parkingStatus;  // 주차장 여부
 
+    @Column(nullable = false)
+    private String province; // 행정 구역
 
 
     // 이미지의 경우 최소 하나 이상 최대 3개이하로 저장 가능

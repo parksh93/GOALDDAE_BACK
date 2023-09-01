@@ -35,12 +35,15 @@ public class SoccerFieldRepositoryTest {
                 .closingTime(LocalTime.parse("21:00"))
                 .playerCapacity(10)
                 .region("분당")
+                .province("경기")
                 .reservationFee(10000)
                 .inOutWhether("실내")
                 .grassWhether("천연")
+                .fieldSize("14x15")
                 .toiletStatus(true)
                 .showerStatus(true)
                 .parkingStatus(true)
+                .fieldImg1("테스트이미지1")
                 .build();
 
         // 저장 후 반환된 객체 받기
@@ -66,12 +69,15 @@ public class SoccerFieldRepositoryTest {
                 .closingTime(LocalTime.parse("21:00"))
                 .playerCapacity(10)
                 .region("분당")
+                .province("경기")
                 .reservationFee(10000)
                 .inOutWhether("실내")
                 .grassWhether("천연")
+                .fieldSize("14x15")
                 .toiletStatus(true)
                 .showerStatus(true)
                 .parkingStatus(true)
+                .fieldImg1("테스트이미지1")
                 .build();
 
         // When
@@ -92,17 +98,20 @@ public class SoccerFieldRepositoryTest {
         // Given: 새로운 Soccer Field 생성 및 저장
         SoccerField soccerField = SoccerField.builder()
                 .id(1L)
-                .fieldName("테스트구장 변경 후")
+                .fieldName("테스트구장 생성")
                 .operatingHours(LocalTime.parse("10:00"))
                 .closingTime(LocalTime.parse("21:00"))
                 .playerCapacity(10)
                 .region("분당")
+                .province("경기")
                 .reservationFee(10000)
                 .inOutWhether("실내")
                 .grassWhether("천연")
+                .fieldSize("14x15")
                 .toiletStatus(true)
                 .showerStatus(true)
                 .parkingStatus(true)
+                .fieldImg1("테스트이미지1")
                 .build();
 
         soccerField = soccerFieldRepository.save(soccerField);

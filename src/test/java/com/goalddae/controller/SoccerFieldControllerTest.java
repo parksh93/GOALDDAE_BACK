@@ -146,7 +146,6 @@ public class SoccerFieldControllerTest {
 
         // Then
         verify(soccerFieldService, times(1)).delete(anyLong());
-
     }
 
         @Test

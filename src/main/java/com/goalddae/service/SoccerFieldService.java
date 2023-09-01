@@ -7,8 +7,12 @@ import java.io.IOException;
 import java.util.List;
 
 public interface SoccerFieldService {
-
+    // 검색 기능
     List<SoccerField> searchSoccerFields(String searchTerm);
+    // 필터 기능
+    List<SoccerField> searchFieldByProvince(String province);
+    // 지역 조회
+    List<String> getProvinces() throws IOException;
     List<String> searchCityNames(String searchTerm) throws IOException;
     SoccerField save(SoccerField soccerField);
     SoccerField update(SoccerFieldDTO soccerFieldDTO);
