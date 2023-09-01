@@ -18,18 +18,20 @@ import com.goalddae.util.CookieUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.val;
+import com.goalddae.repository.CommunicationBoardRepository;
+import com.goalddae.repository.UsedTransactionBoardRepository;
+import com.goalddae.repository.UserJPARepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.List;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -39,9 +41,10 @@ public class UserServiceImpl implements UserService{
     private final RefreshTokenRepository refreshTokenRepository;
     private final CommunicationBoardRepository communicationBoardRepository;
     private final UsedTransactionBoardRepository usedTransactionBoardRepository;
-
+    private final FriendService friendService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
+
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(2);
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofSeconds(10);
     public static final String ACCESS_TOKEN_COOKIE_NAME = "token";
@@ -49,13 +52,14 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     public UserServiceImpl(UserJPARepository userRepository, RefreshTokenRepository refreshTokenRepository, TokenProvider tokenProvider,
-                           CommunicationBoardRepository communicationBoardRepository, UsedTransactionBoardRepository usedTransactionBoardRepository){
+                           CommunicationBoardRepository communicationBoardRepository, UsedTransactionBoardRepository usedTransactionBoardRepository, FriendService friendService){
         this.userJPARepository = userRepository;
         this.refreshTokenRepository = refreshTokenRepository;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.tokenProvider = tokenProvider;
         this.communicationBoardRepository = communicationBoardRepository;
         this.usedTransactionBoardRepository = usedTransactionBoardRepository;
+        this.friendService = friendService;
     }
 
     @Override
@@ -77,6 +81,15 @@ public class UserServiceImpl implements UserService{
                 .build();
 
         userJPARepository.save(newUser);
+
+        // 로그인 아이디를 가져와 테이블 생성에 사용
+        Long id = newUser.getId();
+
+        // 동적 테이블 생성
+        friendService.createFriendAcceptTable(id);
+        friendService.createFriendAddTable(id);
+        friendService.createFriendBlockTable(id);
+        friendService.createFriendListTable(id);
     }
 
     public static String createUserCode() {
@@ -268,10 +281,10 @@ public class UserServiceImpl implements UserService{
             String loginId = tokenProvider.getLoginId(changePasswordDTO.getLoginIdToken());
             User user = userJPARepository.findByLoginId(loginId);
 
-           ChangeUserInfoDTO userInfoDTO = new ChangeUserInfoDTO(user);
-           userInfoDTO.setPassword(bCryptPasswordEncoder.encode(changePasswordDTO.getPassword()));
-           userInfoDTO.setProfileUpdateDate(LocalDateTime.now());
-           User updateUser = userInfoDTO.toEntity();
+            ChangeUserInfoDTO userInfoDTO = new ChangeUserInfoDTO(user);
+            userInfoDTO.setPassword(bCryptPasswordEncoder.encode(changePasswordDTO.getPassword()));
+            userInfoDTO.setProfileUpdateDate(LocalDateTime.now());
+            User updateUser = userInfoDTO.toEntity();
 
             userJPARepository.save(updateUser);
         }catch (Exception e){
@@ -285,3 +298,4 @@ public class UserServiceImpl implements UserService{
         return userJPARepository.findByEmail(email);
     }
 }
+
