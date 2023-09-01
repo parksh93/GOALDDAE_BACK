@@ -34,7 +34,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        System.out.println(authentication.getPrincipal());
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = (String)oAuth2User.getAttributes().get("email");
 

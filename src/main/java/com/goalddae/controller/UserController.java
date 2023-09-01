@@ -46,12 +46,6 @@ public class UserController {
         return ResponseEntity.badRequest().body(false);
     }
 
-//    @RequestMapping(value = "/validToken", method = RequestMethod.GET)
-//    public List<Boolean> validToken(@CookieValue(required = false) String token, @CookieValue(required = false) String refreshToken, HttpServletResponse response){
-//        boolean valid = userService.validToken(token, refreshToken, response);
-//        return List.of(valid);
-//    }
-
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.POST)
     public ResponseEntity<?> getUserInfo(@CookieValue(required = false) String token){
         GetUserInfoDTO userInfoDTO = userService.getUserInfo(token);
@@ -61,10 +55,16 @@ public class UserController {
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public ResponseEntity<Boolean> logout(HttpServletResponse response){
-        Cookie cookie = new Cookie("token", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        response.addCookie(cookie);
+        Cookie cookieToken = new Cookie("token", null);
+        cookieToken.setMaxAge(0);
+        cookieToken.setPath("/");
+
+        Cookie cookieRefreshToken = new Cookie("refreshToken", null);
+        cookieRefreshToken.setMaxAge(0);
+        cookieRefreshToken.setPath("/");
+
+        response.addCookie(cookieToken);
+        response.addCookie(cookieRefreshToken);
 
         return ResponseEntity.ok(true);
     }

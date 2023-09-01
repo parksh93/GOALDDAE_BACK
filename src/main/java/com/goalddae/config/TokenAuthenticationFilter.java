@@ -29,8 +29,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private final UserJPARepository userJPARepository;
     private final RefreshTokenService refreshTokenService;
 
-    private final static String HEADER_AUTHORIZATION = "Authorization";
-    private final static  String TOKEN_PREFIX = "Bearer ";
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(2);
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofSeconds(10);
     public static final String ACCESS_TOKEN_COOKIE_NAME = "token";
@@ -41,6 +39,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         Cookie [] cookies = request.getCookies();
         String token = "";
         String refreshToken = "";
+
         for (Cookie cookie: cookies) {
             if(cookie.getName().equals("token")){
                 token = cookie.getValue();
@@ -48,51 +47,35 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             if(cookie.getName().equals("refreshToken")){
                 refreshToken = cookie.getValue();
             }
-
         }
+
         if(!token.equals("")) {
             if (tokenProvider.validToken(token)) {
                 Authentication authentication = tokenProvider.getAuthentication(token);
-                System.out.println(authentication);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
-                System.out.println("==============" + refreshToken);
                 if(!refreshToken.equals("")){
                     Long userId = tokenProvider.getUserId(refreshToken);
                     RefreshToken refreshTokenEntity = refreshTokenService.findByUserId(userId);
-                    System.out.println("---------"+ refreshTokenEntity);
                     boolean validRefreshToken = tokenProvider.validToken(refreshTokenEntity.getRefreshToken());
+
                     if (validRefreshToken && refreshToken.equals(refreshTokenEntity.getRefreshToken())) {
-                        System.out.println("*********토큰 재발급***********");
                         User user = userJPARepository.findById(userId).get();
                         String newAccessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
                         String newRefreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
+
                         refreshTokenService.saveRefreshToken(userId, newRefreshToken);
                         CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE_NAME, newAccessToken);
                         CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, newRefreshToken);
 
+                        Authentication authentication = tokenProvider.getAuthentication(newAccessToken);
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+
                     }
-//                    else {
-//                        throw new UnValidTokenException("유효하지 않은 Refresh Token");
-//                    }
                 }
-//                else {
-//                    throw new NotFoundTokenException("Refresh Token 존재하지 않음");
-//                }
             }
         }
-//        else {
-//            throw new NotFoundTokenException("토큰 미발급");
-//        }
 
         filterChain.doFilter(request, response);
-    }
-
-    // Bearer 접두사 제거
-    public String getAccessToken(String authorizationHeader) {
-        if (authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) {
-            return authorizationHeader.substring(TOKEN_PREFIX.length());
-        }
-        return null;
     }
 }
