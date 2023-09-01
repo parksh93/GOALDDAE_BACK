@@ -50,7 +50,7 @@ public class SoccerFieldServiceTest {
     @Transactional
     @DisplayName("주어진 축구장 이름으로 검색")
     public void searchFieldsByFieldNameTest() {
-        String fieldName = "야탑 풋살장";
+        String fieldName = "테스트 구장8";
 
         List<SoccerField> soccerFields = soccerFieldService.searchSoccerFields(fieldName);
 
@@ -74,6 +74,7 @@ public class SoccerFieldServiceTest {
                 .inOutWhether("실내")
                 .grassWhether("천연")
                 .region("인천")
+                .province("인천")
                 .build();
 
         when(soccerFieldRepository.save(any(SoccerField.class))).thenReturn(soccerField);
@@ -95,6 +96,7 @@ public class SoccerFieldServiceTest {
                 .operatingHours(LocalTime.parse("09:00"))
                 .closingTime(LocalTime.parse("20:00"))
                 .playerCapacity(12)
+                .province("경기도")
                 .region("성남")
                 .reservationFee(8000)
                 .inOutWhether("실외")
@@ -110,6 +112,7 @@ public class SoccerFieldServiceTest {
                 .operatingHours(LocalTime.parse("10:00"))
                 .closingTime(LocalTime.parse("21:00"))
                 .playerCapacity(10)
+                .province("경기도")
                 .region("분당")
                 .reservationFee(10000)
                 .inOutWhether("실내")

@@ -100,4 +100,29 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
         SoccerField soccerField = soccerFieldRepository.findById(id).get();
         return new SoccerFieldInfoDTO(soccerField);
     }
+
+    // province.json을 String으로 변환
+    @Override
+    public List<String> getProvinces() throws IOException {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("province.json");
+        ObjectMapper objectMapper = new ObjectMapper();
+        return Arrays.asList(objectMapper.readValue(inputStream, String[].class));
+    }
+
+    // 해당 지역이 존재하는지 확인하고, 존재한다면 해당 지역의 축구장을 반환
+    @Override
+    public List<SoccerField> searchFieldByProvince(String province) {
+        List<String> provinces;
+        try {
+            provinces = getProvinces();
+        } catch (IOException e) {
+            throw new RuntimeException("json파일 읽기 실패 ", e);
+        }
+
+        if (!provinces.contains(province)) {
+            return new ArrayList<>();
+        }
+
+        return soccerFieldRepository.findByProvinceContaining(province);
+    }
 }
