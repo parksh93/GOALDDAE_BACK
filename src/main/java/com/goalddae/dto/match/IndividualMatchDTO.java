@@ -19,10 +19,4 @@ public class IndividualMatchDTO {
     private String status;
     private long playerNumber;
     private String gender;
-
-    // 플레이어수
-    public String getPlayerFormat() {
-        int teamSize = (int) playerNumber / 2;
-        return teamSize + "대" + teamSize;
-    }
 }
