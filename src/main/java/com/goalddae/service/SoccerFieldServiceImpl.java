@@ -74,13 +74,17 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 구장이 존재하지 않습니다. id=" + soccerFieldDto.getId()));
 
         soccerField.changeFieldName(soccerFieldDto.getFieldName());
-        soccerField.changeFacilityStatus(soccerFieldDto.isToiletStatus(), soccerFieldDto.isShowerStatus(), soccerFieldDto.isParkingStatus());
+        soccerField.changeOperatingHours(soccerFieldDto.getOperatingHours());
+        soccerField.changeClosingTime(soccerFieldDto.getClosingTime());
+        soccerField.changeRegion(soccerFieldDto.getRegion());
         soccerField.changeFieldSize(soccerFieldDto.getFieldSize());
-        soccerField.changeImages(soccerFieldDto.getFieldImg1(), soccerFieldDto.getFieldImg2(), soccerFieldDto.getFieldImg3());
         soccerField.changeReservationFee(soccerFieldDto.getReservationFee());
+        soccerField.changeParkingStatus(soccerFieldDto.isParkingStatus());
+        soccerField.changeShowerStatus(soccerFieldDto.isShowerStatus());
+        soccerField.changeToiletStatus(soccerFieldDto.isToiletStatus());
+        soccerField.changeImages(soccerFieldDto.getFieldImg1(), soccerFieldDto.getFieldImg2(), soccerFieldDto.getFieldImg3());
         soccerField.changeInOutWhether(soccerFieldDto.getInOutWhether());
         soccerField.changeGrassWhether(soccerFieldDto.getGrassWhether());
-        soccerField.changeRegion(soccerFieldDto.getRegion());
 
         return soccerField;
     }

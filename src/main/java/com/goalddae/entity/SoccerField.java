@@ -25,7 +25,28 @@ public class SoccerField {
     private String fieldName;   // 구장명
 
     @Column(nullable = false)
+    private LocalTime operatingHours; // 운영 시작 시간
+
+    @Column(nullable = false)
+    private LocalTime closingTime; // 운영 종료 시간
+
+    @Column(nullable = false)
     private int playerCapacity; // 플레이어수
+
+    @Column(nullable = false)
+    private String region;          // 지역
+
+    @Column(nullable = false)
+    private int reservationFee;    // 대관비
+
+    @Column(nullable = false)
+    private String fieldSize;   // 구장 크기
+
+    @Column(nullable = false)
+    private String inOutWhether;    // 실내외 여부
+
+    @Column(nullable = false)
+    private String grassWhether;    // 잔디 종류
 
     @Column(nullable = false)
     private boolean toiletStatus;   // 화장실 여부
@@ -36,14 +57,7 @@ public class SoccerField {
     @Column(nullable = false)
     private boolean parkingStatus;  // 주차장 여부
 
-    @Column(nullable = false)
-    private String fieldSize;   // 구장 크기
 
-    @Column(nullable = false)
-    private LocalTime operatingHours; // 운영 시작 시간
-
-    @Column(nullable = false)
-    private LocalTime closingTime; // 운영 종료 시간
 
     // 이미지의 경우 최소 하나 이상 최대 3개이하로 저장 가능
     @Column(nullable = false)
@@ -55,29 +69,21 @@ public class SoccerField {
     @Column
     private String fieldImg3;
 
-    @Column(nullable = false)
-    private int reservationFee;    // 대관비
-
-    @Column(nullable = false)
-    private String inOutWhether;    // 실내외 여부
-
-    @Column(nullable = false)
-    private String grassWhether;    // 잔디 여부
-
-    @Column(nullable = false)
-    private String region;          // 지역
-
-
     // 구장 수정을 위한 캡슐화
+
     public void changeFieldName(String fieldName) {
         this.fieldName = fieldName;
     }
 
-    public void changeFacilityStatus(boolean toiletStatus,
-                                     boolean showerStatus,
-                                     boolean parkingStatus) {
+    public void changeToiletStatus(boolean toiletStatus) {
         this.toiletStatus = toiletStatus;
+    }
+
+    public void changeShowerStatus(boolean showerStatus) {
         this.showerStatus = showerStatus;
+    }
+
+    public void changeParkingStatus(boolean parkingStatus) {
         this.parkingStatus = parkingStatus;
     }
 
@@ -105,5 +111,13 @@ public class SoccerField {
 
     public void changeRegion(String region){
         this.region=region;
+    }
+
+    public void changeOperatingHours(LocalTime operatingHours) {
+        this.operatingHours = operatingHours;
+    }
+
+    public void changeClosingTime(LocalTime closingTime) {
+        this.closingTime = closingTime;
     }
 }

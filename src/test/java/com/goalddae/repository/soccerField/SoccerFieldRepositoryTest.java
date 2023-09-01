@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -28,16 +29,18 @@ public class SoccerFieldRepositoryTest {
 
         // 구장 객체 생성 및 저장
         soccerField = SoccerField.builder()
-                .fieldName("테스트구장")
+                .id(1L)
+                .fieldName("테스트구장 생성")
+                .operatingHours(LocalTime.parse("10:00"))
+                .closingTime(LocalTime.parse("21:00"))
+                .playerCapacity(10)
+                .region("분당")
+                .reservationFee(10000)
+                .inOutWhether("실내")
+                .grassWhether("천연")
                 .toiletStatus(true)
                 .showerStatus(true)
                 .parkingStatus(true)
-                .fieldSize("14x16")
-                .fieldImg1("이미지1")
-                .reservationFee(8000)
-                .inOutWhether("실내")
-                .grassWhether("천연")
-                .region("인천")
                 .build();
 
         // 저장 후 반환된 객체 받기
@@ -57,18 +60,18 @@ public class SoccerFieldRepositoryTest {
         String updateSoccerFieldName = "수정된 축구장A";
 
         SoccerField soccerField = SoccerField.builder()
+                .id(1L)
                 .fieldName(updateSoccerFieldName)
+                .operatingHours(LocalTime.parse("10:00"))
+                .closingTime(LocalTime.parse("21:00"))
+                .playerCapacity(10)
+                .region("분당")
+                .reservationFee(10000)
+                .inOutWhether("실내")
+                .grassWhether("천연")
                 .toiletStatus(true)
                 .showerStatus(true)
                 .parkingStatus(true)
-                .fieldSize("기존 사이즈")
-                .fieldImg1("기존 이미지1")
-                .fieldImg2("기존 이미지2")
-                .fieldImg3("기존 이미지3")
-                .reservationFee(4000)
-                .inOutWhether("실외")
-                .grassWhether("천연")
-                .region("용인")
                 .build();
 
         // When
@@ -88,16 +91,18 @@ public class SoccerFieldRepositoryTest {
     public void deleteSoccerFieldTest() {
         // Given: 새로운 Soccer Field 생성 및 저장
         SoccerField soccerField = SoccerField.builder()
-                .fieldName("테스트구장")
+                .id(1L)
+                .fieldName("테스트구장 변경 후")
+                .operatingHours(LocalTime.parse("10:00"))
+                .closingTime(LocalTime.parse("21:00"))
+                .playerCapacity(10)
+                .region("분당")
+                .reservationFee(10000)
+                .inOutWhether("실내")
+                .grassWhether("천연")
                 .toiletStatus(true)
                 .showerStatus(true)
                 .parkingStatus(true)
-                .fieldSize("14x16")
-                .fieldImg1("이미지1")
-                .reservationFee(8000)
-                .inOutWhether("실내")
-                .grassWhether("천연")
-                .region("인천")
                 .build();
 
         soccerField = soccerFieldRepository.save(soccerField);
