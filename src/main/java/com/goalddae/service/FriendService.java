@@ -1,8 +1,10 @@
 package com.goalddae.service;
 
+import org.apache.ibatis.annotations.Param;
+
 public interface FriendService {
-    void createFriendListTable(String friendList);
-    void createFriendAddTable(String friendAdd);
-    void createFriendAcceptTable(String friendAccept);
-    void createFriendBlockTable(String friendBlock);
+    boolean createFriendAddTable(@Param("userId") Long userId);
+    boolean createFriendAcceptTable(@Param("userId") Long userId);
+    boolean createFriendBlockTable(@Param("userId") Long userId);
+    boolean createFriendListTable(@Param("userId") Long userId);
 }

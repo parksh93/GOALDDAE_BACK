@@ -31,8 +31,6 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-
-
     @GetMapping("/list")
     public ResponseEntity<Map<String, Object>> list(@RequestParam(required = false, defaultValue = "") String type,
                                                     @RequestParam(required = false, defaultValue = "") String name,
