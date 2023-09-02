@@ -89,7 +89,4 @@ public class ReplyController {
         replyService.approveReportedReply(reportId);
         return ResponseEntity.ok("신고가 승인되었습니다.");
     }
-
-
-
 }
