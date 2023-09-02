@@ -202,4 +202,15 @@ public class UserServiceTest {
 
         userService.changePassword(changePasswordDTO);
     }
+
+    @Test
+    @Transactional
+    @DisplayName("이메일을 통해 회원정보 가져오기")
+    public void findByEmail() {
+        String email = "jsap50@naver.com";
+
+        User user = userService.findByEmail(email);
+
+        assertNotNull(user);
+    }
 }

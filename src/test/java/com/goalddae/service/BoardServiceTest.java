@@ -35,7 +35,6 @@ public class BoardServiceTest {
     @Autowired
     ReportedBoardJPARepository reportedBoardJPARepository;
 
-
     @Test
     @Transactional
     @DisplayName("페이징처리된 게시글 목록 조회")
