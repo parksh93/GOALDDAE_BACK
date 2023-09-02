@@ -57,7 +57,6 @@ public class UserServiceImpl implements UserService{
     @Autowired
     public UserServiceImpl(UserJPARepository userRepository,
                            RefreshTokenRepository refreshTokenRepository,
-                           BCryptPasswordEncoder bCryptPasswordEncoder,
                            TokenProvider tokenProvider,
                            CommunicationBoardRepository communicationBoardRepository,
                            UsedTransactionBoardRepository usedTransactionBoardRepository,
