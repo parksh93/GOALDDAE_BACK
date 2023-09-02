@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService{
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(2);
-    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofSeconds(10);
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofMinutes(30);
     public static final String ACCESS_TOKEN_COOKIE_NAME = "token";
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
 
