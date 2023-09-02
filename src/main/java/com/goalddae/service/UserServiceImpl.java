@@ -4,16 +4,30 @@ import com.goalddae.config.jwt.TokenProvider;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
 
-import com.goalddae.entity.CommunicationBoard;
-import com.goalddae.entity.UsedTransactionBoard;
+import com.goalddae.entity.*;
+import com.goalddae.exception.NotFoundTokenException;
+import com.goalddae.exception.NotFoundUserException;
+
+import com.goalddae.exception.UnValidTokenException;
+import com.goalddae.repository.*;
+
 import com.goalddae.entity.User;
 import com.goalddae.exception.NotFoundUserException;
+import com.goalddae.repository.UserJPARepository;
+
+import com.goalddae.util.CookieUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.val;
+
 import com.goalddae.repository.CommunicationBoardRepository;
 import com.goalddae.repository.UsedTransactionBoardRepository;
 import com.goalddae.repository.UserJPARepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,22 +40,31 @@ import java.util.Random;
 @Service
 public class UserServiceImpl implements UserService{
     private final UserJPARepository userJPARepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final CommunicationBoardRepository communicationBoardRepository;
     private final UsedTransactionBoardRepository usedTransactionBoardRepository;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
+    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(2);
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofSeconds(10);
+    public static final String ACCESS_TOKEN_COOKIE_NAME = "token";
+    public static final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
+
     private final FriendService friendService;
 
 
     @Autowired
     public UserServiceImpl(UserJPARepository userRepository,
+                           RefreshTokenRepository refreshTokenRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
                            TokenProvider tokenProvider,
                            CommunicationBoardRepository communicationBoardRepository,
                            UsedTransactionBoardRepository usedTransactionBoardRepository,
                            FriendService friendService){
         this.userJPARepository = userRepository;
-        this.bCryptPasswordEncoder =bCryptPasswordEncoder;
+        this.refreshTokenRepository = refreshTokenRepository;
+        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.tokenProvider = tokenProvider;
         this.communicationBoardRepository = communicationBoardRepository;
         this.usedTransactionBoardRepository = usedTransactionBoardRepository;
@@ -106,32 +129,46 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String generateTokenFromLogin(LoginDTO loginDTO){
-        try {
-            User userInfo = getByCredentials(loginDTO.getLoginId());
+    public boolean generateTokenFromLogin(LoginDTO loginDTO, HttpServletResponse response){
+        User userInfo = getByCredentials(loginDTO.getLoginId());
 
+        if(userInfo != null){
             if (bCryptPasswordEncoder.matches(loginDTO.getPassword(), userInfo.getPassword())) {
-                String token = tokenProvider.generateToken(userInfo, Duration.ofHours(2));
+                String refreshToken = tokenProvider.generateToken(userInfo, REFRESH_TOKEN_DURATION);
+                saveRefreshToken(userInfo.getId(), refreshToken);
 
-                return token;
-            } else {
-                throw new NotFoundUserException("login fail");
+                String token = tokenProvider.generateToken(userInfo,ACCESS_TOKEN_DURATION);
+
+                if(!token.equals("")){
+                   CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE_NAME, token);
+                   CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken);
+                    return true;
+                }
+                throw new NotFoundTokenException("fail generateToken");
             }
-        } catch (Exception e) {
-            return "";
         }
+
+        throw new NotFoundUserException("login fail");
+    }
+
+    private void saveRefreshToken(Long userId, String newRefreshToken){
+        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId);
+
+        if(refreshToken != null){
+            refreshToken.update(newRefreshToken);
+        }else{
+            refreshToken = new RefreshToken(userId, newRefreshToken);
+        }
+
+        refreshTokenRepository.save(refreshToken);
     }
 
     @Override
     public GetUserInfoDTO getUserInfo(String token){
-        if(tokenProvider.validToken(token)){
-            User user = userJPARepository.findById(tokenProvider.getUserId(token)).get();
+           User user = userJPARepository.findById(tokenProvider.getUserId(token)).get();
+           GetUserInfoDTO userInfoDTO = new GetUserInfoDTO(user);
 
-            GetUserInfoDTO userInfoDTO = new GetUserInfoDTO(user);
-
-            return userInfoDTO;
-        }
-        return null;
+           return userInfoDTO;
     }
 
     @Override
@@ -168,11 +205,9 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-
     @Override
     public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO){
         String loginId = userJPARepository.findLoginIdByEmailAndName(requestFindLoginIdDTO.getEmail(), requestFindLoginIdDTO.getName());
-
         String star = "**";
 
         if(loginId != null){
@@ -186,13 +221,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String checkLoginIdAndEmail(RequestFindPasswordDTO findPasswordDTO) {
+    public boolean checkLoginIdAndEmail(RequestFindPasswordDTO findPasswordDTO, HttpServletResponse response) {
         int userCnt = userJPARepository.countByLoginIdAndEmail(findPasswordDTO.getLoginId(), findPasswordDTO.getEmail());
+
         if(userCnt == 1){
-            return tokenProvider.generateLoinIdToken(findPasswordDTO.getLoginId(), Duration.ofMinutes(5));
-        }else{
-            return "";
+            String token = tokenProvider.generateLoinIdToken(findPasswordDTO.getLoginId(), Duration.ofMinutes(5));
+            if(!token.equals("")) {
+                CookieUtil.addCookie(response, "loginIdToken", token);
+
+                return true;
+            }
         }
+
+        return false;
     }
 
     @Override
@@ -214,6 +255,27 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public void updateSocialSignup(GetUserInfoDTO getUserInfoDTO){
+        User user = userJPARepository.findByEmail(getUserInfoDTO.getEmail());
+
+        if(user != null){
+            ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
+            changeUserInfoDTO.setNickname(getUserInfoDTO.getNickname());
+            changeUserInfoDTO.setPhoneNumber(getUserInfoDTO.getPhoneNumber());
+            changeUserInfoDTO.setBirth(getUserInfoDTO.getBirth());
+            changeUserInfoDTO.setUserCode(createUserCode());
+            changeUserInfoDTO.setGender(getUserInfoDTO.getGender());
+            changeUserInfoDTO.setPreferredCity(getUserInfoDTO.getPreferredCity());
+            changeUserInfoDTO.setPreferredArea(getUserInfoDTO.getPreferredArea());
+            changeUserInfoDTO.setActivityClass(getUserInfoDTO.getActivityClass());
+
+            user = changeUserInfoDTO.toEntity();
+
+            userJPARepository.save(user);
+        }
+    }
+
+    @Override
     public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId) {
         return communicationBoardRepository.findByUserId(userId);
     }
@@ -222,7 +284,6 @@ public class UserServiceImpl implements UserService{
     public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(long userId) {
         return usedTransactionBoardRepository.findByUserId(userId);
     }
-
 
     public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
         try {
@@ -239,5 +300,10 @@ public class UserServiceImpl implements UserService{
             return false;
         }
         return true;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userJPARepository.findByEmail(email);
     }
 }
