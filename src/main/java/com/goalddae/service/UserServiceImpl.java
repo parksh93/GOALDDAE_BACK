@@ -271,6 +271,11 @@ public class UserServiceImpl implements UserService{
             user = changeUserInfoDTO.toEntity();
 
             userJPARepository.save(user);
+
+            friendService.createFriendAcceptTable(user.getId());
+            friendService.createFriendAddTable(user.getId());
+            friendService.createFriendBlockTable(user.getId());
+            friendService.createFriendListTable(user.getId());
         }
     }
 
@@ -304,5 +309,10 @@ public class UserServiceImpl implements UserService{
     @Override
     public User findByEmail(String email) {
         return userJPARepository.findByEmail(email);
+    }
+
+    @Override
+    public List<User> searchUserList(String nickname) {
+        return userJPARepository.findByNicknameContaining(nickname);
     }
 }

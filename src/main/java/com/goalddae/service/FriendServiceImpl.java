@@ -1,31 +1,25 @@
 package com.goalddae.service;
 
-import com.goalddae.repository.FriendAcceptRepository;
-import com.goalddae.repository.FriendAddRepository;
-import com.goalddae.repository.FriendBlockRepository;
-import com.goalddae.repository.FriendListRepository;
+import com.goalddae.dto.friend.SearchFriendDTO;
+import com.goalddae.dto.friend.SelectFriendListDTO;
+import com.goalddae.entity.User;
+import com.goalddae.repository.*;
 import com.goalddae.util.MyBatisUtil;
+import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class FriendServiceImpl implements FriendService{
 
     private final FriendListRepository friendListRepository;
     private final FriendAddRepository friendAddRepository;
     private final FriendAcceptRepository friendAcceptRepository;
     private final FriendBlockRepository friendBlockRepository;
-
-    public FriendServiceImpl(FriendListRepository friendListRepository ,
-                             FriendAddRepository friendAddRepository,
-                             FriendAcceptRepository friendAcceptRepository,
-                             FriendBlockRepository friendBlockRepository) {
-        this.friendListRepository = friendListRepository;
-        this.friendAddRepository = friendAddRepository;
-        this.friendAcceptRepository = friendAcceptRepository;
-        this.friendBlockRepository = friendBlockRepository;
-    }
 
     // 동적테이블 생성 - 친구리스트
     @Override
@@ -80,6 +74,12 @@ public class FriendServiceImpl implements FriendService{
         } catch (Exception e) {
         System.out.println("테이블 생성 중 오류가 발생했습니다: " + e.getMessage());
         return false;
+        }
     }
-}
+
+    @Override
+    public List<SearchFriendDTO> searchFriend(SelectFriendListDTO selectFriendListDTO) {
+        return friendListRepository.findByNicknameContaining(selectFriendListDTO);
+    }
+
 }
