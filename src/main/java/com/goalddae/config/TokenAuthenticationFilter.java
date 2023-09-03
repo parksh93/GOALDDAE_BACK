@@ -40,12 +40,14 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String token = "";
         String refreshToken = "";
 
-        for (Cookie cookie: cookies) {
-            if(cookie.getName().equals("token")){
-                token = cookie.getValue();
-            }
-            if(cookie.getName().equals("refreshToken")){
-                refreshToken = cookie.getValue();
+        if(cookies != null){
+            for (Cookie cookie: cookies) {
+                if(cookie.getName().equals("token")){
+                    token = cookie.getValue();
+                }
+                if(cookie.getName().equals("refreshToken")){
+                    refreshToken = cookie.getValue();
+                }
             }
         }
 
