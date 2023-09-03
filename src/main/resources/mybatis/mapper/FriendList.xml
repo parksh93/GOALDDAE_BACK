@@ -2,9 +2,15 @@
 <mapper namespace="com.goalddae.repository.FriendListRepository">
     <update id="createFriendListTable" parameterType="java.lang.Long">
         CREATE TABLE friend_list_#{id} (
-                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                        friend_id VARCHAR(255) NOT NULL,
-                                        users_id BIGINT NOT NULL
-                                       );
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            friend_id VARCHAR(255) NOT NULL,
+            users_id BIGINT NOT NULL
+        );
     </update>
+    <select id="findByNicknameContaining" parameterType="com.goalddae.dto.friend.SelectFriendListDTO" resultType="com.goalddae.dto.friend.SearchFriendDTO">
+        SELECT u.id, u.nickname, u.profile_img_url
+        FROM users u
+        JOIN friend_list_#{userId} f ON u.id = f.friend_id
+        WHERE u.nickname LIKE CONCAT('%',#{nickname},'%');
+    </select>
 </mapper>

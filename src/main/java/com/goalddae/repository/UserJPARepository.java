@@ -5,6 +5,7 @@ import com.goalddae.dto.user.CheckNicknameDTO;
 import com.goalddae.dto.user.GetUserInfoDTO;
 
 import com.goalddae.dto.user.LoginDTO;
+import com.goalddae.dto.user.SearchUserDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,6 +23,6 @@ public interface UserJPARepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT u.login_id FROM users u WHERE u.email = :email AND name = :name", nativeQuery = true)
     String findLoginIdByEmailAndName(@Param("email") String email, @Param("name") String name);
     int countByLoginIdAndEmail(String loginId, String email);
-
     User findByEmail(String email);
+    List<User> findByNicknameContaining(String nickname);
 }

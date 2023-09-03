@@ -1,5 +1,6 @@
 package com.goalddae.repository.user;
 
+import com.goalddae.dto.user.SearchUserDTO;
 import com.goalddae.entity.User;
 import com.goalddae.repository.UserJPARepository;
 import org.junit.jupiter.api.DisplayName;
@@ -7,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -91,5 +94,16 @@ public class UserJPARepositoryTest {
         User user = userJPARepository.findByEmail(email);
 
         assertEquals(user.getLoginId(), "asdas");
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("닉네임을 통해 유저 찾기")
+    public void findUserByNickname() {
+        String nickname ="구";
+
+        List<User> userList = userJPARepository.findByNicknameContaining(nickname);
+        
+        assertEquals(userList.get(0).getNickname(), "구글ㄹ");
     }
 }
