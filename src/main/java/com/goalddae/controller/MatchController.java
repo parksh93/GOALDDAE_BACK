@@ -51,6 +51,8 @@ public class MatchController {
         @GetMapping("/match-individual/{userId}")
         public ResponseEntity<List<MatchIndividualDTO>> findAllByUserId(@PathVariable String userId) {
             List<MatchIndividualDTO> matchList = matchService.findAllByUserId(userId);
+
+            System.out.println("개인매치 페이지");
             return ResponseEntity.ok().body(matchList);
         }
     }
