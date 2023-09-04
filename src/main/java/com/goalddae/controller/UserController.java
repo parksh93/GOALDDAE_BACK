@@ -87,6 +87,7 @@ public class UserController {
         System.out.println(getUserInfoDTO.toString());
 
         userService.update(getUserInfoDTO);
+
         return ResponseEntity.ok("수정 되었습니다.");
     }
 
