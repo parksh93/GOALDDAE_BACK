@@ -10,10 +10,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 @Configuration
-// 정의 해둔 properties의 경로를 설정해준다
 @PropertySource("classpath:application-email.properties")
 public class EmailConfig {
-    // @Value 애노테이션을 통해 해당 변수에 값을 주입해준다.
     @Value("${mail.id}")
     private String id;
     @Value("${mail.password}")

@@ -81,4 +81,15 @@ public class UserJPARepositoryTest {
 
         assertEquals(1, userCnt);
     }
+
+    @Test
+    @Transactional
+    @DisplayName("이메일을 통해 아이디 찾기")
+    public void findByEmail() {
+        String email = "jsap50@naver.com";
+
+        User user = userJPARepository.findByEmail(email);
+
+        assertEquals(user.getLoginId(), "asdas");
+    }
 }

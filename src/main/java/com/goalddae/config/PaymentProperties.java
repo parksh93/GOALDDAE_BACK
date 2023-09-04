@@ -8,7 +8,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Getter
-@Setter
 @Component
 @PropertySource("classpath:application-payment.properties")
 public class PaymentProperties {

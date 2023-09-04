@@ -44,7 +44,7 @@ public class SoccerField {
     private String fieldImg3;
 
     @Column(nullable = false)
-    private int reservationFree;    // 대관비
+    private int reservationFee;    // 대관비
 
     @Column(nullable = false)
     private String inOutWhether;    // 실내외 여부
@@ -55,8 +55,43 @@ public class SoccerField {
     @Column(nullable = false)
     private String region;          // 지역
 
-    public SoccerField(String region, String fieldName) {
-        this.region = region;
+
+    // 구장 수정을 위한 캡슐화
+    public void changeFieldName(String fieldName) {
         this.fieldName = fieldName;
+    }
+
+    public void changeFacilityStatus(boolean toiletStatus,
+                                     boolean showerStatus,
+                                     boolean parkingStatus) {
+        this.toiletStatus = toiletStatus;
+        this.showerStatus = showerStatus;
+        this.parkingStatus = parkingStatus;
+    }
+
+    public void changeFieldSize(String fieldSize) {
+        this.fieldSize = fieldSize;
+    }
+
+    public void changeImages(String fieldImg1, String fieldImg2, String fieldImg3) {
+        this.fieldImg1 = fieldImg1;
+        this.fieldImg2 = fieldImg2;
+        this.fieldImg3 = fieldImg3;
+    }
+
+    public void changeReservationFee(int reservationFee) {
+        this.reservationFee = reservationFee;
+    }
+
+    public void changeInOutWhether(String inOutWhether){
+        this.inOutWhether=inOutWhether;
+    }
+
+    public void changeGrassWhether(String grassWhether){
+        this.grassWhether=grassWhether;
+    }
+
+    public void changeRegion(String region){
+        this.region=region;
     }
 }

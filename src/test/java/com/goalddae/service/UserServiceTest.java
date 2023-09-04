@@ -129,7 +129,11 @@ public class UserServiceTest {
     @DisplayName("자유게시판에 쓴 글 조회 테스트")
     public void getUserCommunicationBoardPostsTest() {
         // given
+<<<<<<< HEAD
         long userId = 1;
+=======
+        long userId = 123;
+>>>>>>> develop
 
         // when
         List<CommunicationBoard> communicationBoardList = userService.getUserCommunicationBoardPosts(userId);
@@ -201,5 +205,16 @@ public class UserServiceTest {
                 .build();
 
         userService.changePassword(changePasswordDTO);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("이메일을 통해 회원정보 가져오기")
+    public void findByEmail() {
+        String email = "jsap50@naver.com";
+
+        User user = userService.findByEmail(email);
+
+        assertNotNull(user);
     }
 }

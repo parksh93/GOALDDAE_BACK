@@ -28,9 +28,11 @@ public class ReplyController {
     public ResponseEntity<Map<String, Object>> list(@PathVariable Integer boardId){
 
         List<ReplyListDTO> replyList = replyService.findAllByBoardId(boardId);
+        long count = replyService.replyCount(replyList);
 
         Map<String, Object> response = new HashMap<>();
         response.put("replies", replyList);
+        response.put("count", count);
 
         return ResponseEntity.ok(response);
     }
@@ -87,7 +89,4 @@ public class ReplyController {
         replyService.approveReportedReply(reportId);
         return ResponseEntity.ok("신고가 승인되었습니다.");
     }
-
-
-
 }
