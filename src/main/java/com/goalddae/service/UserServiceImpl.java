@@ -1,6 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.config.jwt.TokenProvider;
+import com.goalddae.config.s3.S3Uploader;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
 
@@ -18,7 +19,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.sql.DataSource;
+import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.util.List;
 
@@ -32,16 +38,19 @@ public class UserServiceImpl implements UserService{
     private final UsedTransactionBoardRepository usedTransactionBoardRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
+    private final S3Uploader s3Uploader;
 
 
     @Autowired
     public UserServiceImpl(UserJPARepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, TokenProvider tokenProvider,
-                           CommunicationBoardRepository communicationBoardRepository, UsedTransactionBoardRepository usedTransactionBoardRepository){
+                           CommunicationBoardRepository communicationBoardRepository, UsedTransactionBoardRepository usedTransactionBoardRepository,
+                           S3Uploader s3Uploader){
         this.userJPARepository = userRepository;
         this.bCryptPasswordEncoder =bCryptPasswordEncoder;
         this.tokenProvider = tokenProvider;
         this.communicationBoardRepository = communicationBoardRepository;
         this.usedTransactionBoardRepository = usedTransactionBoardRepository;
+        this.s3Uploader = s3Uploader;
     }
 
     @Override
@@ -200,6 +209,26 @@ public class UserServiceImpl implements UserService{
             userJPARepository.save(updateduser);
         }
     }
+
+    @Override
+    public void updateProfileImg(GetUserInfoDTO getUserInfoDTO, MultipartFile multipartFile) {
+        User user = userJPARepository.findByLoginId(getUserInfoDTO.getLoginId());
+
+        String uploadImageUrl = null;
+        try {
+            uploadImageUrl = s3Uploader.uploadFiles(multipartFile, "profile");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
+        changeUserInfoDTO.setProfileImgUrl(uploadImageUrl);
+        changeUserInfoDTO.setProfileUpdateDate(LocalDateTime.now());
+
+        User profileUpdatedUser = changeUserInfoDTO.toEntity();
+        userJPARepository.save(profileUpdatedUser);
+    }
+
 
     @Override
     public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId) {
