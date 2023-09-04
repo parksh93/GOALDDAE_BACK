@@ -2,11 +2,17 @@
 <mapper namespace="com.goalddae.repository.FriendAcceptRepository">
     <update id="createFriendAcceptTable" parameterType="java.lang.Long">
         CREATE TABLE friend_accept_#{id} (
-                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                        from_user VARCHAR(255) NOT NULL,
-                                        accept_date DATETIME NOT NULL,
-                                        accept BIGINT NOT NULL,
-                                        users_id BIGINT NOT NULL
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            from_user BIGINT NOT NULL,
+            accept_date DATETIME NOT NULL,
+            accept BIGINT NOT NULL,
+            users_id BIGINT NOT NULL
         );
     </update>
+    <select id="findFriendAcceptList" parameterType="com.goalddae.dto.friend.FindFriendRequestDTO" resultType="com.goalddae.dto.friend.FindFriendAcceptDTO">
+        SELECT u.id, u.nickname, u.profile_img_url AS profileImgUrl, f.accept_date AS acceptDate, f.accept
+        FROM users u
+        JOIN friend_accept_#{userId} f
+        ON u.id = f.from_user
+    </select>
 </mapper>

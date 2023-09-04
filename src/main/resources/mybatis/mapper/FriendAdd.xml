@@ -2,10 +2,10 @@
 <mapper namespace="com.goalddae.repository.FriendAddRepository">
     <update id="createFriendAddTable" parameterType="java.lang.Long">
         CREATE TABLE friend_add_#{id} (
-                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                        to_user VARCHAR(255) NOT NULL,
-                                        request_date DATETIME NOT NULL,
-                                        users_id BIGINT NOT NULL
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            to_user BIGINT NOT NULL,
+            request_date DATETIME NOT NULL,
+            users_id BIGINT NOT NULL
         );
     </update>
 </mapper>

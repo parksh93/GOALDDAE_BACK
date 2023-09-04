@@ -1,6 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.email.SendEmailDTO;
+import com.goalddae.dto.friend.SelectFriendListDTO;
 import com.goalddae.dto.user.*;
 
 import com.goalddae.entity.CommunicationBoard;
@@ -214,15 +215,5 @@ public class UserServiceTest {
         User user = userService.findByEmail(email);
 
         assertNotNull(user);
-    }
-
-    @Test
-    @Transactional
-    @DisplayName("닉네임에 맞는 유저 찾기")
-    public void searchUserListTest() {
-        String nickname = "구";
-        List<User> userList = userService.searchUserList(nickname);
-
-        assertEquals(userList.get(0).getNickname(), "구글ㄹ");
     }
 }

@@ -6,9 +6,8 @@ import lombok.*;
 @Setter
 @Builder
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
-public class SelectFriendListDTO {
+@AllArgsConstructor
+public class FindFriendRequestDTO {
     private long userId;
-    private String nickname;
 }
