@@ -8,5 +8,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IndividualMatchService {
-    List<IndividualMatchDTO> getMatchesByDate(LocalDate date);
+    List<IndividualMatchDTO> getMatchesByDateAndProvince(LocalDate date, String province);
 }

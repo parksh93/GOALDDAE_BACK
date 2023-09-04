@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -23,9 +24,12 @@ public class IndividualMatchController {
         this.individualMatchService = individualMatchService;
     }
 
-    // 개인매치리스트 조회
+    // 타임라인 - 매치 조회
     @GetMapping("/individual")
-    public List<IndividualMatchDTO> getMatches(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return individualMatchService.getMatchesByDate(date);
+    public List<IndividualMatchDTO> getMatches(
+            @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+            @RequestParam("province") String province
+    ) {
+        return individualMatchService.getMatchesByDateAndProvince(startTime.toLocalDate(), province);
     }
 }

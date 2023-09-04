@@ -52,7 +52,7 @@ public class IndividualMatch {
 
     // 외래키 형성 - 예약구장
     @ManyToOne
-    @JoinColumn(name="soccer_field_id")
+    @JoinColumn(name="reservation_field")
     private ReservationField reservationField;
 
     // 외래키 형성 - 매치요청

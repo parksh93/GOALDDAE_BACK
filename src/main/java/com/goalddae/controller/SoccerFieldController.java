@@ -84,28 +84,4 @@ public class SoccerFieldController {
             return ResponseEntity.status(500).build();
         }
     }
-
-    // 모든 도시 이름 조회
-    @GetMapping("/provinces")
-    public ResponseEntity<List<String>> getProvinces() {
-        try {
-            List<String> provinces = soccerFieldService.getProvinces();
-            return ResponseEntity.ok(provinces);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).build();
-        }
-    }
-
-    // 타임라인 - 필터기능
-    @GetMapping("/search/province")
-    public ResponseEntity<List<SoccerField>> searchFieldByProvince(
-            @RequestParam(value = "province", required = false, defaultValue = "") String province) {
-        try {
-            List<SoccerField> fields = soccerFieldService.searchFieldByProvince(province);
-            return ResponseEntity.ok(fields);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 }

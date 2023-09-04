@@ -28,14 +28,14 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
 
     // 매치 조회하여 유저에게 필요한 정보만 공개
     @Override
-    public List<IndividualMatchDTO> getMatchesByDate(LocalDate date) {
+    public List<IndividualMatchDTO> getMatchesByDateAndProvince(LocalDate date, String province) {
         try {
-            LocalDateTime startOfDay = date.atStartOfDay();
-            LocalDateTime endOfDay = date.plusDays(1).atStartOfDay();
+            LocalDateTime startTime = date.atStartOfDay();
+            LocalDateTime endTime = startTime.plusDays(1);
 
-            List<IndividualMatch> matches = individualMatchJPARepository.findByStartTimeBetweenOrderByStartTimeAsc(startOfDay, endOfDay);
+            List<IndividualMatch> matchesInProvince = individualMatchJPARepository.findByStartTimeBetweenAndReservationField_SoccerField_Province(startTime, endTime, province);
 
-            return matches.stream()
+            return matchesInProvince.stream()
                     .map(match -> new IndividualMatchDTO(
                             match.getId(),
                             match.getReservationField().getId(),
