@@ -31,25 +31,16 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-
-
     @GetMapping("/list")
     public ResponseEntity<Map<String, Object>> list(@RequestParam(required = false, defaultValue = "") String type,
                                                     @RequestParam(required = false, defaultValue = "") String name,
                                                     @RequestParam(required = false, defaultValue = "1") Integer page) {
 
-        final int PAGE_SIZE = 10;
-        final int PAGE_BTN_NUM = 5;
+        final int PAGE_BTN_NUM = 10;
 
         Page<BoardListDTO> pageInfo;
 
-        if(Objects.equals(type, "writer")){
-            pageInfo = boardService.findAllBoardListDTOByWriter(page, PAGE_SIZE, name);
-        } else if(Objects.equals(type, "title")){
-            pageInfo = boardService.findAllBoardListDTOByTitle(page, PAGE_SIZE, name);
-        } else {
-            pageInfo = boardService.findAllBoardListDTO(page, PAGE_SIZE);
-        }
+        pageInfo = boardService.findAllBoardListDTOs(page, type, name);
 
 
         int currentPageNum = pageInfo.getNumber() + 1;

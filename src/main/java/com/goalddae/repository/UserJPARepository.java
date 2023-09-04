@@ -22,4 +22,6 @@ public interface UserJPARepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT u.login_id FROM users u WHERE u.email = :email AND name = :name", nativeQuery = true)
     String findLoginIdByEmailAndName(@Param("email") String email, @Param("name") String name);
     int countByLoginIdAndEmail(String loginId, String email);
+
+    User findByEmail(String email);
 }

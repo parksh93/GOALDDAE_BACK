@@ -12,6 +12,8 @@ public interface ReplyService {
 
     List<ReplyListDTO> findAllByBoardId(long boardId);
 
+    long replyCount(List<ReplyListDTO> replyListDTOs);
+
     void deleteByUser(long replyId);
 
     void deleteByAdmin(long replyId);

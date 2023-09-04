@@ -1,14 +1,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.goalddae.repository.FieldReservationRepository">
-    <update id="createFieldReservationTable">
-        CREATE TABLE ${fieldReservation} (
+    <update id="createFieldReservationTable" parameterType="java.lang.Long">
+        CREATE TABLE field_reservation_#{id} (
                                              id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                              reservation_id VARCHAR(255) NOT NULL,
                                              reservation_date DATETIME NOT NULL,
                                              reservation_team_Whether BIGINT NOT NULL,
                                              reservation_team_id VARCHAR(255) NULL,
-                                             soccer_field_id BIGINT NOT NULL,
-                                             FOREIGN KEY (soccer_field_id) REFERENCES soccer_field(id)
+                                             soccer_field_id BIGINT NOT NULL
         );
     </update>
+
+    <!-- 동적 테이블 삭제 쿼리 -->
+    <delete id="dropFieldReservationTable" parameterType="java.lang.Long">
+        DROP TABLE IF EXISTS field_reservation_#{id}
+    </delete>
 </mapper>
