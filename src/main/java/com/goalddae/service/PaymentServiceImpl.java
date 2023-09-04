@@ -44,7 +44,7 @@ public class PaymentServiceImpl implements PaymentService{
         }
 
         //DB에서 물건가격과 실제 결제금액이 일치하는지 확인, 만약 다르면 예외 발생
-        if(amount != soccerFieldRepository.findById(fieldId).get().getReservationFree()){
+        if(amount != soccerFieldRepository.findById(fieldId).get().getReservationFee()){
             throw new VerifyIamPortException("결제 금액 위/변조: DB");
         }
     }

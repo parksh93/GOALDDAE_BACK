@@ -30,6 +30,7 @@ public class GetUserInfoDTO {
     private String preferredCity;
     private String preferredArea;
     private int activityClass;
+    private Long teamId;
 
     public GetUserInfoDTO(User user){
         this.id = user.getId();
@@ -49,5 +50,6 @@ public class GetUserInfoDTO {
         this.preferredCity = user.getPreferredCity();
         this.preferredArea = user.getPreferredArea();
         this.activityClass = user.getActivityClass();
+        this.teamId = user.getTeamId();
     }
 }

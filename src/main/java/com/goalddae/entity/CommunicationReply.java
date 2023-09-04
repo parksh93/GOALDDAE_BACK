@@ -31,7 +31,7 @@ public class CommunicationReply {
     @Column
     private long parentId; // 부모 댓글의 ID (일반댓글일경우 null)
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2000)
     private String content; // 본문
 
     @Column(nullable = false)
