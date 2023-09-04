@@ -3,14 +3,27 @@
     <update id="createFriendListTable" parameterType="java.lang.Long">
         CREATE TABLE friend_list_#{id} (
             id BIGINT AUTO_INCREMENT PRIMARY KEY,
-            friend_id VARCHAR(255) NOT NULL,
+            friend_id BIGINT NOT NULL,
             users_id BIGINT NOT NULL
         );
     </update>
-    <select id="findByNicknameContaining" parameterType="com.goalddae.dto.friend.SelectFriendListDTO" resultType="com.goalddae.dto.friend.SearchFriendDTO">
-        SELECT u.id, u.nickname, u.profile_img_url
+    <select id="searchFriendList" parameterType="com.goalddae.dto.friend.SelectFriendListDTO" resultType="com.goalddae.dto.friend.SearchFriendDTO">
+        SELECT u.id, u.nickname, u.profile_img_url AS profileImgUrl
         FROM users u
         JOIN friend_list_#{userId} f ON u.id = f.friend_id
         WHERE u.nickname LIKE CONCAT('%',#{nickname},'%');
+    </select>
+    <select id="searchUnFriendList" parameterType="com.goalddae.dto.friend.SelectFriendListDTO" resultType="com.goalddae.dto.friend.SearchFriendDTO">
+        SELECT u.id, u.nickname, u.profile_img_url AS profileImgUrl,
+        (SELECT COUNT(to_user) FROM friend_add_#{userId} f WHERE f.to_user = u.id) AS friendAddCnt,
+        (SELECT COUNT(from_user) FROM friend_accept_#{userId} fa WHERE fa.from_user = u.id) AS friendAcceptCnt
+        FROM users u
+        WHERE u.id NOT IN (SELECT friend_id FROM friend_list_#{userId})
+        AND u.nickname LIKE CONCAT('%',#{nickname},'%');
+    </select>
+    <select id="findFriendList" parameterType="com.goalddae.dto.friend.FindFriendListResponseDTO" resultType="com.goalddae.dto.friend.FindFriendListResponseDTO">
+        SELECT u.nickname, u.profile_img_url AS profileImgUrl, u.id FROM users u
+        JOIN friend_list_#{userId} f
+        ON u.id = f.friend_id
     </select>
 </mapper>

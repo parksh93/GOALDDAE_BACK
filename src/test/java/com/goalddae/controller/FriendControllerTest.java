@@ -1,6 +1,7 @@
 package com.goalddae.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.goalddae.dto.friend.FindFriendRequestDTO;
 import com.goalddae.dto.friend.SelectFriendListDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,12 +42,27 @@ public class FriendControllerTest {
 
         String url = "/friend/search";
 
-        String request = objectMapper.writeValueAsString(selectFriendListDTO);
+        final String request = objectMapper.writeValueAsString(selectFriendListDTO);
 
         ResultActions result = mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON).content(request)
                 .accept(MediaType.APPLICATION_JSON));
 
-        result.andExpect(jsonPath("$[1][0].getNickname").value("안녕뉴비야"));
+        result.andExpect(jsonPath("$.friendList[0].nickname").value("안녕뉴비야"));
 
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("친구 조회")
+    public void findFriendList() throws Exception {
+        FindFriendRequestDTO findFriendListRequestDTO = FindFriendRequestDTO.builder().userId(1).build();
+        String url = "/friend/findFriendList";
+
+        final String request = objectMapper.writeValueAsString(findFriendListRequestDTO);
+
+        ResultActions result = mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON).content(request).accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].nickname").value("안녕뉴비야"));
     }
 }

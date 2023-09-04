@@ -2,6 +2,7 @@ package com.goalddae.service;
 
 import com.goalddae.config.jwt.TokenProvider;
 import com.goalddae.dto.email.SendEmailDTO;
+import com.goalddae.dto.friend.SelectFriendListDTO;
 import com.goalddae.dto.user.*;
 
 import com.goalddae.entity.*;
@@ -309,10 +310,5 @@ public class UserServiceImpl implements UserService{
     @Override
     public User findByEmail(String email) {
         return userJPARepository.findByEmail(email);
-    }
-
-    @Override
-    public List<User> searchUserList(String nickname) {
-        return userJPARepository.findByNicknameContaining(nickname);
     }
 }

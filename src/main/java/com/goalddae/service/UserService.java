@@ -2,6 +2,7 @@ package com.goalddae.service;
 
 
 import com.goalddae.dto.email.SendEmailDTO;
+import com.goalddae.dto.friend.SelectFriendListDTO;
 import com.goalddae.dto.user.*;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.UsedTransactionBoard;
@@ -32,5 +33,4 @@ public interface UserService {
     public boolean checkLoginIdAndEmail(RequestFindPasswordDTO requestFindPasswordDTO, HttpServletResponse response);
     public boolean changePassword(ChangePasswordDTO changePasswordDTO);
     public User findByEmail(String email);
-    public List<User> searchUserList(String nickname);
 }

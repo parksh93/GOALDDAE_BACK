@@ -2,16 +2,18 @@ package com.goalddae.dto.friend;
 
 import lombok.*;
 
+import java.sql.Date;
+
 @Getter
 @Setter
 @Builder
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class SearchFriendDTO {
+public class FindFriendAcceptDTO {
     private long id;
     private String nickname;
     private String profileImgUrl;
-    private int friendAddCnt;
-    private int friendAcceptCnt;
+    private Date acceptDate;
+    private int accept;
 }
