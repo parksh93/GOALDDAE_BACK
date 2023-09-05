@@ -1,7 +1,16 @@
 package com.goalddae.config;
 
 import com.goalddae.config.jwt.TokenProvider;
+import com.goalddae.config.oauth.OAuth2AuthorizationRequestBaseOnCookRepository;
+import com.goalddae.config.oauth.OAuth2SuccessHandler;
+import com.goalddae.config.oauth.OAuth2UserService;
+import com.goalddae.repository.RefreshTokenRepository;
+import com.goalddae.repository.UserJPARepository;
+import com.goalddae.service.RefreshTokenService;
+import com.goalddae.service.UserService;
+import com.goalddae.util.CookieUtil;
 import jakarta.servlet.DispatcherType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,15 +32,16 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
-    private final UserDetailsService userService;
+    private final UserDetailsService userDetailsService;
+    private final UserService userService;
     private final TokenProvider tokenProvider;
+    private final OAuth2UserService oAuth2UserService;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final UserJPARepository userJPARepository;
+    private final RefreshTokenService refreshTokenService;
 
-    @Autowired
-    public SecurityConfig(UserDetailsService userService, TokenProvider tokenProvider){
-        this.userService = userService;
-        this.tokenProvider = tokenProvider;
-    }
 
     @Bean
     public WebSecurityCustomizer configure(){
@@ -62,6 +72,7 @@ public class SecurityConfig {
                             .requestMatchers("/manager", "manager/**" ).hasAnyRole("manager", "admin")
                             .requestMatchers("/user/myInfo").hasRole("user")
                             .requestMatchers("/webSocket/**").permitAll()
+                            .requestMatchers("/user/myPage").hasAnyRole("user", "manager", "admin")
                             .anyRequest()
                             .permitAll();
                 })
@@ -75,6 +86,14 @@ public class SecurityConfig {
                 .sessionManagement(sessionConfig -> {
                     sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
+                .oauth2Login(oauth2Config ->{
+                    oauth2Config.loginPage("/login") // 로그인 성공시
+                            .authorizationEndpoint(endpointConfig -> endpointConfig
+                                    .authorizationRequestRepository(oAuth2AuthorizationRequestBaseOnCookieRepository()))
+                            .successHandler(oAuth2SuccessHandler())
+                            .userInfoEndpoint(userInfoConfig -> userInfoConfig
+                                    .userService(oAuth2UserService));
+                })
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -84,7 +103,7 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(HttpSecurity http,
                                                        BCryptPasswordEncoder bCryptPasswordEncoder, UserDetailsService userDetailService) throws Exception{
         AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        builder.userDetailsService(userService)
+        builder.userDetailsService(userDetailService)
                 .passwordEncoder(bCryptPasswordEncoder);
         return builder.build();
     }
@@ -96,6 +115,16 @@ public class SecurityConfig {
 
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter(){
-        return new TokenAuthenticationFilter(tokenProvider);
+        return new TokenAuthenticationFilter(tokenProvider, userJPARepository, refreshTokenService);
+    }
+
+    @Bean
+    public OAuth2SuccessHandler oAuth2SuccessHandler() {
+        return new OAuth2SuccessHandler(tokenProvider, refreshTokenRepository, oAuth2AuthorizationRequestBaseOnCookieRepository(),userService);
+    }
+
+    @Bean
+    public OAuth2AuthorizationRequestBaseOnCookRepository oAuth2AuthorizationRequestBaseOnCookieRepository() {
+        return new OAuth2AuthorizationRequestBaseOnCookRepository();
     }
 }

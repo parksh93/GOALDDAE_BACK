@@ -1,6 +1,8 @@
 package com.goalddae.entity;
 
 
+import com.goalddae.dto.team.TeamListDTO;
+import com.goalddae.dto.team.TeamUpdateDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +29,12 @@ public class Team {
     private int averageAge; // 평균나이
 
     @Column(nullable = false)
+    private boolean recruiting; // 모집중
+
+    @Column
+    private String teamIntroduce;   // 팀 소개글
+
+    @Column(nullable = false)
     private int entryFee;  // 입단비
 
     @Column(nullable = false)
@@ -49,6 +57,46 @@ public class Team {
 
     @Column(nullable = false)
     private boolean recruiting; // 모집중 유무
+  
+    public Team(Long id, String teamName, String area, int averageAge, int entryFee, String entryGender,
+                String teamProfileImgUrl, String preferredDay, String preferredTime) {
+        this.id = id;
+        this.teamName = teamName;
+        this.area = area;
+        this.averageAge = averageAge;
+        this.entryFee = entryFee;
+        this.entryGender = entryGender;
+        this.teamProfileImgUrl = teamProfileImgUrl;
+        this.preferredDay = preferredDay;
+        this.preferredTime = preferredTime;
+    }
+
+    public static Team toEntity(TeamListDTO teamListDTO){
+        return Team.builder()
+                .id(teamListDTO.getId())
+                .teamName(teamListDTO.getTeamName())
+                .area(teamListDTO.getArea())
+                .averageAge(teamListDTO.getAverageAge())
+                .recruiting(teamListDTO.isRecruiting())
+                .entryGender(teamListDTO.getEntryGender())
+                .teamProfileImgUrl(teamListDTO.getTeamProfileImgUrl())
+                .build();
+    }
+
+    public static Team toEntity(TeamUpdateDTO teamUpdateDTO){
+        return Team.builder()
+                .id(teamUpdateDTO.getId())
+                .teamName(teamUpdateDTO.getTeamName())
+                .area(teamUpdateDTO.getArea())
+                .averageAge(teamUpdateDTO.getAverageAge())
+                .recruiting(teamUpdateDTO.isRecruiting())
+                .entryFee(teamUpdateDTO.getEntryFee())
+                .entryGender(teamUpdateDTO.getEntryGender())
+                .teamProfileImgUrl(teamUpdateDTO.getTeamProfileImgUrl())
+                .preferredDay(teamUpdateDTO.getPreferredDay())
+                .preferredTime(teamUpdateDTO.getPreferredTime())
+                .build();
+    }
 
     @PrePersist
     public void setInformation() {
