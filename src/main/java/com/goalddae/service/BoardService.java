@@ -38,6 +38,8 @@ public interface BoardService {
 
     void approveReportedBoard(long reportId);
 
+    List<CommunicationBoard> getUserCommunicationBoardPosts(long userId);
+
 
 
 
