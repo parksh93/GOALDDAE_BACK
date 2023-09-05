@@ -26,14 +26,25 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
         this.matchStatusNotifier = matchStatusNotifier;
     }
 
-    // 매치 조회하여 유저에게 필요한 정보만 공개
+    // 타임라인 - 일자, 지역, 레벨, 남녀구분
     @Override
-    public List<IndividualMatchDTO> getMatchesByDateAndProvince(LocalDate date, String province) {
+    public List<IndividualMatchDTO> getMatchesByDateAndProvinceAndLevelAndGender(
+            LocalDate date, String province, String level, String gender) {
         try {
             LocalDateTime startTime = date.atStartOfDay();
             LocalDateTime endTime = startTime.plusDays(1);
 
-            List<IndividualMatch> matchesInProvince = individualMatchJPARepository.findByStartTimeBetweenAndReservationField_SoccerField_Province(startTime, endTime, province);
+            if ("남녀모두".equals(gender) || gender == null || "".equals(gender)) {
+                gender = null;
+            }
+
+            if ("레벨".equals(level) || level == null || "".equals(level)) {
+                level = null;
+            }
+
+            List<IndividualMatch> matchesInProvince = individualMatchJPARepository
+                    .findMatches(
+                            startTime, endTime, province, level, gender);
 
             return matchesInProvince.stream()
                     .map(match -> new IndividualMatchDTO(
@@ -48,11 +59,12 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
                     .limit(10)
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            System.err.println("에러 메시지: " + e.getMessage());
+            System.err.println("error: " + e.getMessage());
             e.printStackTrace();
             return Collections.emptyList();
         }
     }
+
 
     // 신청 가능 상태
     private String determineStatus(IndividualMatch match) {

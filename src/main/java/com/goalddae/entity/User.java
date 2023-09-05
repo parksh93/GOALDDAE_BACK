@@ -47,6 +47,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String name;    // 사용자 이름
 
+    @Column(nullable = false)
     private String nickname;    // 닉네임
 
     @Column(nullable = false)

@@ -24,12 +24,15 @@ public class IndividualMatchController {
         this.individualMatchService = individualMatchService;
     }
 
-    // 타임라인 - 매치 조회
+    // 타임라인(일자, 지역, 레벨, 남녀구분) - 개인매치 조회
     @GetMapping("/individual")
     public List<IndividualMatchDTO> getMatches(
             @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
-            @RequestParam("province") String province
+            @RequestParam("province") String province,
+            @RequestParam(value = "level", required = false) String level,
+            @RequestParam(value = "gender", required = false) String gender
     ) {
-        return individualMatchService.getMatchesByDateAndProvince(startTime.toLocalDate(), province);
+        return individualMatchService.getMatchesByDateAndProvinceAndLevelAndGender(
+                startTime.toLocalDate(), province, level, gender);
     }
 }

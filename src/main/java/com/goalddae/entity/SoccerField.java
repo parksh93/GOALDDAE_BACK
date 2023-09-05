@@ -30,6 +30,7 @@ public class SoccerField {
     @Column(nullable = false)
     private LocalTime closingTime; // 운영 종료 시간
 
+    // 필요없으면 삭제 예정
     @Column(nullable = false)
     private int playerCapacity; // 플레이어수
 
@@ -59,7 +60,6 @@ public class SoccerField {
 
     @Column(nullable = false)
     private String province; // 행정 구역
-
 
     // 이미지의 경우 최소 하나 이상 최대 3개이하로 저장 가능
     @Column(nullable = false)
