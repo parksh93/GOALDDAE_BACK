@@ -1,11 +1,13 @@
 package com.goalddae.controller;
 
-import com.goalddae.dto.friend.FindFriendRequestDTO;
-import com.goalddae.dto.friend.FindFriendListResponseDTO;
-import com.goalddae.dto.friend.SearchFriendDTO;
-import com.goalddae.dto.friend.SelectFriendListDTO;
+import com.goalddae.dto.friend.*;
+import com.goalddae.dto.friend.friendAccept.FindFriendAcceptDTO;
+import com.goalddae.dto.friend.friendAccept.FriendRejectionDTO;
+import com.goalddae.dto.friend.friendAdd.FindFriendAddDTO;
+import com.goalddae.dto.friend.friendList.FindFriendListResponseDTO;
+import com.goalddae.dto.friend.friendList.SearchFriendDTO;
+import com.goalddae.dto.friend.friendList.SelectFriendListDTO;
 import com.goalddae.service.FriendService;
-import com.goalddae.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,12 +18,10 @@ import java.util.Map;
 @RequestMapping("/friend")
 public class FriendController {
     private final FriendService friendService;
-    private final UserService userService;
 
     @Autowired
-    public FriendController(FriendService friendService, UserService userService){
+    public FriendController(FriendService friendService){
         this.friendService = friendService;
-        this.userService = userService;
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
@@ -34,4 +34,28 @@ public class FriendController {
         return friendService.findFriendList(findFriendListRequestDTO);
     }
 
+    @PostMapping("/findFriendAccept")
+    public List<FindFriendAcceptDTO> findFriendAccept(@RequestBody FindFriendRequestDTO findFriendRequestDTO) throws Exception{
+        return friendService.findAcceptList(findFriendRequestDTO);
+    }
+
+    @PutMapping("/addFriendRequest")
+    public void addFriendRequest(@RequestBody AddFriendRequestDTO addFriendRequestDTO){
+        friendService.addFriendRequest(addFriendRequestDTO);
+    }
+
+    @PostMapping("/findFriendAdd")
+    public List<FindFriendAddDTO> findFriendAddDTOList(@RequestBody FindFriendRequestDTO findFriendRequestDTO){
+        return friendService.findFriendAddList(findFriendRequestDTO);
+    }
+
+    @PatchMapping("/friendRejection")
+    public void friendRejection(@RequestBody FriendRejectionDTO friendRejectionDTO){
+        friendService.friendRejection(friendRejectionDTO);
+    }
+
+    @DeleteMapping("/deleteFriendRequest")
+    public void deleteFriendRequest(@RequestBody FriendRequestDTO deleteFriendRequestDTO){
+        friendService.deleteFriendRequest(deleteFriendRequestDTO);
+    }
 }

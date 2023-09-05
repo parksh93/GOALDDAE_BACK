@@ -1,7 +1,18 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.friend.*;
-import com.goalddae.repository.*;
+import com.goalddae.dto.friend.friendAccept.FindFriendAcceptDTO;
+import com.goalddae.dto.friend.friendAccept.FriendRejectionDTO;
+import com.goalddae.dto.friend.friendAccept.SelectFromUserDTO;
+import com.goalddae.dto.friend.friendAdd.FindFriendAddDTO;
+import com.goalddae.dto.friend.friendAdd.SelectToUserDTO;
+import com.goalddae.dto.friend.friendList.FindFriendListResponseDTO;
+import com.goalddae.dto.friend.friendList.SearchFriendDTO;
+import com.goalddae.dto.friend.friendList.SelectFriendListDTO;
+import com.goalddae.repository.friend.FriendAcceptRepository;
+import com.goalddae.repository.friend.FriendAddRepository;
+import com.goalddae.repository.friend.FriendBlockRepository;
+import com.goalddae.repository.friend.FriendListRepository;
 import com.goalddae.util.MyBatisUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.annotations.Param;
@@ -95,7 +106,42 @@ public class FriendServiceImpl implements FriendService{
 
     @Override
     public List<FindFriendAcceptDTO> findAcceptList(FindFriendRequestDTO findFriendRequestDTO) {
-        return friendAcceptRepository.findFriendAcceptList(findFriendRequestDTO);
+        List<SelectFromUserDTO> fromUserDTOList = friendAcceptRepository.selectFromUser(findFriendRequestDTO);
+
+        if(fromUserDTOList.size() != 0){
+            List<FindFriendAcceptDTO> friendAcceptDTOList = friendAcceptRepository.findFriendAcceptList(fromUserDTOList);
+            return friendAcceptDTOList;
+        }
+        return null;
+    }
+
+    @Override
+    public void addFriendRequest(AddFriendRequestDTO addFriendRequestDTO) {
+        friendAddRepository.addFriendAdd(addFriendRequestDTO);
+        friendAcceptRepository.addFriendAccept(addFriendRequestDTO);
+    }
+
+    @Override
+    public List<FindFriendAddDTO> findFriendAddList(FindFriendRequestDTO findFriendRequestDTO) {
+        List<SelectToUserDTO> selectToUserDTOList = friendAddRepository.selectToUser(findFriendRequestDTO);
+
+        if(selectToUserDTOList.size() !=0){
+            List<FindFriendAddDTO> friendAddDTOList = friendAddRepository.findFriendAdd(selectToUserDTOList);
+
+            return friendAddDTOList;
+        }
+        return null;
+    }
+
+    @Override
+    public void friendRejection(FriendRejectionDTO friendRejectionDTO) {
+        friendAcceptRepository.updateFriendAccept(friendRejectionDTO);
+    }
+
+    @Override
+    public void deleteFriendRequest(FriendRequestDTO friendRequestDTO) {
+        friendAcceptRepository.deleteFriendAccept(friendRequestDTO);
+        friendAddRepository.deleteFriendAdd(friendRequestDTO);
     }
 
 }

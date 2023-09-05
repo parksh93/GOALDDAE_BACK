@@ -1,7 +1,6 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.email.SendEmailDTO;
-import com.goalddae.dto.friend.SelectFriendListDTO;
 import com.goalddae.dto.user.*;
 
 import com.goalddae.entity.CommunicationBoard;
@@ -9,18 +8,13 @@ import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.entity.User;
 import com.goalddae.repository.UserJPARepository;
 
-import com.goalddae.entity.User;
-
-import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.net.http.HttpResponse;
 import java.util.List;
 
 

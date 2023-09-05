@@ -1,8 +1,6 @@
-package com.goalddae.dto.friend;
+package com.goalddae.dto.friend.friendList;
 
 import lombok.*;
-
-import java.sql.Date;
 
 @Getter
 @Setter
@@ -10,10 +8,10 @@ import java.sql.Date;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class FindFriendAcceptDTO {
+public class SearchFriendDTO {
     private long id;
     private String nickname;
     private String profileImgUrl;
-    private Date acceptDate;
-    private int accept;
+    private int friendAddCnt;
+    private int friendAcceptCnt;
 }

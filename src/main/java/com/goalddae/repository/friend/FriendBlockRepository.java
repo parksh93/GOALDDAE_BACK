@@ -1,4 +1,4 @@
-package com.goalddae.repository;
+package com.goalddae.repository.friend;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

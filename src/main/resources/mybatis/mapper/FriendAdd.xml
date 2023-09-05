@@ -1,5 +1,5 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.goalddae.repository.FriendAddRepository">
+<mapper namespace="com.goalddae.repository.friend.FriendAddRepository">
     <update id="createFriendAddTable" parameterType="java.lang.Long">
         CREATE TABLE friend_add_#{id} (
             id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -8,4 +8,22 @@
             users_id BIGINT NOT NULL
         );
     </update>
+    <select id="selectToUser" parameterType="com.goalddae.dto.friend.FindFriendRequestDTO" resultType="com.goalddae.dto.friend.friendAdd.SelectToUserDTO">
+        SELECT to_user AS toUser, users_id AS userId FROM friend_add_#{userId}
+    </select>
+    <select id="findFriendAdd" parameterType="com.goalddae.dto.friend.friendAdd.SelectToUserDTO" resultType="com.goalddae.dto.friend.friendAdd.FindFriendAddDTO">
+        <foreach collection="list" item="item">
+            SELECT u.id, u.nickname, u.profile_img_url AS profileImgUrl, (SELECT accept FROM friend_accept_#{item.toUser}) AS accept,
+            (SELECT accept_date FROM friend_accept_#{item.toUser}) AS acceptDate, f.request_date AS requestDate
+            FROM users u
+            JOIN friend_add_#{item.userId} f
+            ON u.id = f.to_user
+        </foreach>
+    </select>
+    <insert id="addFriendAdd" parameterType="com.goalddae.dto.friend.AddFriendRequestDTO">
+        INSERT INTO friend_add_#{fromUser} (to_user, request_date, users_id) VALUES (#{toUser}, now(), #{fromUser})
+    </insert>
+    <delete id="deleteFriendAdd" parameterType="com.goalddae.dto.friend.FriendRequestDTO">
+        DELETE FROM friend_add_#{fromUser} WHERE to_user = #{toUser}
+    </delete>
 </mapper>
