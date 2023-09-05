@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,9 +25,6 @@ public class SoccerFieldServiceTest {
 
     @MockBean
     private SoccerFieldRepository soccerFieldRepository;
-
-    @MockBean
-    private MatchService matchService;
 
     @MockBean
     private FieldReservationService fieldReservationService;
@@ -52,7 +50,7 @@ public class SoccerFieldServiceTest {
     @Transactional
     @DisplayName("주어진 축구장 이름으로 검색")
     public void searchFieldsByFieldNameTest() {
-        String fieldName = "야탑 풋살장";
+        String fieldName = "테스트 구장8";
 
         List<SoccerField> soccerFields = soccerFieldService.searchSoccerFields(fieldName);
 
@@ -76,17 +74,13 @@ public class SoccerFieldServiceTest {
                 .inOutWhether("실내")
                 .grassWhether("천연")
                 .region("인천")
+                .province("인천")
                 .build();
 
         when(soccerFieldRepository.save(any(SoccerField.class))).thenReturn(soccerField);
 
         // when
         SoccerField saveSoccerField = soccerFieldService.save(soccerField);
-
-        // then
-        verify(fieldReservationService).createFieldReservationTable(anyLong());
-        verify(matchService).createMatchIndividualTable(anyLong());
-        verify(matchService).createMatchTeamTable(anyLong());
 
         assertThat(saveSoccerField).isNotNull();
         assertThat(saveSoccerField.getFieldName()).isEqualTo(soccerField.getFieldName());
@@ -96,37 +90,39 @@ public class SoccerFieldServiceTest {
     @DisplayName("구장 정보 수정 테스트")
     public void updateSoccerFields() {
         // Given: 기존에 저장되어 있는 Soccer Field 정보와 업데이트 할 정보 생성
-        SoccerField existing = new SoccerField(
-                1L,
-                "인천 풋살장",
-                 true,
-                true,
-                true,
-                "14x15",
-                "img1",
-                "img2",
-                "img3",
-                1,
-                "실내",
-                "인조",
-                "인천");
+        SoccerField existing = SoccerField.builder()
+                .id(1L)
+                .fieldName("테스트구장 수정 전")
+                .operatingHours(LocalTime.parse("09:00"))
+                .closingTime(LocalTime.parse("20:00"))
+                .playerCapacity(12)
+                .province("경기도")
+                .region("성남")
+                .reservationFee(8000)
+                .inOutWhether("실외")
+                .grassWhether("인조")
+                .toiletStatus(true)
+                .showerStatus(true)
+                .parkingStatus(true)
+                .build();
 
-        SoccerFieldDTO updateDto = new SoccerFieldDTO(
-                1L,
-                "테스트 구장",
-                false,
-                false,
-                false,
-                "15x16",
-                "변경이미지1",
-                "변경이미지2",
-                "변경이미지3",
-                5000,
-                "실외",
-                "자연",
-                "테스트 지역");
+        SoccerFieldDTO updateDto =  SoccerFieldDTO.builder()
+                .id(1L)
+                .fieldName("테스트구장 변경 후")
+                .operatingHours(LocalTime.parse("10:00"))
+                .closingTime(LocalTime.parse("21:00"))
+                .playerCapacity(10)
+                .province("경기도")
+                .region("분당")
+                .reservationFee(10000)
+                .inOutWhether("실내")
+                .grassWhether("천연")
+                .toiletStatus(true)
+                .showerStatus(true)
+                .parkingStatus(true)
+                .build();
 
-        when(soccerFieldRepository.findById(anyLong())).thenReturn(Optional.of(existing));
+                        when(soccerFieldRepository.findById(anyLong())).thenReturn(Optional.of(existing));
         when(soccerFieldRepository.save(any(SoccerField.class))).thenReturn(existing);
 
         // When: 서비스 메소드 호출
