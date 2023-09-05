@@ -97,19 +97,6 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/posts/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<?> viewUserPosts(@PathVariable long userId) {
-
-        List<CommunicationBoard> communicationBoardsList = userService.getUserCommunicationBoardPosts(userId);
-        List<UsedTransactionBoard> usedTransactionBoardList = userService.getUserUsedTransactionBoardPosts(userId);
-
-        List<Object> combinedList = new ArrayList<>();
-        combinedList.addAll(communicationBoardsList);
-        combinedList.addAll(usedTransactionBoardList);
-
-        return ResponseEntity.ok(combinedList);
-    }
-
     @GetMapping("/match-individual/{userId}")
     public ResponseEntity<List<MatchIndividualDTO>> findAllByUserId(@PathVariable String userId) {
         List<MatchIndividualDTO> matchList = matchService.findAllByUserId(userId);
