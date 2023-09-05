@@ -1,12 +1,29 @@
-/* 유저 더미테이블 */
-insert into users values (
-    null, false, 20, "user", "2003-03-10", "asssd@naver.com",
-    "남", "뉴비", "qwe", 0, "신현섭",0, "123", "010232555232",
-    "서울", "동대문구", "./img/userProfileImg/goalddae_default_profile.Webp",
-    now(), now(),"zxczxcxz"
+/* 타임라인 관련 테이블 생성 순서*/
+insert into users values   (
+	NULL, FALSE, 20, 'user', '1994-02-04', 'test@naver.com',
+    '남자', '유망주', 'test1', 0, '신현섭', '닉네임1', 0, 'qwer0000', '010232555232', '경기',
+    '성남', "./img/userProfileImg/goalddae_default_profile.Webp",
+	NOW(), NOW(), '00001'
+   );
+
+/* 타임라인 관련 테이블 생성 순서*/
+insert into soccer_field values (
+	null, '20:00:00', 'img1', 'img2', 'img3', "테스트 구장1",
+    "14x16", "인조", "실외", '06:00:00', 1, 12, "경기","성남", 8000, 0, 1
     );
 
-/* Like연산자: 여러 조건에 따라 검색 결과를 반환함
-   예로 들어 '성' 입력하면 db에 있는 '성남'으로 검색됨*/
-SELECT * FROM soccer_field
+insert into reservation_field values (
+	null, '2023-08-20', '2023-09-04', '2023-09-15', 1, 1
+);
+
+insert into individual_match values (
+	null, '2023-09-05 10:00:00', "남자", "유망주", 12, '2023-09-05 08:00:00', 1, 1
+);
+
+insert into individual_match_request values (
+	null, 1, 1
+);
+
+/* 검색 관련 */
+SELECT * FROM team
 WHERE field_name LIKE '%검색어%';

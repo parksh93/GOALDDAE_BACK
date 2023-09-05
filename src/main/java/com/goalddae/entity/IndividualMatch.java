@@ -37,6 +37,10 @@ public class IndividualMatch {
     @Column(nullable = false)
     private String gender;
 
+    // 레벨
+    @Column(nullable = false)
+    private String level;
+
     // 신청 가능 상태(실제 DB적용 x)
     @Transient
     private String status;
