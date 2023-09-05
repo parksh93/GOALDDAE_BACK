@@ -1,4 +1,4 @@
-package com.goalddae.dto.friend;
+package com.goalddae.dto.friend.friendAccept;
 
 import lombok.*;
 

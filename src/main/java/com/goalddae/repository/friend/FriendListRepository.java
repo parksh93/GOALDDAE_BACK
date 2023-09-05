@@ -1,6 +1,9 @@
-package com.goalddae.repository;
+package com.goalddae.repository.friend;
 
 import com.goalddae.dto.friend.*;
+import com.goalddae.dto.friend.friendList.FindFriendListResponseDTO;
+import com.goalddae.dto.friend.friendList.SearchFriendDTO;
+import com.goalddae.dto.friend.friendList.SelectFriendListDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

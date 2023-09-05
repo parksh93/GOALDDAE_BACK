@@ -1,4 +1,4 @@
-package com.goalddae.dto.friend;
+package com.goalddae.dto.friend.friendAdd;
 
 import lombok.*;
 
@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class FriendBlockDTO {
+public class FriendAddDTO {
     private long id;
-    private String blockUserId;
-    private LocalDateTime blockDate;
+    private String toUser;
+    private LocalDateTime requestDate;
     private long userId;
 }

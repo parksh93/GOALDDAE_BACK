@@ -2,33 +2,25 @@ package com.goalddae.service;
 
 import com.goalddae.config.jwt.TokenProvider;
 import com.goalddae.dto.email.SendEmailDTO;
-import com.goalddae.dto.friend.SelectFriendListDTO;
 import com.goalddae.dto.user.*;
 
 import com.goalddae.entity.*;
 import com.goalddae.exception.NotFoundTokenException;
 import com.goalddae.exception.NotFoundUserException;
 
-import com.goalddae.exception.UnValidTokenException;
 import com.goalddae.repository.*;
 
 import com.goalddae.entity.User;
-import com.goalddae.exception.NotFoundUserException;
 import com.goalddae.repository.UserJPARepository;
 
 import com.goalddae.util.CookieUtil;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.val;
 
 import com.goalddae.repository.CommunicationBoardRepository;
 import com.goalddae.repository.UsedTransactionBoardRepository;
-import com.goalddae.repository.UserJPARepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +40,7 @@ public class UserServiceImpl implements UserService{
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(2);
-    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofMinutes(30);
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(1);
     public static final String ACCESS_TOKEN_COOKIE_NAME = "token";
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
 

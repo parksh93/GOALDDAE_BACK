@@ -1,10 +1,9 @@
 package com.goalddae.repository.friend;
 
 import com.goalddae.dto.friend.FindFriendRequestDTO;
-import com.goalddae.dto.friend.FindFriendListResponseDTO;
-import com.goalddae.dto.friend.SearchFriendDTO;
-import com.goalddae.dto.friend.SelectFriendListDTO;
-import com.goalddae.repository.FriendListRepository;
+import com.goalddae.dto.friend.friendList.FindFriendListResponseDTO;
+import com.goalddae.dto.friend.friendList.SearchFriendDTO;
+import com.goalddae.dto.friend.friendList.SelectFriendListDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
