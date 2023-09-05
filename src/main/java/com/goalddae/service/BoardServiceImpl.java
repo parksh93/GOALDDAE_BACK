@@ -6,10 +6,7 @@ import com.goalddae.dto.board.HeartInfoDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
 import com.goalddae.entity.ReportedBoard;
-import com.goalddae.repository.BoardJPARepository;
-import com.goalddae.repository.HeartJPARepository;
-import com.goalddae.repository.ReplyJPARepository;
-import com.goalddae.repository.ReportedBoardJPARepository;
+import com.goalddae.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,13 +25,15 @@ public class BoardServiceImpl implements BoardService{
     ReplyJPARepository replyJPARepository;
     HeartJPARepository heartJPARepository;
     ReportedBoardJPARepository reportedBoardJPARepository;
+    CommunicationBoardRepository communicationBoardRepository;
 
     @Autowired
-    public BoardServiceImpl(BoardJPARepository boardJPARepository, ReplyJPARepository replyJPARepository, HeartJPARepository heartJPARepository, ReportedBoardJPARepository reportedBoardJPARepository){
+    public BoardServiceImpl(BoardJPARepository boardJPARepository, ReplyJPARepository replyJPARepository, HeartJPARepository heartJPARepository, ReportedBoardJPARepository reportedBoardJPARepository, CommunicationBoardRepository communicationBoardRepository){
         this.boardJPARepository = boardJPARepository;
         this.replyJPARepository = replyJPARepository;
         this.heartJPARepository = heartJPARepository;
         this.reportedBoardJPARepository = reportedBoardJPARepository;
+        this.communicationBoardRepository = communicationBoardRepository;
     }
 
     @Override
@@ -211,5 +210,10 @@ public class BoardServiceImpl implements BoardService{
             return 0;
         }
         return pno - 1;
+    }
+
+    @Override
+    public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId) {
+        return communicationBoardRepository.findByUserId(userId);
     }
 }

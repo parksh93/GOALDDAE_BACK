@@ -46,8 +46,6 @@ import java.util.Random;
 public class UserServiceImpl implements UserService{
     private final UserJPARepository userJPARepository;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final CommunicationBoardRepository communicationBoardRepository;
-    private final UsedTransactionBoardRepository usedTransactionBoardRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(2);
@@ -62,8 +60,6 @@ public class UserServiceImpl implements UserService{
     public UserServiceImpl(UserJPARepository userRepository,
                            RefreshTokenRepository refreshTokenRepository,
                            TokenProvider tokenProvider,
-                           CommunicationBoardRepository communicationBoardRepository,
-                           UsedTransactionBoardRepository usedTransactionBoardRepository,
                            FriendService friendService,
                            S3Uploader s3Uploader){
 
@@ -71,8 +67,6 @@ public class UserServiceImpl implements UserService{
         this.refreshTokenRepository = refreshTokenRepository;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.tokenProvider = tokenProvider;
-        this.communicationBoardRepository = communicationBoardRepository;
-        this.usedTransactionBoardRepository = usedTransactionBoardRepository;
         this.friendService = friendService;
         this.s3Uploader = s3Uploader;
     }
@@ -299,17 +293,6 @@ public class UserServiceImpl implements UserService{
             userJPARepository.save(user);
         }
     }
-
-    @Override
-    public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId) {
-        return communicationBoardRepository.findByUserId(userId);
-    }
-
-    @Override
-    public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(long userId) {
-        return usedTransactionBoardRepository.findByUserId(userId);
-    }
-
 
     @Override
     public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
