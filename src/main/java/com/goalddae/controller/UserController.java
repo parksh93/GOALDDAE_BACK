@@ -9,6 +9,7 @@ import com.goalddae.exception.NotFoundMatchException;
 import com.goalddae.exception.NotFoundPostException;
 import com.goalddae.dto.user.*;
 import com.goalddae.entity.User;
+import com.goalddae.exception.NotFoundTokenException;
 import com.goalddae.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -36,26 +38,16 @@ public class UserController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<Boolean> login(@RequestBody LoginDTO loginDTO, HttpServletResponse response) {
-        String token = userService.generateTokenFromLogin(loginDTO);
+        boolean checkUser = userService.generateTokenFromLogin(loginDTO, response);
 
-        if(!token.equals("")){
-            Cookie cookie = new Cookie("token", token);
-            cookie.setHttpOnly(true);
-            cookie.setPath("/");
-            cookie.setSecure(true);
-
-            response.addCookie(cookie);
+        if(checkUser){
             return ResponseEntity.ok(true);
-        }else{
-            return ResponseEntity.badRequest().body(false);
         }
+        return ResponseEntity.badRequest().body(false);
     }
 
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.POST)
     public ResponseEntity<?> getUserInfo(@CookieValue(required = false) String token){
-        if(token == null){
-            return ResponseEntity.badRequest().body("");
-        }
         GetUserInfoDTO userInfoDTO = userService.getUserInfo(token);
 
         return ResponseEntity.ok(userInfoDTO);
@@ -63,10 +55,16 @@ public class UserController {
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public ResponseEntity<Boolean> logout(HttpServletResponse response){
-        Cookie cookie = new Cookie("token", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        response.addCookie(cookie);
+        Cookie cookieToken = new Cookie("token", null);
+        cookieToken.setMaxAge(0);
+        cookieToken.setPath("/");
+
+        Cookie cookieRefreshToken = new Cookie("refreshToken", null);
+        cookieRefreshToken.setMaxAge(0);
+        cookieRefreshToken.setPath("/");
+
+        response.addCookie(cookieToken);
+        response.addCookie(cookieRefreshToken);
 
         return ResponseEntity.ok(true);
     }
@@ -78,9 +76,6 @@ public class UserController {
 
     @RequestMapping(value = "/checkNickname", method = RequestMethod.POST)
     public List<Boolean> checkNickname(@RequestBody CheckNicknameDTO checkNicknameDTO){
-
-        System.out.println(checkNicknameDTO.toString());
-
         return List.of(userService.checkNickname(checkNicknameDTO));
     }
 
@@ -89,12 +84,15 @@ public class UserController {
         userService.save(user);
     }
 
+    @PostMapping("/socialSignup")
+    public void socialSignup(@RequestBody GetUserInfoDTO getUserInfoDTO){
+        userService.updateSocialSignup(getUserInfoDTO);
+    }
+
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
     public ResponseEntity<String> updateUserInfo(@RequestBody GetUserInfoDTO getUserInfoDTO) {
-
-        System.out.println(getUserInfoDTO.toString());
-
         userService.update(getUserInfoDTO);
+
         return ResponseEntity.ok("수정 되었습니다.");
     }
 
@@ -119,17 +117,10 @@ public class UserController {
     }
 
     @RequestMapping(value = "/findPassword", method = RequestMethod.POST)
-    public List<String> findPassword(@RequestBody RequestFindPasswordDTO findPasswordDTO, HttpServletResponse response){
-        String token = userService.checkLoginIdAndEmail(findPasswordDTO);
-        if(!token.equals("")) {
-            Cookie cookie = new Cookie("loginIdToken", token);
-            cookie.setPath("/");
-            cookie.setHttpOnly(true);
-            cookie.setSecure(true);
+    public List<Boolean> findPassword(@RequestBody RequestFindPasswordDTO findPasswordDTO, HttpServletResponse response){
+        boolean checkUser = userService.checkLoginIdAndEmail(findPasswordDTO, response);
 
-            response.addCookie(cookie);
-        }
-        return List.of(token);
+        return List.of(checkUser);
     }
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.PATCH)
