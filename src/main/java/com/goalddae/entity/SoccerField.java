@@ -71,6 +71,9 @@ public class SoccerField {
     @Column
     private String fieldImg3;
 
+    @Column(length = 5000)
+    private String content;
+
     // 구장 수정을 위한 캡슐화
 
     public void changeFieldName(String fieldName) {
