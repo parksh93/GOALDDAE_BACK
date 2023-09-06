@@ -1,12 +1,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.goalddae.repository.FriendAcceptRepository">
+<mapper namespace="com.goalddae.repository.friend.FriendAcceptRepository">
     <update id="createFriendAcceptTable" parameterType="java.lang.Long">
         CREATE TABLE friend_accept_#{id} (
-                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                        from_user VARCHAR(255) NOT NULL,
-                                        accept_date DATETIME NOT NULL,
-                                        accept BIGINT NOT NULL,
-                                        users_id BIGINT NOT NULL
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            from_user BIGINT NOT NULL,
+            accept_date DATETIME,
+            <!-- 1: 승인 / 2: 거절 / 3: 대기  -->
+            accept INT NOT NULL,
+            users_id BIGINT NOT NULL
         );
     </update>
+    <select id="selectFromUser" parameterType="com.goalddae.dto.friend.FindFriendRequestDTO" resultType="com.goalddae.dto.friend.friendAccept.SelectFromUserDTO">
+        SELECT from_user AS fromUser, users_id AS userId FROM friend_accept_#{userId}
+    </select>
+    <select id="findFriendAcceptList" parameterType="com.goalddae.dto.friend.friendAccept.SelectFromUserDTO" resultType="com.goalddae.dto.friend.friendAccept.FindFriendAcceptDTO">
+        <foreach collection="list" item="item">
+            SELECT u.id, u.nickname, u.profile_img_url AS profileImgUrl, (SELECT request_date FROM friend_add_#{item.fromUser}) AS requestDate
+            FROM users u
+            JOIN friend_accept_#{item.userId} f
+            ON u.id = f.from_user
+            WHERE f.accept = 3
+        </foreach>
+    </select>
+    <insert id="addFriendAccept" parameterType="com.goalddae.dto.friend.AddFriendRequestDTO">
+        INSERT INTO friend_accept_#{toUser} (from_user, accept, users_id) VALUES (#{fromUser}, 3, #{toUser})
+    </insert>
+    <update id="updateFriendAccept" parameterType="com.goalddae.dto.friend.friendAccept.FriendRejectionDTO">
+        UPDATE friend_accept_#{userId} SET accept=2, accept_date = now() WHERE from_user = #{fromUser}
+    </update>
+    <delete id="deleteFriendAccept" parameterType="com.goalddae.dto.friend.FriendRequestDTO">
+        DELETE FROM friend_accept_#{toUser} WHERE from_user = #{fromUser}
+    </delete>
 </mapper>
