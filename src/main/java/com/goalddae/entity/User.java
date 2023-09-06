@@ -20,7 +20,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -142,9 +141,6 @@ public class User implements UserDetails {
         this.noShowCnt = 0;
         this.teamId = -1L;
     }
-
-
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

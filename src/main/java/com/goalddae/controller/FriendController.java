@@ -4,6 +4,9 @@ import com.goalddae.dto.friend.*;
 import com.goalddae.dto.friend.friendAccept.FindFriendAcceptDTO;
 import com.goalddae.dto.friend.friendAccept.FriendRejectionDTO;
 import com.goalddae.dto.friend.friendAdd.FindFriendAddDTO;
+import com.goalddae.dto.friend.FriendDTO;
+import com.goalddae.dto.friend.friendBlock.FindFriendBlockDTO;
+import com.goalddae.dto.friend.friendBlock.UnblockFriendDTO;
 import com.goalddae.dto.friend.friendList.FindFriendListResponseDTO;
 import com.goalddae.dto.friend.friendList.SearchFriendDTO;
 import com.goalddae.dto.friend.friendList.SelectFriendListDTO;
@@ -55,7 +58,32 @@ public class FriendController {
     }
 
     @DeleteMapping("/deleteFriendRequest")
-    public void deleteFriendRequest(@RequestBody FriendRequestDTO deleteFriendRequestDTO){
-        friendService.deleteFriendRequest(deleteFriendRequestDTO);
+    public void deleteFriendRequest(@RequestBody FriendRequestDTO friendRequestDTO){
+        friendService.deleteFriendRequest(friendRequestDTO);
+    }
+
+    @PutMapping("/addFriend")
+    public void addFriend(@RequestBody FriendRequestDTO friendRequestDTO){
+        friendService.addFriend(friendRequestDTO);
+    }
+
+    @DeleteMapping("/deleteFriend")
+    public void deleteFriend(@RequestBody FriendDTO deleteFriendDTO){
+        friendService.deleteFriend(deleteFriendDTO);
+    }
+
+    @GetMapping("/findFriendBlockList/{userId}")
+    public List<FindFriendBlockDTO> findFriendBlockList(@PathVariable long userId){
+        return friendService.findFriendBlockList(userId);
+    }
+
+    @PutMapping("/blockFriend")
+    public void blockFriend(@RequestBody FriendDTO deleteFriendDTO){
+        friendService.blockFriend(deleteFriendDTO);
+    }
+
+    @DeleteMapping("/unblockFriend")
+    public void unblockFriend(@RequestBody UnblockFriendDTO unBlockFriendDTO){
+        friendService.unblockFriend(unBlockFriendDTO);
     }
 }

@@ -1,9 +1,7 @@
 package com.goalddae.repository.friend;
 
 import com.goalddae.dto.friend.*;
-import com.goalddae.dto.friend.friendList.FindFriendListResponseDTO;
-import com.goalddae.dto.friend.friendList.SearchFriendDTO;
-import com.goalddae.dto.friend.friendList.SelectFriendListDTO;
+import com.goalddae.dto.friend.friendList.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,5 +13,7 @@ public interface FriendListRepository {
     List<SearchFriendDTO> searchFriendList(SelectFriendListDTO selectFriendListDTO);
     List<SearchFriendDTO> searchUnFriendList(SelectFriendListDTO selectFriendListDTO);
     List<FindFriendListResponseDTO> findFriendList(FindFriendRequestDTO findFriendRequestDTO);
+    void insertFriend(AddFriendDTO addFriendDTO);
+    void deleteFriend(FriendDTO friendDTO);
 
 }
