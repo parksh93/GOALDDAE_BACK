@@ -11,10 +11,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FieldReservationDTO {
-    private long id;
-    private String reservationId;
-    private LocalDateTime reservationDate;
-    private int reservationTeamWhether;
-    private String reservationTeamId;
-    private Long SoccerFieldId;
+    private Long soccerFieldId; // 구장 ID
+    private String reservedDate; // 8자리 문자열, 예: "20230901"
+    private int startTime;       // 0~23 사이의 int, 예: 14
+    private int totalHours;      // 총 대관 시간, 예: 2
+    private Long userId; // 유저 ID
+    private Long playerNumber; // 매치 유저 수
+    private String gender; // 남녀 구분
+    private String level; // 레벨
+
 }
