@@ -20,14 +20,18 @@
         FROM users u
         WHERE u.id NOT IN (SELECT friend_id FROM friend_list_#{userId})
         AND u.nickname LIKE CONCAT('%',#{nickname},'%')
-        AND u.id NOT IN (SELECT block_user_id FROM friend_block_#{userId})
+        AND u.id NOT IN (SELECT user_id FROM friend_block WHERE friend_id = #{userId})
+        AND u.id NOT IN (SELECT friend_id FROM friend_block WHERE user_id = #{userId})
     </select>
     <select id="findFriendList" parameterType="com.goalddae.dto.friend.friendList.FindFriendListResponseDTO" resultType="com.goalddae.dto.friend.friendList.FindFriendListResponseDTO">
         SELECT u.nickname, u.profile_img_url AS profileImgUrl, u.id FROM users u
         JOIN friend_list_#{userId} f
         ON u.id = f.friend_id
     </select>
-    <insert id="insertFriend" parameterType="">
-
+    <insert id="insertFriend" parameterType="com.goalddae.dto.friend.friendList.AddFriendDTO">
+        INSERT INTO friend_list_#{userId} (friend_id, users_id) VALUES (#{friendId}, #{userId})
     </insert>
+    <delete id="deleteFriend" parameterType="com.goalddae.dto.friend.FriendDTO">
+        DELETE FROM friend_list_#{userId} WHERE friend_id = #{friendId}
+    </delete>
 </mapper>

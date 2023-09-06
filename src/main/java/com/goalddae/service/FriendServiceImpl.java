@@ -6,9 +6,10 @@ import com.goalddae.dto.friend.friendAccept.FriendRejectionDTO;
 import com.goalddae.dto.friend.friendAccept.SelectFromUserDTO;
 import com.goalddae.dto.friend.friendAdd.FindFriendAddDTO;
 import com.goalddae.dto.friend.friendAdd.SelectToUserDTO;
-import com.goalddae.dto.friend.friendList.FindFriendListResponseDTO;
-import com.goalddae.dto.friend.friendList.SearchFriendDTO;
-import com.goalddae.dto.friend.friendList.SelectFriendListDTO;
+import com.goalddae.dto.friend.friendBlock.FindFriendBlockDTO;
+import com.goalddae.dto.friend.friendBlock.UnblockFriendDTO;
+import com.goalddae.dto.friend.friendList.*;
+import com.goalddae.entity.FriendBlock;
 import com.goalddae.repository.friend.FriendAcceptRepository;
 import com.goalddae.repository.friend.FriendAddRepository;
 import com.goalddae.repository.friend.FriendBlockRepository;
@@ -19,6 +20,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,20 +72,6 @@ public class FriendServiceImpl implements FriendService{
         } catch (Exception e) {
             System.out.println("테이블 생성 중 오류가 발생했습니다: " + e.getMessage());
             return false;
-        }
-}
-
-    // 동적테이블 생성 - 친구차단
-    @Override
-    @Transactional
-    public boolean createFriendBlockTable(@Param("userId") Long userId) {
-        try {
-            Long safeTable = MyBatisUtil.safeTable(userId);
-            friendBlockRepository.createFriendBlockTable(safeTable);
-            return true;
-        } catch (Exception e) {
-        System.out.println("테이블 생성 중 오류가 발생했습니다: " + e.getMessage());
-        return false;
         }
     }
 
@@ -144,4 +132,62 @@ public class FriendServiceImpl implements FriendService{
         friendAddRepository.deleteFriendAdd(friendRequestDTO);
     }
 
+    @Override
+    public void addFriend(FriendRequestDTO friendRequestDTO) {
+        friendAcceptRepository.deleteFriendAccept(friendRequestDTO);
+        friendAddRepository.deleteFriendAdd(friendRequestDTO);
+
+        AddFriendDTO addFriendDTO = new AddFriendDTO();
+        addFriendDTO.setFriendId(friendRequestDTO.getToUser());
+        addFriendDTO.setUserId(friendRequestDTO.getFromUser());
+        friendListRepository.insertFriend(addFriendDTO);
+
+        addFriendDTO.setFriendId(friendRequestDTO.getFromUser());
+        addFriendDTO.setUserId(friendRequestDTO.getToUser());
+        friendListRepository.insertFriend(addFriendDTO);
+    }
+
+    @Override
+    public void deleteFriend(FriendDTO friendDTO) {
+        friendListRepository.deleteFriend(friendDTO);
+        long userId = friendDTO.getUserId();
+        long friendId = friendDTO.getFriendId();
+        friendDTO.setFriendId(userId);
+        friendDTO.setUserId(friendId);
+        friendListRepository.deleteFriend(friendDTO);
+    }
+
+    @Override
+    public void blockFriend(FriendDTO friendDTO) {
+        friendListRepository.deleteFriend(friendDTO);
+
+        FriendBlock friendBlock = FriendBlock.builder()
+                .friendId(friendDTO.getFriendId())
+                .userId(friendDTO.getUserId())
+                .blockDate(LocalDateTime.now())
+                .build();
+
+        friendBlockRepository.save(friendBlock);
+
+        long userId = friendDTO.getUserId();
+        long friendId = friendDTO.getFriendId();
+        friendDTO.setFriendId(userId);
+        friendDTO.setUserId(friendId);
+        friendListRepository.deleteFriend(friendDTO);
+
+    }
+
+    @Override
+    public List<FindFriendBlockDTO> findFriendBlockList(long userId) {
+        return friendBlockRepository.findFriendBlockList(userId);
+    }
+
+    @Override
+    public void unblockFriend(UnblockFriendDTO unblockFriendDTO) {
+        FriendBlock block = friendBlockRepository.findByUserIdAndFriendId(unblockFriendDTO.getUserId(), unblockFriendDTO.getFriendId());
+        friendBlockRepository.deleteById(block.getId());
+    }
+
 }
+
+

@@ -5,6 +5,8 @@ import com.goalddae.dto.friend.AddFriendRequestDTO;
 import com.goalddae.dto.friend.FriendRequestDTO;
 import com.goalddae.dto.friend.FindFriendRequestDTO;
 import com.goalddae.dto.friend.friendAccept.FriendRejectionDTO;
+import com.goalddae.dto.friend.FriendDTO;
+import com.goalddae.dto.friend.friendBlock.UnblockFriendDTO;
 import com.goalddae.dto.friend.friendList.SelectFriendListDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -141,15 +143,123 @@ public class FriendControllerTest {
     @Transactional
     @DisplayName("친구 요청 목록 삭제")
     public void deleteFriendRequest() throws Exception {
-        FriendRequestDTO deleteFriendRequestDTO = FriendRequestDTO.builder()
+        FriendRequestDTO friendRequestDTO = FriendRequestDTO.builder()
                 .toUser(2)
                 .fromUser(1)
                 .build();
 
         String url = "/friend/deleteFriendRequest";
 
-        final String request = objectMapper.writeValueAsString(deleteFriendRequestDTO);
+        final String request = objectMapper.writeValueAsString(friendRequestDTO);
 
         mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON).content(request));
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("친구 추가")
+    public void addFriend() throws Exception {
+        FriendRequestDTO friendRequestDTO = FriendRequestDTO.builder()
+                .toUser(2)
+                .fromUser(1)
+                .build();
+
+        String url = "/friend/addFriend";
+        String url2 = "/friend/findFriendList";
+
+        final  String request = objectMapper.writeValueAsString(friendRequestDTO);
+
+        mockMvc.perform(put(url).contentType(MediaType.APPLICATION_JSON).content(request));
+
+        FindFriendRequestDTO findFriendListRequestDTO = FindFriendRequestDTO.builder().userId(1).build();
+
+        final String request2 = objectMapper.writeValueAsString(findFriendListRequestDTO);
+
+        ResultActions result = mockMvc.perform(post(url2).contentType(MediaType.APPLICATION_JSON).content(request2).accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].nickname").value("넵이"));
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("친구 삭제")
+    public void deleteFriend() throws Exception {
+        FriendDTO deleteFriendDTO = FriendDTO.builder()
+                .userId(1)
+                .friendId(2)
+                .build();
+
+        String url = "/friend/deleteFriend";
+        String url2 = "/friend/findFriendList";
+
+        final String request = objectMapper.writeValueAsString(deleteFriendDTO);
+
+        mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON).content(request));
+
+        FindFriendRequestDTO findFriendListRequestDTO = FindFriendRequestDTO.builder().userId(1).build();
+
+        final String request2 = objectMapper.writeValueAsString(findFriendListRequestDTO);
+
+        ResultActions result = mockMvc.perform(post(url2).contentType(MediaType.APPLICATION_JSON).content(request2).accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$").isEmpty());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("친구 차단목록 조회")
+    public void findFriendBlockList() throws Exception {
+        long userId = 1;
+        String url = "/friend/findFriendBlockList/" + userId;
+
+        ResultActions resultActions = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$").isEmpty());
+    }
+    @Test
+    @Transactional
+    @DisplayName("친구 차단목록 조회")
+    public void blockFriend() throws Exception {
+        FriendDTO friendDTO = FriendDTO.builder()
+                .userId(1)
+                .friendId(2)
+                .build();
+        String url = "/friend/blockFriend";
+
+        final String request = objectMapper.writeValueAsString(friendDTO);
+        mockMvc.perform(put(url).contentType(MediaType.APPLICATION_JSON).content(request));
+
+        long userId = 1;
+        String url2 = "/friend/findFriendBlockList/" + userId;
+
+        ResultActions resultActions = mockMvc.perform(get(url2).accept(MediaType.APPLICATION_JSON));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].nickname").value("넵이"));
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("친구 차단 해제")
+    public void unBlockFriendTest() throws Exception{
+        UnblockFriendDTO unBlockFriendDTO = UnblockFriendDTO.builder()
+                .friendId(2)
+                .userId(1)
+                .build();
+
+        String url = "/friend/unblockFriend";
+        final String request = objectMapper.writeValueAsString(unBlockFriendDTO);
+        mockMvc.perform(delete(url).contentType(MediaType.APPLICATION_JSON).content(request));
+
+        long userId = 1;
+        String url2 = "/friend/findFriendBlockList/" + userId;
+
+        ResultActions resultActions = mockMvc.perform(get(url2).accept(MediaType.APPLICATION_JSON));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$").isEmpty());
     }
 }

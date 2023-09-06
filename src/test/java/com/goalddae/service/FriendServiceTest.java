@@ -4,6 +4,9 @@ import com.goalddae.dto.friend.*;
 import com.goalddae.dto.friend.friendAccept.FindFriendAcceptDTO;
 import com.goalddae.dto.friend.friendAccept.FriendRejectionDTO;
 import com.goalddae.dto.friend.friendAdd.FindFriendAddDTO;
+import com.goalddae.dto.friend.FriendDTO;
+import com.goalddae.dto.friend.friendBlock.FindFriendBlockDTO;
+import com.goalddae.dto.friend.friendBlock.UnblockFriendDTO;
 import com.goalddae.dto.friend.friendList.FindFriendListResponseDTO;
 import com.goalddae.dto.friend.friendList.SearchFriendDTO;
 import com.goalddae.dto.friend.friendList.SelectFriendListDTO;
@@ -43,7 +46,7 @@ public class FriendServiceTest {
 
     @Test
     @Transactional
-    @DisplayName("친구 리스트 가져오기")
+    @DisplayName("친구 리스트 조회")
     public void findFriendListTest() {
         FindFriendRequestDTO findFriendRequestDTO = FindFriendRequestDTO.builder().userId(1).build();
 
@@ -54,7 +57,7 @@ public class FriendServiceTest {
 
     @Test
     @Transactional
-    @DisplayName("친구 수락 리스트 가져오기")
+    @DisplayName("친구 수락 리스트 조회")
     public void findAcceptListTest(){
         FindFriendRequestDTO findFriendRequestDTO = FindFriendRequestDTO.builder().userId(1).build();
 
@@ -82,7 +85,7 @@ public class FriendServiceTest {
 
     @Test
     @Transactional
-    @DisplayName("내가 신청한 친구 목록 가져오기")
+    @DisplayName("내가 신청한 친구 목록 조회")
     public void findFriendAddListTest() {
         FindFriendRequestDTO findFriendRequestDTO = FindFriendRequestDTO.builder()
                 .userId(1).build();
@@ -122,4 +125,84 @@ public class FriendServiceTest {
 
         assertNull(findFriendAcceptDTOList);
     }
+
+    @Test
+    @Transactional
+    @DisplayName("친구 추가")
+    public void addFriendTest() {
+        FriendRequestDTO friendRequestDTO = FriendRequestDTO
+                .builder().toUser(2).fromUser(1).build();
+
+        friendService.addFriend(friendRequestDTO);
+
+        FindFriendRequestDTO findFriendRequestDTO = FindFriendRequestDTO.builder().userId(1).build();
+
+        List<FindFriendListResponseDTO> findFriendListResponseDTO = friendService.findFriendList(findFriendRequestDTO);
+
+        assertEquals(findFriendListResponseDTO.get(0).getNickname(), "넵이");
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("친구 삭제")
+    public void deleteFriend() {
+        FriendDTO deleteFriendDTO = FriendDTO.builder()
+                .userId(1)
+                .friendId(2)
+                .build();
+
+        friendService.deleteFriend(deleteFriendDTO);
+
+        FindFriendRequestDTO findFriendRequestDTO = FindFriendRequestDTO.builder().userId(1).build();
+
+        List<FindFriendListResponseDTO> findFriendListResponseDTO = friendService.findFriendList(findFriendRequestDTO);
+
+        assertEquals(findFriendListResponseDTO.size(), 0);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("친구 차단")
+    public void blockFriend() {
+        FriendDTO friendDTO = FriendDTO.builder()
+                .userId(1)
+                .friendId(2)
+                .build();
+
+        friendService.blockFriend(friendDTO);
+
+        long userId = 1;
+        List<FindFriendBlockDTO> friendBlockList = friendService.findFriendBlockList(userId);
+
+        assertEquals(friendBlockList.get(0).getNickname(), "넵이");
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("친구 차단 목록 조회")
+    public void findFriendBlockListTest() {
+        long userId = 1;
+        List<FindFriendBlockDTO> friendBlockList = friendService.findFriendBlockList(userId);
+
+        assertEquals(friendBlockList.size(), 0);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("친구 차단 해제")
+    public void unBlockFriendTest() {
+        long userId = 1;
+        long friendId = 2;
+        UnblockFriendDTO unblockFriendDTO = UnblockFriendDTO.builder()
+                        .friendId(friendId)
+                                .userId(userId)
+                                        .build();
+
+        friendService.unblockFriend(unblockFriendDTO);
+
+        List<FindFriendBlockDTO> friendBlockList = friendService.findFriendBlockList(userId);
+
+        assertEquals(friendBlockList.size(), 0);
+    }
+
 }

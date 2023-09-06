@@ -89,7 +89,6 @@ public class UserServiceImpl implements UserService{
         // 동적 테이블 생성
         friendService.createFriendAcceptTable(id);
         friendService.createFriendAddTable(id);
-        friendService.createFriendBlockTable(id);
         friendService.createFriendListTable(id);
     }
 
@@ -267,7 +266,6 @@ public class UserServiceImpl implements UserService{
 
             friendService.createFriendAcceptTable(user.getId());
             friendService.createFriendAddTable(user.getId());
-            friendService.createFriendBlockTable(user.getId());
             friendService.createFriendListTable(user.getId());
         }
     }
