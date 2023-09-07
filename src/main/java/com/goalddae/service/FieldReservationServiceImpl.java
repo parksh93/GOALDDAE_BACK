@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FieldReservationServiceImpl implements FieldReservationService {
@@ -84,4 +86,23 @@ public class FieldReservationServiceImpl implements FieldReservationService {
         individualMatchJPARepository.save(individualMatch);
 
     }
+
+    public List<Integer> getReservationTimesByFieldIdAndDate(long fieldId, String date) {
+        // 문자열 형식의 date를 LocalDateTime으로 변환
+        LocalDateTime localDateTime = LocalDateTime.of(
+                Integer.parseInt(date.substring(0, 4)),
+                Integer.parseInt(date.substring(4, 6)),
+                Integer.parseInt(date.substring(6, 8)),
+                0, 0
+        );
+
+        // ReservationField 엔티티 조회
+        List<ReservationField> reservationFields = reservationFieldJPARepository
+                .findBySoccerFieldIdAndReservedDate(fieldId, localDateTime);
+
+        return reservationFields.stream()
+                .map(reservationField -> reservationField.getStartDate().toLocalTime().getHour())
+                .collect(Collectors.toList());
+    }
+
 }
