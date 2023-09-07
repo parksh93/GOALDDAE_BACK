@@ -4,10 +4,9 @@ import com.goalddae.dto.fieldReservation.FieldReservationDTO;
 import com.goalddae.service.FieldReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/reservation")
@@ -24,6 +23,11 @@ public class FieldReservationController {
     public ResponseEntity<String> createReservationFieldAndMatch(@RequestBody FieldReservationDTO dto) {
         fieldReservationService.CreateReservationFieldAndMatch(dto);
         return ResponseEntity.ok("Reservation created successfully");
+    }
+
+    @GetMapping("/times")
+    public List<Integer> getReservationTimes(@RequestParam long fieldId, @RequestParam String date) {
+        return fieldReservationService.getReservationTimesByFieldIdAndDate(fieldId, date);
     }
 
 }
