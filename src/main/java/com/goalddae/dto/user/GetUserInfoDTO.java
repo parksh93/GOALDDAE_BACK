@@ -30,7 +30,7 @@ public class GetUserInfoDTO {
     private String preferredCity;
     private String preferredArea;
     private int activityClass;
-    private long teamId;
+    private Long teamId;
 
     public GetUserInfoDTO(User user){
         this.id = user.getId();

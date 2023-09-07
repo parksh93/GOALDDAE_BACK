@@ -48,10 +48,10 @@ public class TeamServiceImpl implements TeamService {
         return teamJPARepository.findTeamById(id);
     }
 
-    @Override
+    /*@Override
     public void save(Team team) {
         teamJPARepository.save(team);
-    }
+    }*/
 
     @Override
     public void update(TeamUpdateDTO teamUpdateDTO) {
@@ -169,9 +169,9 @@ public class TeamServiceImpl implements TeamService {
                 .teamProfileImgUrl("default_profile_img_url")
                 .build();
 
-        teamJPARepository.save(newTeam);
+        Team savedTeam = teamJPARepository.save(newTeam);
 
-        // 팀 ID 필드를 가져와 테이블 생성에 F사용
+        // 팀 ID 필드를 가져와 테이블 생성에 사용
         Long id = newTeam.getId();
 
         // 동적테이블 생성
@@ -179,4 +179,17 @@ public class TeamServiceImpl implements TeamService {
         this.createTeamMemberTable(id);
         this.createTeamMatchResult(id);
     }
+
+    @Override
+    public Long getAutoIncrementValue() {
+        Team lastInsertedTeam = teamJPARepository.findFirstByOrderByIdDesc();
+
+        if(lastInsertedTeam != null ){
+            return lastInsertedTeam.getId();
+        } else {
+            return null;
+        }
+    }
+
+
 }

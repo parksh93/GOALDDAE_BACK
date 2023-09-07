@@ -22,4 +22,5 @@ public interface TeamJPARepository extends JpaRepository<Team, Long> {
 
     List<Team> findByAreaAndRecruiting(String area ,boolean recruiting);
 
+    Team findFirstByOrderByIdDesc();
 }

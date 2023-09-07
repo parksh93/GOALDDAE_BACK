@@ -60,29 +60,45 @@ public class TeamController {
         }
     }
 
-    @PostMapping(value = "/teamSave")
+    /*@PostMapping(value = "/teamSave")
     public ResponseEntity<String> teamSave(@RequestBody Team team){
 
         teamService.save(team);
         return ResponseEntity
-                .ok("팀 생성이 완료되었습니다.");
-    }
+                .ok("팀 생성이 완료되었습니다. 자세한 팀 정보는 팀 페이지에서 수정해주세요.");
+    }*/
 
-      // 팀 등록
+    // 팀 등록
     @PostMapping(value = "/save")
-    public ResponseEntity<String> saveTeam(@RequestBody TeamSaveDTO teamSaveDTO) {
+    public ResponseEntity<?> saveTeam(@RequestBody TeamSaveDTO teamSaveDTO) {
         try {
+
             teamService.save(teamSaveDTO);
-            return ResponseEntity.ok("팀 생성이 완료되었습니다.");
+
+            Long id = teamSaveDTO.getId();
+            return ResponseEntity.ok(id);
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
   
-  
-  
-    @RequestMapping(value="/teamUpdate", method= {RequestMethod.PUT, RequestMethod.PATCH})
+    @GetMapping("/getAutoIncrementTeamId")
+    public ResponseEntity<Long> getAutoIncrementTeamId(){
+        Long autoIncrementValue = teamService.getAutoIncrementValue();
+
+        if (autoIncrementValue != null ){
+            return ResponseEntity.ok(autoIncrementValue);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+    @RequestMapping(value="/update", method= {RequestMethod.PUT, RequestMethod.PATCH})
     public ResponseEntity<String> teamUpdate(@RequestBody TeamUpdateDTO teamUpdateDTO){
+
+        System.out.println(teamUpdateDTO.toString());
 
         teamService.update(teamUpdateDTO);
         return ResponseEntity

@@ -201,15 +201,29 @@ public class UserServiceImpl implements UserService{
 
         if (user != null) {
             ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
-            changeUserInfoDTO.setNickname(getUserInfoDTO.getNickname());
-            changeUserInfoDTO.setPhoneNumber(getUserInfoDTO.getPhoneNumber());
-            changeUserInfoDTO.setPreferredCity(getUserInfoDTO.getPreferredCity());
-            changeUserInfoDTO.setPreferredArea(getUserInfoDTO.getPreferredArea());
-            changeUserInfoDTO.setActivityClass(getUserInfoDTO.getActivityClass());
+                changeUserInfoDTO.setNickname(getUserInfoDTO.getNickname());
+                changeUserInfoDTO.setPhoneNumber(getUserInfoDTO.getPhoneNumber());
+                changeUserInfoDTO.setPreferredCity(getUserInfoDTO.getPreferredCity());
+                changeUserInfoDTO.setPreferredArea(getUserInfoDTO.getPreferredArea());
+                changeUserInfoDTO.setActivityClass(getUserInfoDTO.getActivityClass());
+                changeUserInfoDTO.setTeamId(getUserInfoDTO.getTeamId());
 
             User updateduser = changeUserInfoDTO.toEntity();
 
             userJPARepository.save(updateduser);
+        }
+    }
+
+    @Override
+    public void updateTeamId(GetUserInfoDTO getUserInfoDTO) {
+        User user = userJPARepository.findById(getUserInfoDTO.getId()).get();
+
+        if (user != null){
+                ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
+                changeUserInfoDTO.setTeamId(getUserInfoDTO.getTeamId());
+                user = changeUserInfoDTO.toEntity();
+
+            userJPARepository.save(user);
         }
     }
 

@@ -9,10 +9,6 @@ import com.goalddae.entity.User;
 
 import java.util.List;
 
-import com.goalddae.dto.email.SendEmailDTO;
-import com.goalddae.dto.user.*;
-import com.goalddae.entity.User;
-
 public interface UserService {
     public void save(User user);
     public User getByCredentials(String loginId);
@@ -22,6 +18,9 @@ public interface UserService {
     public boolean checkEmail(SendEmailDTO checkEmailDTO);
     public boolean checkNickname(CheckNicknameDTO checkNicknameDTO);
     public void update(GetUserInfoDTO getUserInfoDTO);
+    public void updateTeamId(GetUserInfoDTO getUserInfoDTO);
+
+
     public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId);
     public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(long userId);
     public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO);
