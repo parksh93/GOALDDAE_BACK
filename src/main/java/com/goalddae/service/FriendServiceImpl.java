@@ -9,7 +9,11 @@ import com.goalddae.dto.friend.friendAdd.SelectToUserDTO;
 import com.goalddae.dto.friend.friendBlock.FindFriendBlockDTO;
 import com.goalddae.dto.friend.friendBlock.UnblockFriendDTO;
 import com.goalddae.dto.friend.friendList.*;
+import com.goalddae.entity.Channel;
 import com.goalddae.entity.FriendBlock;
+import com.goalddae.entity.User;
+import com.goalddae.repository.UserJPARepository;
+import com.goalddae.repository.chat.ChannelRepository;
 import com.goalddae.repository.friend.FriendAcceptRepository;
 import com.goalddae.repository.friend.FriendAddRepository;
 import com.goalddae.repository.friend.FriendBlockRepository;
@@ -21,9 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +34,9 @@ public class FriendServiceImpl implements FriendService{
     private final FriendAddRepository friendAddRepository;
     private final FriendAcceptRepository friendAcceptRepository;
     private final FriendBlockRepository friendBlockRepository;
+    private  final ChannelRepository channelRepository;
+    private final UserJPARepository userJPARepository;
+
 
     // 동적테이블 생성 - 친구리스트
     @Override
@@ -145,6 +150,18 @@ public class FriendServiceImpl implements FriendService{
         addFriendDTO.setFriendId(friendRequestDTO.getFromUser());
         addFriendDTO.setUserId(friendRequestDTO.getToUser());
         friendListRepository.insertFriend(addFriendDTO);
+
+        User user1 =  userJPARepository.findById(friendRequestDTO.getToUser()).get();
+        User user2 = userJPARepository.findById(friendRequestDTO.getFromUser()).get();
+
+//        Set<User> users = new HashSet<>();
+//        users.add(user1);
+//        users.add(user2);
+//
+//        Channel channel = Channel.builder().users(users).build();
+//
+//        channelRepository.save(channel);
+
     }
 
     @Override
