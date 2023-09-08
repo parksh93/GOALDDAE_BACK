@@ -15,8 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -102,6 +101,9 @@ public class User implements UserDetails {
     @Column(nullable = true)
     private String authority;  // 권한 등급
                             // 일반 유저 : user / 매니저 : manager / 관리자 : admin
+
+    @OneToMany(mappedBy = "User", cascade = CascadeType.ALL)
+    private List<Channel> channels = new ArrayList<>();
 
     @Builder
     public User(long id, String loginId, String email, String password, String userCode, String name, String nickname, String gender, String profileImgUrl,
