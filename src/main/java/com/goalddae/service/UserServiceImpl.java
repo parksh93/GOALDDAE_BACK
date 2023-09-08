@@ -1,43 +1,25 @@
 package com.goalddae.service;
 
 import com.goalddae.config.jwt.TokenProvider;
-import com.goalddae.config.s3.S3Uploader;
+import com.goalddae.util.S3Uploader;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
 import com.goalddae.entity.*;
 import com.goalddae.exception.NotFoundTokenException;
 import com.goalddae.exception.NotFoundUserException;
-import com.goalddae.repository.CommunicationBoardRepository;
-import com.goalddae.repository.UsedTransactionBoardRepository;
 import com.goalddae.repository.UserJPARepository;
-import com.goalddae.exception.UnValidTokenException;
 import com.goalddae.repository.*;
 import com.goalddae.entity.User;
-import com.goalddae.exception.NotFoundUserException;
-import com.goalddae.repository.UserJPARepository;
 import com.goalddae.util.CookieUtil;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.val;
-import com.goalddae.repository.CommunicationBoardRepository;
-import com.goalddae.repository.UsedTransactionBoardRepository;
-import com.goalddae.repository.UserJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import javax.sql.DataSource;
-import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.time.Duration;
-import java.util.List;
 
 import java.time.LocalDateTime;
 import java.util.Random;
