@@ -10,5 +10,5 @@ public interface ArticleKoreaJpaRepository extends JpaRepository<ArticleKorea, L
     // 일정 시간에 기사 데이터 삭제
     void deleteByCreatedAtBefore(LocalDateTime cutoff);
     // 유저에게 최신 뉴스 24개만 보이게
-    List<ArticleKorea> findTop24ByOrderByCreatedAtDesc();
+    List<ArticleKorea> findTop25ByOrderByCreatedAtDesc();
 }
