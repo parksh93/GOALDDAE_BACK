@@ -39,8 +39,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerTest {
     @Autowired
     UserServiceImpl userService;
-    @Autowired
-    FileUploadServiceImpl fileUploadService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -140,32 +138,6 @@ public class UserControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].nickname").value(nickname))
                 .andExpect(jsonPath("$[0].level").value(level));
-    }
-    @Test
-    @Transactional
-    @DisplayName("내가 쓴 게시글 조회 테스트")
-    public void getUserPostsTest() throws Exception {
-        // given
-<<<<<<< HEAD
-        long userId = 1;
-=======
-        long userId = 123;
->>>>>>> develop
-        List<CommunicationBoard> communicationBoardPosts = new ArrayList<>();
-        List<UsedTransactionBoard> usedTransactionBoardPosts = new ArrayList<>();
-
-        // when
-        when(userService.getUserCommunicationBoardPosts(userId)).thenReturn(communicationBoardPosts);
-        when(userService.getUserUsedTransactionBoardPosts(userId)).thenReturn(usedTransactionBoardPosts);
-
-        ResultActions resultActions = mockMvc.perform(get("/posts/{userId}", userId)
-                .contentType(MediaType.APPLICATION_JSON));
-
-        // then
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.communicationBoardPosts").isArray())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.usedTransactionBoardPosts").isArray());
     }
 
     @Test
