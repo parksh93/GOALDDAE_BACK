@@ -1,39 +1,24 @@
 package com.goalddae.controller;
 
-import com.goalddae.dto.match.MatchIndividualDTO;
-import com.goalddae.dto.user.*;
-import com.goalddae.entity.CommunicationBoard;
-import com.goalddae.entity.UsedTransactionBoard;
-import com.goalddae.entity.User;
-import com.goalddae.exception.NotFoundMatchException;
-import com.goalddae.exception.NotFoundPostException;
 import com.goalddae.dto.user.*;
 import com.goalddae.entity.User;
-import com.goalddae.exception.NotFoundTokenException;
-import com.goalddae.service.MatchServiceImpl;
 import com.goalddae.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
     private final UserServiceImpl userService;
-    private final MatchServiceImpl matchService;
 
     @Autowired
-    public UserController(UserServiceImpl userService, MatchServiceImpl matchService){
+    public UserController(UserServiceImpl userService){
         this.userService = userService;
-        this.matchService = matchService;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -94,15 +79,6 @@ public class UserController {
         userService.update(getUserInfoDTO);
 
         return ResponseEntity.ok("수정 되었습니다.");
-    }
-
-
-    @GetMapping("/match-individual/{userId}")
-    public ResponseEntity<List<MatchIndividualDTO>> findAllByUserId(@PathVariable String userId) {
-        List<MatchIndividualDTO> matchList = matchService.findAllByUserId(userId);
-
-        System.out.println("개인매치 페이지");
-        return ResponseEntity.ok().body(matchList);
     }
 
 

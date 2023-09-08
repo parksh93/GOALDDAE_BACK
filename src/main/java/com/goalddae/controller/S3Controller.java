@@ -1,9 +1,8 @@
 package com.goalddae.controller;
 
-import com.goalddae.config.s3.S3Uploader;
+import com.goalddae.util.S3Uploader;
 import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

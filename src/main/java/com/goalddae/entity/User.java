@@ -1,5 +1,9 @@
 package com.goalddae.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import lombok.Builder;
@@ -18,9 +22,9 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -47,6 +51,7 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String name;    // 사용자 이름
+
 
     @Column(nullable = true)
     private String nickname;    // 닉네임
@@ -77,6 +82,11 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private LocalDateTime profileUpdateDate;    // 프로필 수정일자
+
+    // 외래키 형성 - 사용자가 생성한 개인 매치 목록
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<IndividualMatch> individualMatches;
 
     @Column(nullable = false)
     private boolean accountSuspersion;  // 계정 정지 유무

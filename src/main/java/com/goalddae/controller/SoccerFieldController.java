@@ -5,6 +5,7 @@ import com.goalddae.dto.soccerField.SoccerFieldInfoDTO;
 import com.goalddae.entity.SoccerField;
 import com.goalddae.service.SoccerFieldService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @RequestMapping("/field")
 public class SoccerFieldController {
     SoccerFieldService soccerFieldService;
+
     @Autowired
     public SoccerFieldController(SoccerFieldService soccerFieldService){
         this.soccerFieldService = soccerFieldService;

@@ -1,4 +1,4 @@
-package com.goalddae.config.s3;
+package com.goalddae.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
