@@ -1,14 +1,8 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.fieldReservation.FieldReservationDTO;
-import com.goalddae.entity.IndividualMatch;
-import com.goalddae.entity.ReservationField;
-import com.goalddae.entity.SoccerField;
-import com.goalddae.entity.User;
-import com.goalddae.repository.IndividualMatchJPARepository;
-import com.goalddae.repository.ReservationFieldJPARepository;
-import com.goalddae.repository.SoccerFieldRepository;
-import com.goalddae.repository.UserJPARepository;
+import com.goalddae.entity.*;
+import com.goalddae.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,14 +17,16 @@ public class FieldReservationServiceImpl implements FieldReservationService {
 
     ReservationFieldJPARepository reservationFieldJPARepository;
     IndividualMatchJPARepository individualMatchJPARepository;
+    TeamMatchJPARepository teamMatchJPARepository;
     SoccerFieldRepository soccerFieldRepository;
     UserJPARepository userJPARepository;
 
     @Autowired
-    public FieldReservationServiceImpl(ReservationFieldJPARepository reservationFieldJPARepository, IndividualMatchJPARepository individualMatchJPARepository,
+    public FieldReservationServiceImpl(ReservationFieldJPARepository reservationFieldJPARepository, IndividualMatchJPARepository individualMatchJPARepository, TeamMatchJPARepository teamMatchJPARepository,
                                        SoccerFieldRepository soccerFieldRepository, UserJPARepository userJPARepository) {
         this.reservationFieldJPARepository = reservationFieldJPARepository;
         this.individualMatchJPARepository = individualMatchJPARepository;
+        this.teamMatchJPARepository = teamMatchJPARepository;
         this.soccerFieldRepository = soccerFieldRepository;
         this.userJPARepository = userJPARepository;
     }
@@ -56,6 +52,7 @@ public class FieldReservationServiceImpl implements FieldReservationService {
         Long playerNumber = dto.getPlayerNumber();
         String gender = dto.getGender();
         String level = dto.getLevel();
+        Long teamId = dto.getTeamId();
 
         SoccerField soccerField = soccerFieldRepository.findById(soccerFieldId)
                 .orElseThrow(() -> new EntityNotFoundException("SoccerField not found with id: " + soccerFieldId));
@@ -73,17 +70,32 @@ public class FieldReservationServiceImpl implements FieldReservationService {
                 .build();
         reservationFieldJPARepository.save(reservationField);
 
-        // 매치 정보 생성 및 저장
-        IndividualMatch individualMatch = IndividualMatch.builder()
-                .startTime(startDate) // 매치 시작 시간
-                .endTime(endDate) // 매치 종료 시간
-                .playerNumber(playerNumber) // 매치 유저 수
-                .gender(gender) // 남녀 구분
-                .level(level) // 레벨
-                .user(user) // 매치할 유저
-                .reservationField(reservationField) // 예약한 구장
-                .build();
-        individualMatchJPARepository.save(individualMatch);
+        if(teamId != -1L){
+            // 팀매치 정보 생성 및 저장
+            TeamMatch teamMatch = TeamMatch.builder()
+                    .startTime(startDate) // 매치 시작 시간
+                    .endTime(endDate) // 매치 종료 시간
+                    .playerNumber(playerNumber) // 매치 유저 수
+                    .gender(gender) // 남녀 구분
+                    .level(level) // 레벨
+                    .homeUser(user) // 매치할 유저 (홈팀 유저)
+                    .homeTeamId(teamId) // 매치할 팀 (홈팀 id)
+                    .reservationField(reservationField) // 예약한 구장
+                    .build();
+            teamMatchJPARepository.save(teamMatch);
+        } else {
+            // 개인매치 정보 생성 및 저장
+            IndividualMatch individualMatch = IndividualMatch.builder()
+                    .startTime(startDate) // 매치 시작 시간
+                    .endTime(endDate) // 매치 종료 시간
+                    .playerNumber(playerNumber) // 매치 유저 수
+                    .gender(gender) // 남녀 구분
+                    .level(level) // 레벨
+                    .user(user) // 매치할 유저
+                    .reservationField(reservationField) // 예약한 구장
+                    .build();
+            individualMatchJPARepository.save(individualMatch);
+        }
 
     }
 
