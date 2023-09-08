@@ -19,5 +19,6 @@ public class FieldReservationDTO {
     private Long playerNumber; // 매치 유저 수
     private String gender; // 남녀 구분
     private String level; // 레벨
+    private Long teamId; // 팀 id (팀매치가 아닐경우엔 -1)
 
 }
