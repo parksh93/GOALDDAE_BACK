@@ -18,5 +18,4 @@ public class TeamSaveDTO {
         private int averageAge;
         private String entryGender;
         private boolean recruiting;
-
 }
