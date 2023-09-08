@@ -20,15 +20,14 @@ public class TeamMatchRequest {
     @Column(updatable = false)
     private long id;
 
-    // 팀 매치 ID
-    @Column(nullable = false)
-    private long teamMatchId;
+    // 외래키 형성 - 매치 신청한 유저
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
 
-    // 매치 신청한 팀
-    @Column(nullable = false)
-    private long teamId;
+    // 외래키 형성 - 팀 매치
+    @ManyToOne
+    @JoinColumn(name="team_match_id")
+    private TeamMatch teamMatch;
 
-    // 매치 신청한 일정
-    @Column(nullable = false)
-    private LocalDateTime requestDate;
 }
