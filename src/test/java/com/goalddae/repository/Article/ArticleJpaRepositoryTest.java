@@ -37,7 +37,7 @@ public class ArticleJpaRepositoryTest {
         }
 
         // When: 최신 24개의 기사를 조회
-        List<ArticleWorld> latestArticles = articleWorldJpaRepository.findTop24ByOrderByCreatedAtDesc();
+        List<ArticleWorld> latestArticles = articleWorldJpaRepository.findTop25ByOrderByCreatedAtDesc();
 
         // Then: 반환된 리스트의 크기는 24
         assertEquals(24, latestArticles.size());

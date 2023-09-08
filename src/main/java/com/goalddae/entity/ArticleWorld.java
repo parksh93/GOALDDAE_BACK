@@ -37,4 +37,5 @@ public class ArticleWorld {
     @Column(updatable = true)
     @CreationTimestamp // 현재시간
     private LocalDateTime createdAt;
+
 }

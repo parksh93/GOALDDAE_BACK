@@ -32,7 +32,7 @@ public class WebCrawlerServiceImpl implements WebCrawlerService {
         this.articleKoreaJpaRepository = articleKoreaJpaRepository;
     }
 
-//    @PostConstruct  // 서버가 시작될 때 즉시 크롤링 시작
+    //    @PostConstruct  // 서버가 시작될 때 즉시 크롤링 시작
     @Scheduled(cron = "0 0 6,12,18,0 * * ?", zone = "Asia/Seoul")
     public void crawlArticles() {
         String[] URLs = {
@@ -80,13 +80,13 @@ public class WebCrawlerServiceImpl implements WebCrawlerService {
     // 조회 - 해외 축구 최신 기사 24개
     @Override
     public List<ArticleWorld> getWorldArticles() {
-        return articleWorldJpaRepository.findTop24ByOrderByCreatedAtDesc();
+        return articleWorldJpaRepository.findTop25ByOrderByCreatedAtDesc();
     }
 
     // 조회 - 국내 축구 최신 기사 24개
     @Override
     public List<ArticleKorea> getKoreaArticles() {
-        return articleKoreaJpaRepository.findTop24ByOrderByCreatedAtDesc();
+        return articleKoreaJpaRepository.findTop25ByOrderByCreatedAtDesc();
     }
 
     // 10일 이상된 데이터는 삭제 - 매일 자정에 실행됨
