@@ -4,6 +4,7 @@ import com.goalddae.entity.ArticleWorld;
 
 import com.goalddae.repository.ArticleWorldJpaRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -56,16 +56,18 @@ public class WebCrawlerServiceImpl implements WebCrawlerService {
         }
     }
 
-    // 유저에게 금일 기사만 보게끔
-    public List<ArticleWorld> getTodayWorldArticles() {
-        LocalDateTime startOfToday = LocalDate.now().atStartOfDay();
-        return articleWorldJpaRepository.findByCreatedAtAfter(startOfToday);
+    // 유저에게 최신 뉴스 25개만 보이게끔
+    @Override
+    public List<ArticleWorld> getLatest25WorldArticles() {
+        return articleWorldJpaRepository.findTop25ByOrderByCreatedAtDesc();
     }
 
     // 3일 이상된 데이터는 삭제 - 매일 자정에 실행됨
     @Scheduled(cron = "0 0 0 * * ?", zone = "Asia/Seoul")
+    @Override
+    @Transactional
     public void deleteOldArticles() {
-        LocalDateTime tenDaysAgo = LocalDateTime.now().minusDays(3);
-        articleWorldJpaRepository.deleteByCreatedAtBefore(tenDaysAgo);
+        LocalDateTime threeDaysAgo = LocalDateTime.now().minusDays(3);
+        articleWorldJpaRepository.deleteByCreatedAtBefore(threeDaysAgo);
     }
 }

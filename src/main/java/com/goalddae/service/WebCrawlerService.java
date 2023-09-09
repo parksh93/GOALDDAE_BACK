@@ -5,5 +5,6 @@ import com.goalddae.entity.ArticleWorld;
 import java.util.List;
 
 public interface WebCrawlerService {
-    public List<ArticleWorld> getTodayWorldArticles();
+    void deleteOldArticles();
+    List<ArticleWorld> getLatest25WorldArticles();
 }
