@@ -47,11 +47,10 @@ public class UserServiceTest {
     public void generateTokenFromLoginTest() {
         LoginDTO loginDTO = LoginDTO.builder()
                 .loginId("asd")
-                .password("123")
+                .password("qwer1234")
                 .build();
 
 //        String token = userService.generateTokenFromLogin(loginDTO);
-//
 //        assertNotEquals("", token) ;
     }
 
@@ -176,30 +175,28 @@ public class UserServiceTest {
                 .build();
 
 //        String loginIdToken = userService.checkLoginIdAndEmail(findPasswordDTO);
-//
 //        assertNotNull(loginIdToken);
     }
 
-    @Test
+     @Test
     @Transactional
     @DisplayName("비밀번호 변경")
     public void changePasswordTest() {
-        String loginId = "asdas";
+//        String loginId = "asdas";
         String password = "asd123123";
         String email = "jsap50@naver.com";
         RequestFindPasswordDTO findPasswordDTO = RequestFindPasswordDTO.builder()
-                .loginId(loginId)
+//                .loginId(loginId)
                 .email(email)
                 .build();
 
-//        ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder()
+        ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder()
 //                .loginIdToken(userService.checkLoginIdAndEmail(findPasswordDTO))
-//                .password(password)
-//                .build();
-//
-//        userService.changePassword(changePasswordDTO);
-    }
+                .password(password)
+                .build();
 
+        userService.changePassword(changePasswordDTO);
+    }
     @Test
     @Transactional
     @DisplayName("이메일을 통해 회원정보 가져오기")
