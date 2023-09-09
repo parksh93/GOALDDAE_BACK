@@ -9,11 +9,7 @@ import com.goalddae.entity.User;
 
 import java.util.List;
 
-import com.goalddae.dto.email.SendEmailDTO;
-import com.goalddae.dto.user.*;
-import com.goalddae.entity.User;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.core.Authentication;
 
 public interface UserService {
     public void save(User user);

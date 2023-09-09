@@ -51,7 +51,6 @@ public class UserServiceTest {
                 .build();
 
 //        String token = userService.generateTokenFromLogin(loginDTO);
-
 //        assertNotEquals("", token) ;
     }
 
@@ -176,11 +175,10 @@ public class UserServiceTest {
                 .build();
 
 //        String loginIdToken = userService.checkLoginIdAndEmail(findPasswordDTO);
-
 //        assertNotNull(loginIdToken);
     }
 
-    @Test
+     @Test
     @Transactional
     @DisplayName("비밀번호 변경")
     public void changePasswordTest() {
@@ -199,7 +197,6 @@ public class UserServiceTest {
 
         userService.changePassword(changePasswordDTO);
     }
-
     @Test
     @Transactional
     @DisplayName("이메일을 통해 회원정보 가져오기")
