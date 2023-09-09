@@ -20,9 +20,9 @@ public class ArticleController {
         this.webCrawlerService = webCrawlerService;
     }
 
-    // 오늘의 해외 축구 뉴스 기사
+    // 오늘의 최신 해외 축구 뉴스 기사
     @GetMapping("/world")
-    public List<ArticleWorld> todayArticleWorldFootball() {
-        return webCrawlerService.getTodayWorldArticles();
+    public List<ArticleWorld> todayLatest25ArticleWorldFootball() {
+        return webCrawlerService.getLatest25WorldArticles();
     }
 }

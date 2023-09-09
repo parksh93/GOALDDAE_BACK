@@ -26,10 +26,10 @@ public class ArticleControllerTest {
     private WebCrawlerServiceImpl webCrawlerService;
 
     @Test
-    @DisplayName("오늘의 해외 축구 기사 조회 컨트롤러 테스트")
+    @DisplayName("오늘의 최신 축구 기사 조회 테스트")
     public void findArticleWorld() throws Exception {
         // Given
-        given(webCrawlerService.getTodayWorldArticles()).willReturn(new ArrayList<>());
+        given(webCrawlerService.getLatest25WorldArticles()).willReturn(new ArrayList<>());
 
         // When, Then
         mockMvc.perform(get("/article/world")
