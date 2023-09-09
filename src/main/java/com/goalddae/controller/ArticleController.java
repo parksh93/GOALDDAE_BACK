@@ -1,6 +1,5 @@
 package com.goalddae.controller;
 
-import com.goalddae.entity.ArticleKorea;
 import com.goalddae.entity.ArticleWorld;
 import com.goalddae.service.WebCrawlerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +20,9 @@ public class ArticleController {
         this.webCrawlerService = webCrawlerService;
     }
 
-    // 해외 축구 뉴스 기사
+    // 오늘의 해외 축구 뉴스 기사
     @GetMapping("/world")
-    public List<ArticleWorld> articleWorldFootball() {
-        return webCrawlerService.getWorldArticles();
-    }
-
-    // 국내 축구 뉴스 기사
-    @GetMapping("/korea")
-    public List<ArticleKorea> articleKoreaFootball() {
-        return webCrawlerService.getKoreaArticles();
+    public List<ArticleWorld> todayArticleWorldFootball() {
+        return webCrawlerService.getTodayWorldArticles();
     }
 }

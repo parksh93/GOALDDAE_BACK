@@ -22,10 +22,10 @@ public class ArticleJpaRepositoryTest {
 
     @Test
     @Transactional
-    @DisplayName("최신 뉴스 24개 조회")
+    @DisplayName("최신 뉴스 25개 조회")
     public void latestArticleTest() {
         // Given: 25개의 기사를 생성하고 저장합니다.
-        for (int i = 0; i < 25; i++) {
+        for (int i = 1; i <= 25; i++) {
             LocalDateTime createdAt = LocalDateTime.now().minusSeconds(i);
             ArticleWorld article = ArticleWorld.builder()
                     .title("제목 " + i)
@@ -36,14 +36,14 @@ public class ArticleJpaRepositoryTest {
             articleWorldJpaRepository.save(article);
         }
 
-        // When: 최신 24개의 기사를 조회
+        // When: 최신 25개의 기사를 조회
         List<ArticleWorld> latestArticles = articleWorldJpaRepository.findTop25ByOrderByCreatedAtDesc();
 
         // Then: 반환된 리스트의 크기는 24
-        assertEquals(24, latestArticles.size());
+        assertEquals(25, latestArticles.size());
 
-        // Then: 리스트의 첫 번째 기사는 가장 마지막에 추가한 기사 ("제목 24")
-        assertEquals("제목 24", latestArticles.get(0).getTitle());
+        // Then: 리스트의 첫 번째 기사는 가장 마지막에 추가한 기사 ("제목 25")
+        assertEquals("제목 25", latestArticles.get(0).getTitle());
     }
 
 

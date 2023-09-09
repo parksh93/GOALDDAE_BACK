@@ -11,5 +11,7 @@ public interface ArticleWorldJpaRepository extends JpaRepository<ArticleWorld, L
     void deleteByCreatedAtBefore(LocalDateTime cutoff);
     // 유저에게 최신 뉴스 24개만 보이게
     List<ArticleWorld> findTop25ByOrderByCreatedAtDesc();
+    // 오늘 날짜 기사만 보여주게끔
+    List<ArticleWorld> findByCreatedAtAfter(LocalDateTime dateTime);
 }
     

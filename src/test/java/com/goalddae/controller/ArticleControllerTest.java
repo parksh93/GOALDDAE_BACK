@@ -26,25 +26,13 @@ public class ArticleControllerTest {
     private WebCrawlerServiceImpl webCrawlerService;
 
     @Test
-    @DisplayName("해외 축구 기사 조회 컨트롤러 테스트")
+    @DisplayName("오늘의 해외 축구 기사 조회 컨트롤러 테스트")
     public void findArticleWorld() throws Exception {
         // Given
-        given(webCrawlerService.getWorldArticles()).willReturn(new ArrayList<>());
+        given(webCrawlerService.getTodayWorldArticles()).willReturn(new ArrayList<>());
 
         // When, Then
         mockMvc.perform(get("/article/world")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("국내 축구 기사 조회 컨트롤러 테스트")
-    public void findArticleKorea() throws Exception {
-        // Given
-        given(webCrawlerService.getKoreaArticles()).willReturn(new ArrayList<>());
-
-        // When, Then
-        mockMvc.perform(get("/article/korea")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
