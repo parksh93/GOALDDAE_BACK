@@ -7,6 +7,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Builder
@@ -14,8 +16,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageDTO {
-    private Integer id;
     private String content;
     private Long channelId;
-    private Long userId;
+    private long userId;
+    private String senderName;
+    private LocalDateTime sendDate;
 }

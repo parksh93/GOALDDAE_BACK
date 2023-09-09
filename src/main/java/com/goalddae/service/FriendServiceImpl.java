@@ -10,10 +10,12 @@ import com.goalddae.dto.friend.friendBlock.FindFriendBlockDTO;
 import com.goalddae.dto.friend.friendBlock.UnblockFriendDTO;
 import com.goalddae.dto.friend.friendList.*;
 import com.goalddae.entity.Channel;
+import com.goalddae.entity.ChannelUser;
 import com.goalddae.entity.FriendBlock;
 import com.goalddae.entity.User;
 import com.goalddae.repository.UserJPARepository;
 import com.goalddae.repository.chat.ChannelRepository;
+import com.goalddae.repository.chat.ChannelUserRepository;
 import com.goalddae.repository.friend.FriendAcceptRepository;
 import com.goalddae.repository.friend.FriendAddRepository;
 import com.goalddae.repository.friend.FriendBlockRepository;
@@ -36,6 +38,7 @@ public class FriendServiceImpl implements FriendService{
     private final FriendBlockRepository friendBlockRepository;
     private  final ChannelRepository channelRepository;
     private final UserJPARepository userJPARepository;
+    private final ChannelUserRepository channelUserRepository;
 
 
     // 동적테이블 생성 - 친구리스트
@@ -151,17 +154,23 @@ public class FriendServiceImpl implements FriendService{
         addFriendDTO.setUserId(friendRequestDTO.getToUser());
         friendListRepository.insertFriend(addFriendDTO);
 
-        User user1 =  userJPARepository.findById(friendRequestDTO.getToUser()).get();
-        User user2 = userJPARepository.findById(friendRequestDTO.getFromUser()).get();
+        // 채팅방 생성
+        Long channelId = channelRepository.save(new Channel()).getId();
 
-//        Set<User> users = new HashSet<>();
-//        users.add(user1);
-//        users.add(user2);
-//
-//        Channel channel = Channel.builder().users(users).build();
-//
-//        channelRepository.save(channel);
+        int channelCnt = channelRepository.countById(channelId);
+        if(channelCnt <= 1){
+            ChannelUser channelUser1 = ChannelUser.builder()
+                            .userId(friendRequestDTO.getFromUser())
+                                    .channelId(channelId)
+                                            .build();
+            ChannelUser channelUser2 = ChannelUser.builder()
+                            .userId(friendRequestDTO.getToUser())
+                                    .channelId(channelId)
+                                            .build();
 
+            channelUserRepository.save(channelUser1);
+            channelUserRepository.save(channelUser2);
+        }
     }
 
     @Override

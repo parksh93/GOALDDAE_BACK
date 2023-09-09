@@ -102,9 +102,6 @@ public class User implements UserDetails {
     private String authority;  // 권한 등급
                             // 일반 유저 : user / 매니저 : manager / 관리자 : admin
 
-    @OneToMany(mappedBy = "User", cascade = CascadeType.ALL)
-    private List<Channel> channels = new ArrayList<>();
-
     @Builder
     public User(long id, String loginId, String email, String password, String userCode, String name, String nickname, String gender, String profileImgUrl,
                 String phoneNumber, Date birth, Long teamId, int matchesCnt, LocalDateTime signupDate, LocalDateTime profileUpdateDate, String level,
