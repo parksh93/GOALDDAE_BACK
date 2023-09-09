@@ -29,13 +29,12 @@ public class ArticleWorld {
     @Column(updatable = true)
     private String url;
 
-    // 미리보기
-    @Column(updatable = true)
-    private String preview;
-
     // 생성된 시간
     @Column(updatable = true)
     @CreationTimestamp // 현재시간
     private LocalDateTime createdAt;
 
+    // 미리보기
+    //    @Column(updatable = true)
+    //    private String preview;
 }
