@@ -3,6 +3,7 @@ package com.goalddae.dto.soccerField;
 import com.goalddae.entity.SoccerField;
 import lombok.*;
 
+import java.time.LocalTime;
 import java.util.Scanner;
 
 @Getter
@@ -25,6 +26,9 @@ public class SoccerFieldInfoDTO {
     private String inOutWhether;
     private String grassWhether;
     private String region;
+    private String content;
+    private LocalTime operatingHours;
+    private LocalTime closingTime;
 
     public SoccerFieldInfoDTO(SoccerField soccerField){
         this.id = soccerField.getId();
@@ -40,6 +44,9 @@ public class SoccerFieldInfoDTO {
         this.inOutWhether = soccerField.getInOutWhether();
         this.grassWhether = soccerField.getGrassWhether();
         this.region = soccerField.getRegion();
+        this.content = soccerField.getContent();
+        this.operatingHours = soccerField.getOperatingHours();
+        this.closingTime = soccerField.getClosingTime();
     }
 
     public SoccerField toEntity(){
@@ -57,6 +64,9 @@ public class SoccerFieldInfoDTO {
                 .grassWhether(grassWhether)
                 .reservationFee(reservationFee)
                 .region(region)
+                .content(content)
+                .operatingHours(operatingHours)
+                .closingTime(closingTime)
                 .build();
     }
 

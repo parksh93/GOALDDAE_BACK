@@ -1,10 +1,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.goalddae.repository.FriendListRepository">
+<mapper namespace="com.goalddae.repository.friend.FriendListRepository">
     <update id="createFriendListTable" parameterType="java.lang.Long">
         CREATE TABLE friend_list_#{id} (
-                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                        friend_id VARCHAR(255) NOT NULL,
-                                        users_id BIGINT NOT NULL
-                                       );
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            friend_id BIGINT NOT NULL,
+            users_id BIGINT NOT NULL
+        );
     </update>
+    <select id="searchFriendList" parameterType="com.goalddae.dto.friend.friendList.SelectFriendListDTO" resultType="com.goalddae.dto.friend.friendList.SearchFriendDTO">
+        SELECT u.id, u.nickname, u.profile_img_url AS profileImgUrl
+        FROM users u
+        JOIN friend_list_#{userId} f ON u.id = f.friend_id
+        WHERE u.nickname LIKE CONCAT('%',#{nickname},'%');
+    </select>
+    <select id="searchUnFriendList" parameterType="com.goalddae.dto.friend.friendList.SelectFriendListDTO" resultType="com.goalddae.dto.friend.friendList.SearchFriendDTO">
+        SELECT u.id, u.nickname, u.profile_img_url AS profileImgUrl,
+        (SELECT COUNT(to_user) FROM friend_add_#{userId} f WHERE f.to_user = u.id) AS friendAddCnt,
+        (SELECT COUNT(from_user) FROM friend_accept_#{userId} fa WHERE fa.from_user = u.id) AS friendAcceptCnt
+        FROM users u
+        WHERE u.id NOT IN (SELECT friend_id FROM friend_list_#{userId})
+        AND u.nickname LIKE CONCAT('%',#{nickname},'%')
+        AND u.id NOT IN (SELECT user_id FROM friend_block WHERE friend_id = #{userId})
+        AND u.id NOT IN (SELECT friend_id FROM friend_block WHERE user_id = #{userId})
+    </select>
+    <select id="findFriendList" parameterType="com.goalddae.dto.friend.friendList.FindFriendListResponseDTO" resultType="com.goalddae.dto.friend.friendList.FindFriendListResponseDTO">
+        SELECT u.nickname, u.profile_img_url AS profileImgUrl, u.id FROM users u
+        JOIN friend_list_#{userId} f
+        ON u.id = f.friend_id
+    </select>
+    <insert id="insertFriend" parameterType="com.goalddae.dto.friend.friendList.AddFriendDTO">
+        INSERT INTO friend_list_#{userId} (friend_id, users_id) VALUES (#{friendId}, #{userId})
+    </insert>
+    <delete id="deleteFriend" parameterType="com.goalddae.dto.friend.FriendDTO">
+        DELETE FROM friend_list_#{userId} WHERE friend_id = #{friendId}
+    </delete>
 </mapper>
