@@ -1,32 +1,25 @@
 package com.goalddae.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Builder
 @Getter
-@ToString
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
-public class Message {
+@AllArgsConstructor
+public class ChannelUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
     private Long id;
 
     @Column(nullable = false)
-    private String content;
-
-    @Column(nullable = false)
-    private LocalDateTime sendDate;
+    private long userId;
 
     @Column(nullable = false)
     private Long channelId;
-
-    @Column(nullable = false)
-    private long userId;
-
 }

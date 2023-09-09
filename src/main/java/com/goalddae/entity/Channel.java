@@ -20,13 +20,7 @@ public class Channel{
     @Column(updatable = false)
     private Long id;
 
-    @OneToMany(mappedBy = "Channel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Message> messages = new ArrayList<>();
+    private String channelName;
 
-    @OneToMany(mappedBy = "Channel", cascade = CascadeType.ALL)
-    private List<User> users = new ArrayList<>();
-
-    public void addUser(User user){
-        this.users.add(user);
-    }
+    private String channelImgUrl;
 }

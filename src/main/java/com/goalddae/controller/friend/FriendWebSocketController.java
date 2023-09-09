@@ -25,14 +25,11 @@ public class FriendWebSocketController {
 
     @MessageMapping("/friend/{id}")
     public void sendMessage(@Payload FriendSocketMsgDTO friendSocketMsgDTO, @DestinationVariable Integer id){
-//        System.out.println(friendSocketMsgDTO.toString());
         this.simpMessagingTemplate.convertAndSend("/queue/FriendRequestToClient/"+ id, friendSocketMsgDTO);
     }
 
     @MessageMapping("/friend/join")
     public void joinUser(@Payload Integer userId){
-        System.out.println(userId);
         userList.add(userId);
-        userList.forEach(user -> System.out.println(user));
     }
 }
