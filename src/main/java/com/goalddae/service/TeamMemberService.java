@@ -1,12 +1,13 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.team.TeamMemberDTO;
+import com.goalddae.dto.team.TeamMemberListDTO;
 
 import java.util.List;
 
 public interface TeamMemberService {
 
-    List<TeamMemberDTO> findAll();
+    List<TeamMemberListDTO> findAllTeamMember();
 
     TeamMemberDTO findById(long id);
 

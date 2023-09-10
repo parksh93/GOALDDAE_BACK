@@ -271,6 +271,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public void updateTeamId(GetUserInfoDTO getUserInfoDTO) {
+        User user = userJPARepository.findById(getUserInfoDTO.getId()).get();
+
+        if (user != null){
+            ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
+            changeUserInfoDTO.setTeamId(getUserInfoDTO.getTeamId());
+            user = changeUserInfoDTO.toEntity();
+
+            userJPARepository.save(user);
+        }
+    }
+
+    @Override
     public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId) {
         return communicationBoardRepository.findByUserId(userId);
     }

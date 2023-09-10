@@ -48,10 +48,10 @@ public class TeamServiceImpl implements TeamService {
         return teamJPARepository.findTeamById(id);
     }
 
-    @Override
+    /* @Override
     public void save(Team team) {
         teamJPARepository.save(team);
-    }
+    } */
 
     @Override
     public void update(TeamUpdateDTO teamUpdateDTO) {
@@ -163,6 +163,7 @@ public class TeamServiceImpl implements TeamService {
                 .entryFee(teamSaveDTO.getEntryFee())
                 .preferredDay(teamSaveDTO.getPreferredDay())
                 .preferredTime(teamSaveDTO.getPreferredTime())
+                .averageAge(teamSaveDTO.getAverageAge())
                 .entryGender(teamSaveDTO.getEntryGender())
                 .teamCreate(LocalDateTime.now())
                 .teamProfileImgUrl("default_profile_img_url")
@@ -177,5 +178,16 @@ public class TeamServiceImpl implements TeamService {
         this.createTeamApplyTable(id);
         this.createTeamMemberTable(id);
         this.createTeamMatchResult(id);
+    }
+
+    @Override
+    public Long getAutoIncrementValue() {
+        Team lastInsertedTeam = teamJPARepository.findFirstByOrderByIdDesc();
+
+        if(lastInsertedTeam != null ){
+            return lastInsertedTeam.getId();
+        } else {
+            return null;
+        }
     }
 }

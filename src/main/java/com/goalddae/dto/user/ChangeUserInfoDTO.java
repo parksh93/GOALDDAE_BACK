@@ -34,6 +34,8 @@ public class ChangeUserInfoDTO {
     private String preferredArea;
     private int activityClass;
     private String authority;
+    private Long teamId;
+
 
     public ChangeUserInfoDTO(User user){
         this.id = user.getId();
@@ -57,6 +59,7 @@ public class ChangeUserInfoDTO {
         this.preferredArea = user.getPreferredArea();
         this.activityClass = user.getActivityClass();
         this.authority = user.getAuthority();
+        this.teamId = user.getTeamId();
     }
 
     public User toEntity() {
@@ -82,6 +85,7 @@ public class ChangeUserInfoDTO {
                 .preferredArea(preferredArea)
                 .activityClass(activityClass)
                 .authority(authority)
+                .teamId(teamId)
                 .build();
     }
 }

@@ -60,13 +60,14 @@ public class TeamController {
         }
     }
 
-    @PostMapping(value = "/teamSave")
+    /* @PostMapping(value = "/teamSave")
     public ResponseEntity<String> teamSave(@RequestBody Team team){
 
         teamService.save(team);
         return ResponseEntity
                 .ok("팀 생성이 완료되었습니다.");
     }
+    */
 
       // 팀 등록
     @PostMapping(value = "/save")
@@ -78,8 +79,17 @@ public class TeamController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-  
-  
+
+    @GetMapping("/getAutoIncrementTeamId")
+    public ResponseEntity<Long> getAutoIncrementTeamId(){
+        Long autoIncrementValue = teamService.getAutoIncrementValue();
+
+        if (autoIncrementValue != null ){
+            return ResponseEntity.ok(autoIncrementValue);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
   
     @RequestMapping(value="/teamUpdate", method= {RequestMethod.PUT, RequestMethod.PATCH})
     public ResponseEntity<String> teamUpdate(@RequestBody TeamUpdateDTO teamUpdateDTO){

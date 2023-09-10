@@ -48,7 +48,7 @@ public class TeamServiceTest {
         assertEquals("서울", team.getArea());
     }
 
-    @Test
+    /*@Test
     @Transactional
     @DisplayName("teamName=콜라, 지역=인천,~~ 추가 후 팀명 확인 시 콜라")
     public void saveTest(){
@@ -81,6 +81,7 @@ public class TeamServiceTest {
         assertEquals(9, result.size());
         assertEquals("콜라", newTeam.getTeamName());
     }
+     */
 
     @Test
     @Transactional
