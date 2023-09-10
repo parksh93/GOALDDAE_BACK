@@ -26,4 +26,17 @@ public class MessageRepositoryTest {
 
         assertEquals(2, messageList.size());
     }
+
+    @Test
+    @Transactional
+    @DisplayName("해당 채널의 메시지 삭제")
+    public void deleteByChannelId() {
+        Long channelId = 7L;
+
+        messageRepository.deleteByChannelId(channelId);
+
+        List<Message> messageList = messageRepository.findByChannelIdOrderBySendDateAsc(channelId);
+
+        assertEquals(0, messageList.size());
+    }
 }

@@ -21,9 +21,6 @@ public class ChannelUserRepositoryTest {
     @Autowired
     private ChannelUserRepository channelUserRepository;
 
-    @Autowired
-    private UserJPARepository userJPARepository;
-
     @Test
     @Transactional
     @DisplayName("해당 유저의 채팅방 조회")
@@ -34,4 +31,20 @@ public class ChannelUserRepositoryTest {
 
         assertEquals(3, channelUserList.get(0).getChannelId());
     }
+
+    @Test
+    @Transactional
+    @DisplayName("채널 아이디로 삭제")
+    public void deleteByChannelId() {
+        Long channelId = 5L;
+
+        channelUserRepository.deleteByChannelId(channelId);
+
+        long userId = 2;
+
+        List<ChannelUser> channelUserList = channelUserRepository.findByUserId(userId);
+
+        assertEquals(0, channelUserList.size());
+    }
+
 }
