@@ -22,6 +22,9 @@ public interface UserService {
     public boolean checkNickname(CheckNicknameDTO checkNicknameDTO);
     public void update(GetUserInfoDTO getUserInfoDTO);
     public void updateSocialSignup(GetUserInfoDTO getUserInfoDTO);
+    public void updateTeamId(GetUserInfoDTO getUserInfoDTO);
+
+
     public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId);
     public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(long userId);
     public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO);

@@ -1,6 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.team.TeamMemberDTO;
+import com.goalddae.dto.team.TeamMemberListDTO;
 import com.goalddae.repository.TeamMemberRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,8 @@ public class TeamMemberServiceImpl implements TeamMemberService{
     }
 
     @Override
-    public List<TeamMemberDTO> findAll() {
-        return teamMemberRepository.findAll();
+    public List<TeamMemberListDTO> findAllTeamMember() {
+        return teamMemberRepository.findAllTeamMember();
     }
 
     @Override

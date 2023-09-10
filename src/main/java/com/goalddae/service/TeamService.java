@@ -16,7 +16,7 @@ public interface TeamService {
 
     Team findTeamById(Long id);
 
-    void save(Team team);
+    //void save(Team team);
 
     void update(TeamUpdateDTO teamUpdateDTO);
 
@@ -34,5 +34,7 @@ public interface TeamService {
     boolean createTeamApplyTable(@Param("teamId") Long teamId);
     boolean createTeamMatchResult(@Param("teamId") Long teamId);
     void save(TeamSaveDTO teamSaveDTO);
-  
+
+    Long getAutoIncrementValue();
+
 }

@@ -96,6 +96,20 @@ public class UserController {
         return ResponseEntity.ok("수정 되었습니다.");
     }
 
+    @RequestMapping(value = "/update/teamId", method = RequestMethod.PATCH)
+    public ResponseEntity<String> updateUserTeamId(@RequestBody GetUserInfoDTO getUserInfoDTO){
+        System.out.println(getUserInfoDTO);
+        try {
+            userService.updateTeamId(getUserInfoDTO);
+
+            return ResponseEntity.ok("팀 ID가 업데이트되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("팀 ID 업데이트 중 오류 발생: " + e.getMessage());
+        }
+    }
+
+
+
     @RequestMapping(value = "/posts/{userId}", method = RequestMethod.GET)
     public ResponseEntity<?> viewUserPosts(@PathVariable long userId) {
 

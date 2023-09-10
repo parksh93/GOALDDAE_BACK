@@ -9,4 +9,12 @@
                                         team_id BIGINT NOT NULL
         );
     </update>
+    <select id="findAllTeamMember" parameterType="com.goalddae.dto.team.TeamMemberListDTO">
+        SELECT id, nickname, team_manager, team_id, user_id
+        FROM team_member_#{teamId}
+    </select>
+    <insert id="addTeamMember" parameterType="com.goalddae.dto.team.TeamMemberDTO">
+        INSERT INTO team_member_#{teamId} (user_join_date, team_manager, team_id, users_id)
+        VALUES (now(), #{teamManager}, #{teamId}, #{userId})
+    </insert>
 </mapper>

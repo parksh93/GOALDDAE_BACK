@@ -1,6 +1,7 @@
 package com.goalddae.controller;
 
 import com.goalddae.dto.team.TeamMemberDTO;
+import com.goalddae.dto.team.TeamMemberListDTO;
 import com.goalddae.service.TeamMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,23 +19,21 @@ public class TeamMemberController {
         this.teamMemberService = teamMemberService;
     }
 
-    @GetMapping(value = "/check")
-    public List<TeamMemberDTO> memberList(){
-        List<TeamMemberDTO> member = teamMemberService.findAll();
-        return member;
+    @GetMapping(value = "/list")
+    public List<TeamMemberListDTO> teamMemberList(){
+        List<TeamMemberListDTO> members = teamMemberService.findAllTeamMember();
+        return members;
     }
 
     @PostMapping(value = "/add")
-    public ResponseEntity<?> addTeamMember(@RequestBody TeamMemberDTO teamMemberDTO){
+    public ResponseEntity<String> addTeamMember(@RequestBody TeamMemberDTO teamMemberDTO){
         try{
             teamMemberService.addTeamMember(teamMemberDTO);
-
-            long id = teamMemberDTO.getId();
-            return ResponseEntity.ok(id);
+            
+            return ResponseEntity.ok("팀 멤버가 추가되었습니다.");
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
 
     @DeleteMapping(value = "/removeMember")
