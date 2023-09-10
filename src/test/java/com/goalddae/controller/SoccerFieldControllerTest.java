@@ -160,6 +160,5 @@ public class SoccerFieldControllerTest {
 
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.fieldName").value("테스트 구장"));
-
         }
     }
