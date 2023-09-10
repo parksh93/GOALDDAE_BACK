@@ -14,6 +14,6 @@ public class TeamMemberDTO {
     private long id;
     private LocalDateTime userJoinDate;
     private int teamManager;
-    private String teamId;
+    private long teamId;
     private long userId;
 }
