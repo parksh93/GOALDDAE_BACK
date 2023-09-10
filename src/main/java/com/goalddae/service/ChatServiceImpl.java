@@ -77,6 +77,7 @@ public class ChatServiceImpl implements ChatService{
                     .content(message.getContent())
                     .senderName(user.getNickname())
                     .sendDate(message.getSendDate())
+                    .senderProfileImgUrl(user.getProfileImgUrl())
                     .build();
 
             messageDTOList.add(messageDTO);

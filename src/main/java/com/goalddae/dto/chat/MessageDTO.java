@@ -19,6 +19,7 @@ public class MessageDTO {
     private String content;
     private Long channelId;
     private long userId;
+    private String senderProfileImgUrl;
     private String senderName;
     private LocalDateTime sendDate;
 }

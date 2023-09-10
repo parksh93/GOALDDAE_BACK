@@ -16,6 +16,7 @@ import com.goalddae.entity.User;
 import com.goalddae.repository.UserJPARepository;
 import com.goalddae.repository.chat.ChannelRepository;
 import com.goalddae.repository.chat.ChannelUserRepository;
+import com.goalddae.repository.chat.MessageRepository;
 import com.goalddae.repository.friend.FriendAcceptRepository;
 import com.goalddae.repository.friend.FriendAddRepository;
 import com.goalddae.repository.friend.FriendBlockRepository;
@@ -39,6 +40,7 @@ public class FriendServiceImpl implements FriendService{
     private  final ChannelRepository channelRepository;
     private final UserJPARepository userJPARepository;
     private final ChannelUserRepository channelUserRepository;
+    private final MessageRepository messageRepository;
 
 
     // 동적테이블 생성 - 친구리스트
@@ -181,6 +183,8 @@ public class FriendServiceImpl implements FriendService{
         friendDTO.setFriendId(userId);
         friendDTO.setUserId(friendId);
         friendListRepository.deleteFriend(friendDTO);
+
+        deleteChannel(userId, friendId);
     }
 
     @Override
@@ -201,6 +205,25 @@ public class FriendServiceImpl implements FriendService{
         friendDTO.setUserId(friendId);
         friendListRepository.deleteFriend(friendDTO);
 
+        deleteChannel(userId, friendId);
+    }
+
+    public void deleteChannel(long userId, long friendId){
+        List<ChannelUser> channelUserList1 = channelUserRepository.findByUserId(userId);
+        List<ChannelUser> channelUserList2 = channelUserRepository.findByUserId(friendId);
+
+        Long channelId = 0L;
+        for (ChannelUser channelUser1:channelUserList1) {
+            for (ChannelUser channelUser2:channelUserList2) {
+                if(channelUser1.getChannelId() == channelUser2.getChannelId()){
+                    channelId = channelUser1.getChannelId();
+                    break;
+                }
+            }
+        }
+        channelRepository.deleteById(channelId);
+        channelUserRepository.deleteByChannelId(channelId);
+        messageRepository.deleteByChannelId(channelId);
     }
 
     @Override

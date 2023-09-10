@@ -1,9 +1,8 @@
 package com.goalddae.controller.chat;
 
 import com.goalddae.dto.chat.MessageDTO;
-import com.goalddae.entity.Channel;
 import com.goalddae.service.ChatService;
-import lombok.RequiredArgsConstructor;
+import com.goalddae.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -21,11 +20,13 @@ public class ChatWebSocketController {
 
     private SimpMessagingTemplate simpMessagingTemplate;
     private final ChatService chatService;
+    private final UserService userService;
 
     @Autowired
-    public ChatWebSocketController(SimpMessagingTemplate simpMessagingTemplate, ChatService chatService){
+    public ChatWebSocketController(SimpMessagingTemplate simpMessagingTemplate, ChatService chatService, UserService userService){
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.chatService = chatService;
+        this.userService = userService;
     }
 
     @MessageMapping("/chat/{id}")
