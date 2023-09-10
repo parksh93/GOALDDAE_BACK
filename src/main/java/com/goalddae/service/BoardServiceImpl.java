@@ -18,8 +18,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BoardServiceImpl implements BoardService{
@@ -205,6 +207,27 @@ public class BoardServiceImpl implements BoardService{
         reportedBoardJPARepository.delete(reportedBoard);
     }
 
+    // 금일 조회수 탑5 게시글 조회
+    @Override
+    public List<BoardListDTO> findTop5Board() {
+        PageRequest pageRequest = PageRequest.of(0, 5);
+        List<BoardListDTO> top5Boards = boardJPARepository.findTop5ByOrderByCountDesc(pageRequest);
+        return getCountTop5Board(top5Boards);
+    }
+
+    // 게시판id의 댓글 수 조회
+    public List<BoardListDTO> getCountTop5Board(List<BoardListDTO> boardLists) {
+        List<Long> boardIds = boardLists.stream()
+                .map(BoardListDTO::getId)
+                .collect(Collectors.toList());
+
+        Map<Long, Long> replyCountsMap = replyJPARepository.countRepliesByBoardIds(boardIds).stream()
+                .collect(Collectors.toMap(arr -> (Long) arr[0], arr -> (Long) arr[1]));
+
+        boardLists.forEach(dto -> dto.setReplyCount(replyCountsMap.getOrDefault(dto.getId(), 0L)));
+
+        return boardLists;
+    }
 
     public int getCalibratedPno(Integer pno){
         if (pno <= 0) {
