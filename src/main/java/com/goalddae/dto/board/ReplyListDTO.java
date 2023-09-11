@@ -23,5 +23,4 @@ public class ReplyListDTO {
     private LocalDateTime updateDate;   // 수정일
     private int status;
     private List<CommunicationReply> children; // 자식 댓글 리스트
-
 }

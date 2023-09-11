@@ -152,6 +152,10 @@ public class BoardController {
         return ResponseEntity.ok("좋아요를 취소합니다.");
     }
 
-
-
+    // 조회수 탑5
+    @GetMapping("/top5")
+    public ResponseEntity<List<BoardListDTO>> getTopPosts() {
+        List<BoardListDTO> topPosts = boardService.findTop5Board();
+        return ResponseEntity.ok(topPosts);
+    }
 }
