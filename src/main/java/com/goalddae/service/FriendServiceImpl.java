@@ -9,7 +9,14 @@ import com.goalddae.dto.friend.friendAdd.SelectToUserDTO;
 import com.goalddae.dto.friend.friendBlock.FindFriendBlockDTO;
 import com.goalddae.dto.friend.friendBlock.UnblockFriendDTO;
 import com.goalddae.dto.friend.friendList.*;
+import com.goalddae.entity.Channel;
+import com.goalddae.entity.ChannelUser;
 import com.goalddae.entity.FriendBlock;
+import com.goalddae.entity.User;
+import com.goalddae.repository.UserJPARepository;
+import com.goalddae.repository.chat.ChannelRepository;
+import com.goalddae.repository.chat.ChannelUserRepository;
+import com.goalddae.repository.chat.MessageRepository;
 import com.goalddae.repository.friend.FriendAcceptRepository;
 import com.goalddae.repository.friend.FriendAddRepository;
 import com.goalddae.repository.friend.FriendBlockRepository;
@@ -21,9 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +37,11 @@ public class FriendServiceImpl implements FriendService{
     private final FriendAddRepository friendAddRepository;
     private final FriendAcceptRepository friendAcceptRepository;
     private final FriendBlockRepository friendBlockRepository;
+    private  final ChannelRepository channelRepository;
+    private final UserJPARepository userJPARepository;
+    private final ChannelUserRepository channelUserRepository;
+    private final MessageRepository messageRepository;
+
 
     // 동적테이블 생성 - 친구리스트
     @Override
@@ -145,6 +155,24 @@ public class FriendServiceImpl implements FriendService{
         addFriendDTO.setFriendId(friendRequestDTO.getFromUser());
         addFriendDTO.setUserId(friendRequestDTO.getToUser());
         friendListRepository.insertFriend(addFriendDTO);
+
+        // 채팅방 생성
+        Long channelId = channelRepository.save(new Channel()).getId();
+
+        int channelCnt = channelRepository.countById(channelId);
+        if(channelCnt <= 1){
+            ChannelUser channelUser1 = ChannelUser.builder()
+                            .userId(friendRequestDTO.getFromUser())
+                                    .channelId(channelId)
+                                            .build();
+            ChannelUser channelUser2 = ChannelUser.builder()
+                            .userId(friendRequestDTO.getToUser())
+                                    .channelId(channelId)
+                                            .build();
+
+            channelUserRepository.save(channelUser1);
+            channelUserRepository.save(channelUser2);
+        }
     }
 
     @Override
@@ -155,6 +183,8 @@ public class FriendServiceImpl implements FriendService{
         friendDTO.setFriendId(userId);
         friendDTO.setUserId(friendId);
         friendListRepository.deleteFriend(friendDTO);
+
+        deleteChannel(userId, friendId);
     }
 
     @Override
@@ -175,6 +205,25 @@ public class FriendServiceImpl implements FriendService{
         friendDTO.setUserId(friendId);
         friendListRepository.deleteFriend(friendDTO);
 
+        deleteChannel(userId, friendId);
+    }
+
+    public void deleteChannel(long userId, long friendId){
+        List<ChannelUser> channelUserList1 = channelUserRepository.findByUserId(userId);
+        List<ChannelUser> channelUserList2 = channelUserRepository.findByUserId(friendId);
+
+        Long channelId = 0L;
+        for (ChannelUser channelUser1:channelUserList1) {
+            for (ChannelUser channelUser2:channelUserList2) {
+                if(channelUser1.getChannelId() == channelUser2.getChannelId()){
+                    channelId = channelUser1.getChannelId();
+                    break;
+                }
+            }
+        }
+        channelRepository.deleteById(channelId);
+        channelUserRepository.deleteByChannelId(channelId);
+        messageRepository.deleteByChannelId(channelId);
     }
 
     @Override

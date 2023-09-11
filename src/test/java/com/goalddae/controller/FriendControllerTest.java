@@ -246,8 +246,8 @@ public class FriendControllerTest {
     @DisplayName("친구 차단 해제")
     public void unBlockFriendTest() throws Exception{
         UnblockFriendDTO unBlockFriendDTO = UnblockFriendDTO.builder()
-//                .friendId(2)
-//                .userId(1)
+                .friendId(2L)
+                .userId(1L)
                 .build();
 
         String url = "/friend/unblockFriend";
