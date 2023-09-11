@@ -44,6 +44,7 @@ dependencies {
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket' // 웹소켓
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.jsoup:jsoup:1.14.3' // 크롤링
 }
 
 tasks.named('test') {
