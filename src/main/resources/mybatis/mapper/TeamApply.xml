@@ -9,4 +9,8 @@
                                        team_id BIGINT NOT NULL
         );
     </update>
+    <insert id="addTeamApply" parameterType="com.goalddae.dto.team.TeamApplyDTO">
+        INSERT INTO team_apply_#{teamId} (team_apply_date, team_accept_status, team_id, users_id)
+        VALUES (now(), #{teamAcceptStatus}, #{teamId}, #{userId})
+    </insert>
 </mapper>

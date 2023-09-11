@@ -1,5 +1,6 @@
 package com.goalddae.service;
 
+import com.goalddae.dto.team.TeamApplyDTO;
 import com.goalddae.dto.team.TeamListDTO;
 import com.goalddae.dto.team.TeamUpdateDTO;
 import com.goalddae.entity.Team;
@@ -189,5 +190,19 @@ public class TeamServiceImpl implements TeamService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public void addTeamApply(TeamApplyDTO teamApplyDTO) {
+        long teamId = teamApplyDTO.getTeamId();
+        long userId = teamApplyDTO.getUserId();
+
+        TeamApplyDTO newApply = new TeamApplyDTO();
+        newApply.setTeamId(teamId);
+        newApply.setUserId(userId);
+        newApply.setTeamAcceptStatus(1);
+        newApply.setTeamApplyDate(LocalDateTime.now());
+
+        teamApplyRepository.addTeamApply(newApply);
     }
 }

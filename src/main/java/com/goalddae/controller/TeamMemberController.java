@@ -1,7 +1,6 @@
 package com.goalddae.controller;
 
 import com.goalddae.dto.team.TeamMemberDTO;
-import com.goalddae.dto.team.TeamMemberListDTO;
 import com.goalddae.service.TeamMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +19,11 @@ public class TeamMemberController {
     }
 
     @GetMapping(value = "/list")
-    public List<TeamMemberListDTO> teamMemberList(){
-        List<TeamMemberListDTO> members = teamMemberService.findAllTeamMember();
-        return members;
+    public List<TeamMemberDTO> teamMemberList(@RequestParam long teamId) {
+
+        return teamMemberService.findByTeamIdMember(teamId);
     }
+
 
     @PostMapping(value = "/add")
     public ResponseEntity<String> addTeamMember(@RequestBody TeamMemberDTO teamMemberDTO){
@@ -37,8 +37,8 @@ public class TeamMemberController {
     }
 
     @DeleteMapping(value = "/removeMember")
-    public ResponseEntity<?> removeTeamMember(@PathVariable long id){
-        teamMemberService.deleteTeamMemberById(id);
+    public ResponseEntity<?> removeTeamMember(@PathVariable long usersId){
+        teamMemberService.deleteByUserIdMember(usersId);
         return ResponseEntity.ok("팀 멤버가 정상적으로 삭제되었습니다.");
     }
 }

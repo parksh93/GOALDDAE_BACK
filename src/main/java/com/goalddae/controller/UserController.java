@@ -108,8 +108,6 @@ public class UserController {
         }
     }
 
-
-
     @RequestMapping(value = "/posts/{userId}", method = RequestMethod.GET)
     public ResponseEntity<?> viewUserPosts(@PathVariable long userId) {
 
