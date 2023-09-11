@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -18,10 +20,24 @@ public class TeamMemberRepositoryTest {
 
     @Test
     @Transactional
-    @DisplayName("")
-    public void addTeamMemberTest(){
+    @DisplayName("teamId=4의 사이즈 1 ")
+    public void findByTeamIdMemberTest() {
+        //given
+        long teamId = 4;
+
+        //when
+        List<TeamMemberDTO> members = teamMemberRepository.findByTeamIdMember(teamId);
+
+        //then
+        assertEquals(1, members.size());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("새로운 팀 멤버의 teamId=4")
+    public void addTeamMemberTest() {
         // given
-        long teamId = 3;
+        long teamId = 4;
         long userId = 5;
 
         TeamMemberDTO newTeamMember = TeamMemberDTO.builder()
@@ -33,7 +49,7 @@ public class TeamMemberRepositoryTest {
         teamMemberRepository.addTeamMember(newTeamMember);
 
         //then
-        assertEquals(3,newTeamMember.getTeamId());
+        assertEquals(5, newTeamMember.getUserId());
     }
 
 

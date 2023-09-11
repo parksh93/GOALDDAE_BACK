@@ -1,14 +1,13 @@
 package com.goalddae.controller;
 
-import com.goalddae.dto.team.TeamListDTO;
-import com.goalddae.dto.team.TeamUpdateDTO;
+import com.goalddae.dto.team.*;
 import com.goalddae.entity.Team;
 import com.goalddae.service.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import com.goalddae.dto.team.TeamSaveDTO;
+
 import com.goalddae.service.TeamService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -134,5 +133,17 @@ public class TeamController {
                                               @RequestParam(required = false) boolean recruiting){
         return teamService.findByAreaAndRecruiting(area, true);
     }
+
+    @PostMapping(value = "/apply")
+    public ResponseEntity<?> addTeamApply(@RequestBody TeamApplyDTO teamApplyDTO){
+        try{
+            teamService.addTeamApply(teamApplyDTO);
+
+            return ResponseEntity.ok("팀 가입신청 완료");
+        } catch(Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 
 }
