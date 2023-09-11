@@ -42,3 +42,5 @@ application-email.properties
 application-payment.properties
 application-ncloudChat.properties
 application-oauth2.yml
+application-kakaoDevelop.properties
+application-weather.properties

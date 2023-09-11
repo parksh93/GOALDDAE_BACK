@@ -1,5 +1,5 @@
 package com.goalddae.controller;
-import com.goalddae.service.WebCrawlerServiceImpl;
+import com.goalddae.service.WebCrawlerService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class ArticleControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private WebCrawlerServiceImpl webCrawlerService;
+    private WebCrawlerService webCrawlerService;
 
     @Test
     @DisplayName("오늘의 최신 축구 기사 조회 테스트")
