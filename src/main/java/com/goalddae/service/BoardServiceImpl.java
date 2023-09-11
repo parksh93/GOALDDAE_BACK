@@ -3,18 +3,23 @@ package com.goalddae.service;
 import com.goalddae.dto.board.BoardListDTO;
 import com.goalddae.dto.board.BoardUpdateDTO;
 import com.goalddae.dto.board.HeartInfoDTO;
+import com.goalddae.dto.board.MyBoardListDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
 import com.goalddae.entity.ReportedBoard;
 import com.goalddae.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.jdbc.core.JdbcTemplate;
 
+
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -25,15 +30,25 @@ public class BoardServiceImpl implements BoardService{
     ReplyJPARepository replyJPARepository;
     HeartJPARepository heartJPARepository;
     ReportedBoardJPARepository reportedBoardJPARepository;
-    CommunicationBoardRepository communicationBoardRepository;
+
+    private final JdbcTemplate jdbcTemplate;
+
+    @Value("${spring.datasource.url}")
+    private String jdbcUrl;
+
+    @Value("${spring.datasource.username}")
+    private String jdbcUsername;
+
+    @Value("${spring.datasource.password}")
+    private String jdbcPassword;
 
     @Autowired
-    public BoardServiceImpl(BoardJPARepository boardJPARepository, ReplyJPARepository replyJPARepository, HeartJPARepository heartJPARepository, ReportedBoardJPARepository reportedBoardJPARepository, CommunicationBoardRepository communicationBoardRepository){
+    public BoardServiceImpl(BoardJPARepository boardJPARepository, ReplyJPARepository replyJPARepository, HeartJPARepository heartJPARepository, ReportedBoardJPARepository reportedBoardJPARepository, JdbcTemplate jdbcTemplate){
         this.boardJPARepository = boardJPARepository;
         this.replyJPARepository = replyJPARepository;
         this.heartJPARepository = heartJPARepository;
         this.reportedBoardJPARepository = reportedBoardJPARepository;
-        this.communicationBoardRepository = communicationBoardRepository;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -212,8 +227,28 @@ public class BoardServiceImpl implements BoardService{
         return pno - 1;
     }
 
+
     @Override
-    public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId) {
-        return communicationBoardRepository.findByUserId(userId);
+    public List<MyBoardListDTO> getUserCommunicationBoardPosts(long userId) {
+        String sql = "SELECT c.id, c.writer, c.title, c.content, " +
+                "COUNT(DISTINCT h.id) AS heart_count, COUNT(DISTINCT r.id) AS reply_count, c.count, c.write_date " +
+                "FROM communication_board c " +
+                "LEFT JOIN communication_heart h ON c.id = h.board_id " +
+                "LEFT JOIN communication_reply r ON c.id = r.board_id " +
+                "WHERE c.user_id = ? " +
+                "GROUP BY c.id, c.writer, c.title, c.content, c.count, c.write_date";
+
+        return jdbcTemplate.query(sql, new Object[]{userId}, (resultSet, rowNum) -> {
+            MyBoardListDTO dto = new MyBoardListDTO();
+            dto.setId(resultSet.getLong("id"));
+            dto.setWriter(resultSet.getString("writer"));
+            dto.setTitle(resultSet.getString("title"));
+            dto.setContent(resultSet.getString("content"));
+            dto.setHeartCount(resultSet.getInt("heart_count"));
+            dto.setReplyCount(resultSet.getInt("reply_count"));
+            dto.setCount(resultSet.getLong("count"));
+            dto.setWriteDate(resultSet.getTimestamp("write_date").toLocalDateTime());
+            return dto;
+        });
     }
 }
