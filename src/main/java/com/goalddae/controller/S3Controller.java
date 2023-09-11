@@ -27,8 +27,6 @@ public class S3Controller {
     public ResponseEntity<String> updateUserImage(@RequestParam("file") MultipartFile multipartFile,
                                                   GetUserInfoDTO getUserInfoDTO) {
         try {
-            // 오브젝트스토리지에 파일 저장
-            s3Uploader.uploadFiles(multipartFile, "profile");
             // DB에 파일url 저장
             userService.updateProfileImg(getUserInfoDTO, multipartFile);
 

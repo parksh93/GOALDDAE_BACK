@@ -1,6 +1,7 @@
 package com.goalddae.dto.match;
 
 import com.goalddae.entity.ReservationField;
+import com.goalddae.entity.SoccerField;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,5 @@ public class IndividualMatchRequestDTO {
     private String gender;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-//    private ReservationField reservationField;
-
+    private SoccerField soccerField;
 }
