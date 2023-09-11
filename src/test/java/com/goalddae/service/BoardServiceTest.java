@@ -2,6 +2,7 @@ package com.goalddae.service;
 
 import com.goalddae.dto.board.BoardUpdateDTO;
 import com.goalddae.dto.board.HeartInfoDTO;
+import com.goalddae.dto.board.MyBoardListDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
 import com.goalddae.entity.ReportedBoard;
@@ -285,6 +286,20 @@ public class BoardServiceTest {
         assertNull(result);
         assertNull(communicationBoard);
 
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("해당 유저의 게시글 리스트 조회하기")
+    public void getUserCommunicationBoardPostsTest() {
+        // given
+        long userId = 2;
+
+        // when
+        List<MyBoardListDTO> myBoardList = boardService.getUserCommunicationBoardPosts(userId);
+
+        // then
+        assertEquals(11, myBoardList.size());
     }
 
 

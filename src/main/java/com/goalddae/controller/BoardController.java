@@ -3,6 +3,7 @@ package com.goalddae.controller;
 import com.goalddae.dto.board.BoardListDTO;
 import com.goalddae.dto.board.BoardUpdateDTO;
 import com.goalddae.dto.board.HeartInfoDTO;
+import com.goalddae.dto.board.MyBoardListDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
 import com.goalddae.entity.ReportedBoard;
@@ -152,7 +153,8 @@ public class BoardController {
 
     @RequestMapping(value = "/mylist/{userId}", method = RequestMethod.GET)
     public ResponseEntity<?> viewUserPosts(@PathVariable long userId) {
-        List<CommunicationBoard> communicationBoardsList = boardService.getUserCommunicationBoardPosts(userId);
+        List<MyBoardListDTO> communicationBoardsList = boardService.getUserCommunicationBoardPosts(userId);
+
         return ResponseEntity.ok(communicationBoardsList);
     }
 

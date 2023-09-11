@@ -43,7 +43,6 @@ public class CommunicationReply {
     @Column(nullable = false)
     private int status; // 0 : 정상, 1 : 본인 삭제, 2 : 관리자 삭제
 
-
     @PrePersist
     public void setTime() {
         this.replyWriteDate = LocalDateTime.now();

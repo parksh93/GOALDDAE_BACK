@@ -54,9 +54,9 @@ public class IndividualMatchController {
                 .playerNumber(matchRequest.getIndividualMatch().getPlayerNumber())
                 .level(matchRequest.getIndividualMatch().getLevel())
                 .gender(matchRequest.getIndividualMatch().getGender())
-//                .reservationField(matchRequest.getIndividualMatch().getReservationField())
                 .startTime(matchRequest.getIndividualMatch().getStartTime())
                 .endTime(matchRequest.getIndividualMatch().getEndTime())
+                .soccerField(matchRequest.getIndividualMatch().getReservationField().getSoccerField())
                 .build();
     }
 
