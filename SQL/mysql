@@ -1,9 +1,9 @@
 /* 타임라인 관련 테이블 생성 순서*/
 insert into users values   (
-	NULL, FALSE, 20, 'user', '1994-02-04', 'test@naver.com',
-    '남자', '유망주', 'test1', 0, '신현섭', '닉네임1', 0, 'qwer0000', '010232555232', '경기',
+	NULL, FALSE, 0, 'user', '1994-02-04', 'test@naver.com',
+    '남성', '유망주', 'test1', 0, '신현섭', '닉네임1', 0, 'qwer0000', '010232555232', '경기',
     '성남', "./img/userProfileImg/goalddae_default_profile.Webp",
-	NOW(), NOW(), '00001'
+	NOW(), NOW(), null,'00001'
    );
 
 /* 타임라인 관련 테이블 생성 순서*/

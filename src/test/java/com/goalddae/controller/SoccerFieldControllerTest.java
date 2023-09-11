@@ -122,10 +122,11 @@ public class SoccerFieldControllerTest {
 
     @Test
     @DisplayName("구장 객체 삭제 테스트")
-    public void deleteSoccerFieldTest() {
+    public void deleteSoccerFieldTest() throws Exception {
         // Given
+        Long soccerFieldId = 1L;
         SoccerField soccerField = SoccerField.builder()
-                .id(1L)
+                .id(soccerFieldId)
                 .fieldName("테스트 풋살장")
                 .toiletStatus(true)
                 .showerStatus(true)
@@ -134,14 +135,16 @@ public class SoccerFieldControllerTest {
                 .fieldImg1("테스트이미지1")
                 .inOutWhether("실외")
                 .grassWhether("인조")
+                .province("서울")
                 .region("서울")
+                .reservationFee(8000)
                 .build();
 
-        when(soccerFieldRepository.findById(soccerField.getId())).thenReturn(Optional.of(soccerField));
-        doNothing().when(soccerFieldService).delete(soccerField.getId());
-
         // When
-        soccerFieldService.delete(soccerField.getId());
+        mockMvc.perform(post("/field/delete")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(soccerField)))
+                .andExpect(status().isOk());
 
         // Then
         verify(soccerFieldService, times(1)).delete(anyLong());
@@ -157,6 +160,5 @@ public class SoccerFieldControllerTest {
 
             result.andExpect(status().isOk())
                     .andExpect(jsonPath("$.fieldName").value("테스트 구장"));
-
         }
     }

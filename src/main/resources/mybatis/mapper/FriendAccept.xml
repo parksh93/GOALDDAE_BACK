@@ -14,12 +14,13 @@
         SELECT from_user AS fromUser, users_id AS userId FROM friend_accept_#{userId}
     </select>
     <select id="findFriendAcceptList" parameterType="com.goalddae.dto.friend.friendAccept.SelectFromUserDTO" resultType="com.goalddae.dto.friend.friendAccept.FindFriendAcceptDTO">
-        <foreach collection="list" item="item">
-            SELECT u.id, u.nickname, u.profile_img_url AS profileImgUrl, (SELECT request_date FROM friend_add_#{item.fromUser}) AS requestDate
+        <foreach collection="list" item="item" separator="UNION ALL">
+            SELECT u.id, u.nickname, u.profile_img_url AS profileImgUrl, (SELECT request_date FROM friend_add_#{item.fromUser} WHERE to_user = #{item.userId})  AS requestDate
             FROM users u
             JOIN friend_accept_#{item.userId} f
             ON u.id = f.from_user
             WHERE f.accept = 3
+            AND f.from_user = #{item.fromUser}
         </foreach>
     </select>
     <insert id="addFriendAccept" parameterType="com.goalddae.dto.friend.AddFriendRequestDTO">
