@@ -38,8 +38,6 @@ public interface BoardService {
 
     void approveReportedBoard(long reportId);
 
-
-
-
-
+    // 조회수 탑5 게시글 조회
+    List<BoardListDTO> findTop5Board();
 }
