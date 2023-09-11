@@ -1,4 +1,4 @@
-package com.goalddae.controller;
+package com.goalddae.controller.friend;
 
 import com.goalddae.dto.friend.*;
 import com.goalddae.dto.friend.friendAccept.FindFriendAcceptDTO;

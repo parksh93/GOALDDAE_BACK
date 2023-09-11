@@ -62,7 +62,7 @@ public class UserJPARepositoryTest {
     @Test
     @Transactional
     @DisplayName("이메일과 닉네임을 통해 로그인 아이디 찾기")
-    public void findeLoginIdByEmailTest () {
+    public void findLoginIdByEmailAndName () {
         String email = "jsap50@naver.com";
         String name = "박상현";
 
