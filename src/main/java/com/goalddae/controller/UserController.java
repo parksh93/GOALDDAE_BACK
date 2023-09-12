@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import retrofit2.http.Path;
 
 import java.util.List;
 
@@ -108,6 +109,12 @@ public class UserController {
         response.addCookie(cookie);
 
         return List.of(changeCheck);
+    }
+
+    @RequestMapping(value = "/deleteAccount/{id}", method = RequestMethod.POST)
+    public ResponseEntity<String> deleteAccount(@PathVariable long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok("탈퇴 되었습니다.");
     }
 
 }

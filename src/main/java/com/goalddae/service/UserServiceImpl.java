@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService{
     public boolean generateTokenFromLogin(LoginDTO loginDTO, HttpServletResponse response){
         User userInfo = getByCredentials(loginDTO.getLoginId());
 
-        if(userInfo != null){
+        if (userInfo != null && !userInfo.isAccountSuspersion()) {
             if (bCryptPasswordEncoder.matches(loginDTO.getPassword(), userInfo.getPassword())) {
                 String refreshToken = tokenProvider.generateToken(userInfo, REFRESH_TOKEN_DURATION);
                 saveRefreshToken(userInfo.getId(), refreshToken);
@@ -297,5 +297,15 @@ public class UserServiceImpl implements UserService{
     @Override
     public User findByEmail(String email) {
         return userJPARepository.findByEmail(email);
+    }
+
+    @Override
+    public void deleteUser(long id) {
+        try {
+            userJPARepository.updateUserAccountSuspersionById(id);
+        } catch (Exception e) {
+            System.out.println("예외가 발생했다.");
+            e.printStackTrace();
+        }
     }
 }
