@@ -125,4 +125,6 @@ public class SoccerField {
     public void changeClosingTime(LocalTime closingTime) {
         this.closingTime = closingTime;
     }
-}
+
+    }
+
