@@ -9,8 +9,12 @@
                                         team_id BIGINT NOT NULL
         );
     </update>
-    <select id="findByTeamIdMember" parameterType="java.lang.Long" resultType="com.goalddae.dto.team.TeamMemberDTO">
-        SELECT id, user_join_date, team_manager, users_id, team_id
+    <select id="findAllTeamMembersByTeamId" resultType="com.goalddae.dto.team.TeamMemberDTO">
+        SELECT id as id,
+               user_join_date as userJoinDate,
+               team_manager as teamManager,
+               users_id as userId,
+               team_id as teamId
         FROM team_member_#{teamId}
         WHERE team_id = #{teamId}
     </select>
@@ -18,4 +22,7 @@
         INSERT INTO team_member_#{teamId} (user_join_date, team_manager, team_id, users_id)
         VALUES (now(), #{teamManager}, #{teamId}, #{userId})
     </insert>
+    <delete id="deleteMemberByUserId" parameterType="com.goalddae.dto.team.TeamMemberDTO">
+        DELETE FROM team_member_#{teamId} WHERE users_id = #{userId}
+    </delete>
 </mapper>

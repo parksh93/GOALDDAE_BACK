@@ -157,11 +157,12 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public void save (TeamSaveDTO teamSaveDTO){
+    public void save(TeamSaveDTO teamSaveDTO){
         Team newTeam = Team.builder()
                 .teamName(teamSaveDTO.getTeamName())
                 .area(teamSaveDTO.getArea())
                 .entryFee(teamSaveDTO.getEntryFee())
+                .recruiting(true)
                 .preferredDay(teamSaveDTO.getPreferredDay())
                 .preferredTime(teamSaveDTO.getPreferredTime())
                 .averageAge(teamSaveDTO.getAverageAge())
@@ -192,6 +193,18 @@ public class TeamServiceImpl implements TeamService {
         }
     }
 
+
+
+    @Override
+    public List<TeamApplyDTO> findAllApplyByTeamId(long teamId) {
+        return teamApplyRepository.findAllApplyByTeamId(teamId);
+    }
+
+    @Override
+    public TeamApplyDTO findApplyById(long id, long teamId) {
+        return teamApplyRepository.findApplyById(id, teamId);
+    }
+
     @Override
     public void addTeamApply(TeamApplyDTO teamApplyDTO) {
         long teamId = teamApplyDTO.getTeamId();
@@ -200,9 +213,24 @@ public class TeamServiceImpl implements TeamService {
         TeamApplyDTO newApply = new TeamApplyDTO();
         newApply.setTeamId(teamId);
         newApply.setUserId(userId);
-        newApply.setTeamAcceptStatus(1);
+        newApply.setTeamAcceptStatus(0);
         newApply.setTeamApplyDate(LocalDateTime.now());
 
         teamApplyRepository.addTeamApply(newApply);
+    }
+
+    @Override
+    public void updateAcceptStatus(TeamApplyDTO teamApplyDTO) {
+        long id = teamApplyDTO.getId();
+        long teamId = teamApplyDTO.getTeamId();
+        int teamAcceptStatus = teamApplyDTO.getTeamAcceptStatus();
+
+        TeamApplyDTO apply = TeamApplyDTO.builder()
+                .id(id)
+                .teamId(teamId)
+                .teamAcceptStatus(teamAcceptStatus)
+                .build();
+
+        teamApplyRepository.updateAcceptStatus(apply);
     }
 }

@@ -134,7 +134,7 @@ public class TeamController {
         return teamService.findByAreaAndRecruiting(area, true);
     }
 
-    @PostMapping(value = "/apply")
+    @PostMapping(value = "/addApply")
     public ResponseEntity<?> addTeamApply(@RequestBody TeamApplyDTO teamApplyDTO){
         try{
             teamService.addTeamApply(teamApplyDTO);

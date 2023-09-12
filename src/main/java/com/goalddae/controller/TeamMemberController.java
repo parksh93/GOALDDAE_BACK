@@ -21,7 +21,7 @@ public class TeamMemberController {
     @GetMapping(value = "/list")
     public List<TeamMemberDTO> teamMemberList(@RequestParam long teamId) {
 
-        return teamMemberService.findByTeamIdMember(teamId);
+        return teamMemberService.findAllTeamMembersByTeamId(teamId);
     }
 
 
@@ -38,7 +38,7 @@ public class TeamMemberController {
 
     @DeleteMapping(value = "/removeMember")
     public ResponseEntity<?> removeTeamMember(@PathVariable long usersId){
-        teamMemberService.deleteByUserIdMember(usersId);
+        teamMemberService.deleteMemberByUserId(usersId);
         return ResponseEntity.ok("팀 멤버가 정상적으로 삭제되었습니다.");
     }
 }

@@ -18,8 +18,8 @@ public class TeamMemberServiceImpl implements TeamMemberService{
     }
 
     @Override
-    public List<TeamMemberDTO> findByTeamIdMember(long teamId) {
-        return teamMemberRepository.findByTeamIdMember(teamId);
+    public List<TeamMemberDTO> findAllTeamMembersByTeamId(long teamId) {
+        return teamMemberRepository.findAllTeamMembersByTeamId(teamId);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class TeamMemberServiceImpl implements TeamMemberService{
     }
 
     @Override
-    public void deleteByUserIdMember(long usersId) {
-        teamMemberRepository.deleteByUserIdMember(usersId);
+    public void deleteMemberByUserId(long usersId) {
+        teamMemberRepository.deleteMemberByUserId(usersId);
     }
 }

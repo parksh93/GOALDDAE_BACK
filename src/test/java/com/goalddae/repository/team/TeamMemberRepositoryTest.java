@@ -20,16 +20,19 @@ public class TeamMemberRepositoryTest {
 
     @Test
     @Transactional
-    @DisplayName("teamId=4의 사이즈 1 ")
-    public void findByTeamIdMemberTest() {
+    @DisplayName("teamId=3의 사이즈 1, userId=1 ")
+    public void findAllTeamMembersByTeamIdTest() {
         //given
-        long teamId = 4;
+        long teamId = 3;
+        long userId = 1;
 
         //when
-        List<TeamMemberDTO> members = teamMemberRepository.findByTeamIdMember(teamId);
+        List<TeamMemberDTO> members = teamMemberRepository.findAllTeamMembersByTeamId(teamId);
 
         //then
         assertEquals(1, members.size());
+        //assertEquals(teamId, members.get(0).getTeamId());
+        assertEquals(userId, members.get(0).getUserId());
     }
 
     @Test
