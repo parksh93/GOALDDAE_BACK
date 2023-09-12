@@ -34,21 +34,11 @@ public class KakaoMapService {
         this.userJPARepository = userJPARepository;
     }
 
-    public Map<String, String> getXY(long userId) {
+    public Map<String, String> getXY(String address) {
         Map xyMap = new HashMap<>();
-        User user = new User();
-
-        if (userId != 0) {
-            user = userJPARepository.findById(userId).get();
-        }
 
         try {
-            String address = "";
-            if (!user.getPreferredCity().equals("")) {
-                address = URLEncoder.encode(user.getPreferredCity());
-            } else {
-                address = URLEncoder.encode("서울특별시");
-            }
+            address = URLEncoder.encode(address);
 
             URL url = new URL(GEOCODE_URL + address);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();

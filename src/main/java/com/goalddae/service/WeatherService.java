@@ -1,7 +1,12 @@
 package com.goalddae.service;
 
+import com.goalddae.dto.weather.GetWeatherDTO;
+import com.goalddae.entity.Weather;
+
+import java.util.List;
 import java.util.Map;
 
 public interface WeatherService {
-    public void getTodayWeather(Map<String, String> xyMap) throws Exception;
+    void saveWeatherApi() throws Exception;
+    List<Weather> findMyCityWeather(GetWeatherDTO getWeatherDTO);
 }
