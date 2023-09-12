@@ -9,12 +9,9 @@ import java.util.List;
 @Mapper
 public interface TeamMemberRepository {
     void createTeamMemberTable(@Param("teamId") Long teamId);
-
-    List<TeamMemberDTO> findByTeamIdMember(long teamId);
-
+    List<TeamMemberDTO> findAllTeamMembersByTeamId(long teamId);
     void addTeamMember(TeamMemberDTO teamMemberDTO);
-
-    void deleteByUserIdMember(long usersId);
+    void deleteMemberByUserId(long userId);
 
 
 }

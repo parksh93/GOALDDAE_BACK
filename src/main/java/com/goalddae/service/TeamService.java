@@ -31,7 +31,10 @@ public interface TeamService {
     Long getAutoIncrementValue();
 
 
+    List<TeamApplyDTO> findAllApplyByTeamId(long teamId);
+    TeamApplyDTO findApplyById(long id, long teamId);
     void addTeamApply(TeamApplyDTO teamApplyDTO);
+    void updateAcceptStatus(TeamApplyDTO teamApplyDTO);
 
 
 }
