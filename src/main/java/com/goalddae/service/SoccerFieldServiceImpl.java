@@ -122,12 +122,13 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
     // 필터를 이용한 예약구장리스트 조회
     @Override
     public List<SoccerFieldDTO> findAvailableField(Long userId,
-                                                    LocalTime operatingHours,
-                                                    LocalTime closingTime,
-                                                    String inOutWhether,
-                                                    String grassWhether) {
+                                                   LocalTime operatingHours,
+                                                   LocalTime closingTime,
+                                                   String inOutWhether,
+                                                   String grassWhether) {
 
-        User user = userJPARepository.findByUserId(userId);
+        User user = userJPARepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
         String preferredCity = user.getPreferredCity();
 
         if (preferredCity == null || preferredCity.isEmpty()) {
@@ -135,10 +136,10 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
         }
 
         List<SoccerField> field = soccerFieldRepository.findAvailableField(preferredCity,
-                                                                            operatingHours,
-                                                                            closingTime,
-                                                                            inOutWhether,
-                                                                            grassWhether);
+                operatingHours,
+                closingTime,
+                inOutWhether,
+                grassWhether);
 
         List<SoccerFieldDTO> fieldDTO = field.stream()
                 .map(fields -> SoccerFieldDTO.builder()
@@ -146,7 +147,6 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
                         .fieldName(fields.getFieldName())
                         .operatingHours(fields.getOperatingHours())
                         .closingTime(fields.getClosingTime())
-                        .playerCapacity(fields.getPlayerCapacity())
                         .region(fields.getRegion())
                         .reservationFee(fields.getReservationFee())
                         .fieldSize(fields.getFieldSize())

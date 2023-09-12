@@ -106,7 +106,6 @@ public class SoccerFieldServiceTest {
                 .fieldName("테스트구장 수정 전")
                 .operatingHours(LocalTime.parse("09:00"))
                 .closingTime(LocalTime.parse("20:00"))
-                .playerCapacity(12)
                 .province("경기도")
                 .region("성남")
                 .reservationFee(8000)
@@ -122,7 +121,6 @@ public class SoccerFieldServiceTest {
                 .fieldName("테스트구장 변경 후")
                 .operatingHours(LocalTime.parse("10:00"))
                 .closingTime(LocalTime.parse("21:00"))
-                .playerCapacity(10)
                 .province("경기도")
                 .region("분당")
                 .reservationFee(10000)
@@ -191,7 +189,7 @@ public class SoccerFieldServiceTest {
 
         List<SoccerField> fields = Arrays.asList(soccerField1, soccerField2);
 
-        when(userJPARepository.findByUserId(userId)).thenReturn(user);
+        when(userJPARepository.findById(userId)).thenReturn(Optional.of(user));
         when(soccerFieldRepository.findAvailableField(anyString(), any(LocalTime.class), any(LocalTime.class),
                                                         anyString(), anyString())).thenReturn(fields);
 
