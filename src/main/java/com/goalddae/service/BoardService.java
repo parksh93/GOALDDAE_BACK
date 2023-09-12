@@ -41,8 +41,7 @@ public interface BoardService {
 
     List<MyBoardListDTO> getUserCommunicationBoardPosts(long userId);
 
-
-
-
+    // 조회수 탑5 게시글 조회
+    List<BoardListDTO> findTop5Board();
 
 }

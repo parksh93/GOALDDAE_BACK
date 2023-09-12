@@ -1,25 +1,34 @@
 package com.goalddae.service;
 
+import com.goalddae.dto.board.BoardListDTO;
 import com.goalddae.dto.board.BoardUpdateDTO;
 import com.goalddae.dto.board.HeartInfoDTO;
 import com.goalddae.dto.board.MyBoardListDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
+import com.goalddae.entity.CommunicationReply;
 import com.goalddae.entity.ReportedBoard;
 import com.goalddae.repository.BoardJPARepository;
 import com.goalddae.repository.HeartJPARepository;
+import com.goalddae.repository.ReplyJPARepository;
 import com.goalddae.repository.ReportedBoardJPARepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class BoardServiceTest {
@@ -35,6 +44,9 @@ public class BoardServiceTest {
 
     @Autowired
     ReportedBoardJPARepository reportedBoardJPARepository;
+
+    @Autowired
+    ReplyJPARepository replyJPARepository;
 
     @Test
     @Transactional
@@ -273,7 +285,6 @@ public class BoardServiceTest {
 
         long reportId = 3;
 
-
         ReportedBoard reportedBoard = reportedBoardJPARepository.findById(reportId).get();
 
         long boardId = reportedBoard.getBoardId();
@@ -290,6 +301,7 @@ public class BoardServiceTest {
 
     @Test
     @Transactional
+<<<<<<< HEAD
     @DisplayName("해당 유저의 게시글 리스트 조회하기")
     public void getUserCommunicationBoardPostsTest() {
         // given
@@ -302,6 +314,33 @@ public class BoardServiceTest {
         assertEquals(11, myBoardList.size());
     }
 
+=======
+    @DisplayName("조회수가 가장 많은 객체 조회 테스트")
+    public void findTop5BoardTest() {
+        // Given
+        for (int i = 0; i < 10; i++) {
+            CommunicationBoard board = CommunicationBoard.builder()
+                    .userId((long)i)
+                    .writer("writer" + i)
+                    .title("title" + i)
+                    .content("content" + i)
+                    .boardSortation(i % 2)
+                    .count(100L - i)
+                    .build();
+>>>>>>> develop
 
+            boardJPARepository.save(board);
+        }
 
+        // When
+        List<BoardListDTO> top5Boards = boardService.findTop5Board();
+
+        // Then
+        assertEquals(5, top5Boards.size());
+
+        for (int i = 0; i < top5Boards.size() - 1; i++) {
+            assertTrue(top5Boards.get(i).getCount() >= top5Boards.get(i + 1).getCount());
+            assertEquals(LocalDate.now(), top5Boards.get(i).getWriteDate().toLocalDate());
+        }
+    }
 }

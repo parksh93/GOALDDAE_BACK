@@ -65,12 +65,12 @@ public class UserController {
         return List.of(userService.checkNickname(checkNicknameDTO));
     }
 
-    @PostMapping("/signup")
+    @PutMapping("/signup")
     public void signup(@RequestBody User user){
         userService.save(user);
     }
 
-    @PostMapping("/socialSignup")
+    @PatchMapping("/socialSignup")
     public void socialSignup(@RequestBody GetUserInfoDTO getUserInfoDTO){
         userService.updateSocialSignup(getUserInfoDTO);
     }

@@ -93,7 +93,7 @@ public class UserControllerTest {
     @DisplayName("닉네임 중복 체크")
     public void checkEmailTest() throws Exception{
         CheckNicknameDTO checkNicknameDTO = CheckNicknameDTO.builder()
-                .nickname("박상현")
+                .nickname("안녕뉴비야")
                 .build();
         String url = "/user/checkNickname";
 

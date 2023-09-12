@@ -65,6 +65,4 @@ public class CommunicationBoard {
     public void viewCountUp() {
         this.count++;
     }
-
-
 }
