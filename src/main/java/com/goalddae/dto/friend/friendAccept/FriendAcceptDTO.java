@@ -1,4 +1,4 @@
-package com.goalddae.dto.friend;
+package com.goalddae.dto.friend.friendAccept;
 
 import lombok.*;
 
@@ -10,9 +10,10 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class FriendAddDTO {
+public class FriendAcceptDTO {
     private long id;
-    private String toUser;
-    private LocalDateTime requestDate;
+    private String fromUser;
+    private LocalDateTime acceptDate;
+    private int accept;
     private long userId;
 }

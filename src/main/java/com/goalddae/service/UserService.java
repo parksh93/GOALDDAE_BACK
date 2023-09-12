@@ -12,7 +12,6 @@ import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
 import com.goalddae.entity.User;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.core.Authentication;
 
 
 public interface UserService {

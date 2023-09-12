@@ -7,6 +7,7 @@ import com.goalddae.entity.ReportedBoard;
 import com.goalddae.repository.BoardJPARepository;
 import com.goalddae.repository.HeartJPARepository;
 import com.goalddae.repository.ReportedBoardJPARepository;
+import com.goalddae.service.BoardService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +37,6 @@ public class BoardJPARepositoryTest {
 
     @Autowired
     ReportedBoardJPARepository reportedBoardJPARepository;
-
 
     @Test
     @Transactional
@@ -324,9 +326,38 @@ public class BoardJPARepositoryTest {
 
         assertNull(result);
         assertNull(communicationBoard);
-
     }
 
+    @Test
+    @Transactional
+    @DisplayName("금일 게시글 중 조회수가 많은 객체 조회")
+    public void findTop5BoardTest() {
+        // Given
+        for (int i = 0; i < 5; i++) {
+            CommunicationBoard board = CommunicationBoard.builder()
+                    .id(1L)
+                    .writer("writer" + i)
+                    .title("title" + i)
+                    .content("테스트" + i)
+                    .writeDate(LocalDateTime.now())
+                    .updateDate(LocalDateTime.now())
+                    .boardSortation(i % 2)
+                    .count(100L - i)
+                    .build();
 
+            boardJPARepository.save(board);
+        }
 
+        // When
+        PageRequest pageRequest = PageRequest.of(0, 5);
+        List<BoardListDTO> top5Boards = boardJPARepository.findTop5ByOrderByCountDesc(pageRequest);
+
+        // Then
+        assertEquals(5, top5Boards.size());
+
+        for (int i = 0; i < top5Boards.size() - 1; i++) {
+            assertTrue(top5Boards.get(i).getCount() >= top5Boards.get(i + 1).getCount());
+            assertEquals(LocalDate.now(), top5Boards.get(i).getWriteDate().toLocalDate());
+        }
+    }
 }
