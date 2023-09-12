@@ -14,8 +14,8 @@ public class KaKaoMapServiceTest {
     @Test
     @DisplayName("유저가 선택한 주소의 x, y 좌표값 가져오기")
     public void getXY() {
-        long userId = 1;
-
-        kaKaoMapService.getXY(userId);
+        String address = "충북"; // 127, 36
+//        String address = "서울"; // 126, 37
+        kaKaoMapService.getXY(address);
     }
 }
