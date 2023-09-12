@@ -1,8 +1,13 @@
 package com.goalddae.service;
 
+import com.goalddae.dto.fieldReservation.FieldReservationInfoDTO;
 import com.goalddae.dto.soccerField.SoccerFieldDTO;
+import com.goalddae.entity.ReservationField;
 import com.goalddae.entity.SoccerField;
+import com.goalddae.entity.User;
+import com.goalddae.repository.ReservationFieldJPARepository;
 import com.goalddae.repository.SoccerFieldRepository;
+import com.goalddae.repository.UserJPARepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,11 +34,14 @@ public class SoccerFieldServiceTest {
     @MockBean
     private SoccerFieldRepository soccerFieldRepository;
 
-    @MockBean
-    private FieldReservationService fieldReservationService;
-
     @Autowired
     private SoccerFieldService soccerFieldService;
+
+    @MockBean
+    private UserJPARepository userJPARepository;
+
+    @MockBean
+    private ReservationFieldJPARepository reservationFieldJPARepository;
 
     private SoccerField soccerField;
 
@@ -145,5 +156,105 @@ public class SoccerFieldServiceTest {
 
         // Then
         verify(soccerFieldRepository, times(1)).deleteById(id);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("필터를 이용하여 예약구장 조회")
+    public void findFieldReservationTest() {
+        // Given
+        Long userId = 1L;
+        LocalTime operatingHours = LocalTime.of(9, 0);
+        LocalTime closingTime = LocalTime.of(22, 0);
+        String inOutWhether = "실내";
+        String grassWhether = "천연";
+
+        User user = User.builder()
+                .id(userId)
+                .preferredCity("서울")
+                .build();
+
+        SoccerField soccerField1 = SoccerField.builder()
+                .id(1L)
+                .fieldName("테스트 구장1")
+                .region("서울")
+                .inOutWhether("실내")
+                .grassWhether("천연")
+                .build();
+
+        SoccerField soccerField2 = SoccerField.builder()
+                .id(2L)
+                .fieldName("테스트 구장2")
+                .inOutWhether("실외")
+                .grassWhether("인조")
+                .build();
+
+        List<SoccerField> fields = Arrays.asList(soccerField1, soccerField2);
+
+        when(userJPARepository.findByUserId(userId)).thenReturn(user);
+        when(soccerFieldRepository.findAvailableField(anyString(), any(LocalTime.class), any(LocalTime.class),
+                                                        anyString(), anyString())).thenReturn(fields);
+
+        // When
+        List<SoccerFieldDTO> resultFields = soccerFieldService.findAvailableField(userId, operatingHours,
+                                                                                closingTime, inOutWhether,
+                                                                                grassWhether);
+
+        // Then
+        assertNotNull(resultFields);
+        assertEquals(fields.size(), resultFields.size());
+    }
+
+
+    @Test
+    @Transactional
+    @DisplayName("특정 날짜에 해당 구장에서 이미 예약된 시간과 예약 가능 시간 조회")
+    public void findAvailableFieldReservationTest() {
+        // Given
+        Long fieldId = 1L;
+        LocalDate date = LocalDate.of(2023, 9, 12);
+
+        SoccerField soccerField = SoccerField.builder()
+                .id(fieldId)
+                .fieldName("테스트 구장1")
+                .operatingHours(LocalTime.of(9,0))
+                .closingTime(LocalTime.of(22,0))
+                .build();
+
+        ReservationField reservation1 = ReservationField.builder()
+                .soccerField(soccerField)
+                .reservedDate(date.atStartOfDay().plusHours(8)) // 예약 : 8시
+                .startDate(date.atStartOfDay().plusHours(10)) // 경기 시작: 10시
+                .endDate(date.atStartOfDay().plusHours(12)) // 경기 종료: 12시
+                .build();
+
+        ReservationField reservation2 = ReservationField.builder()
+                .soccerField(soccerField)
+                .reservedDate(date.atStartOfDay().plusHours(13)) // 예약 : 13시
+                .startDate(date.atStartOfDay().plusHours(15)) // 경기 시작: 15시
+                .endDate(date.atStartOfDay().plusHours(17)) // 경기 종료: 17시
+                .build();
+
+        List<ReservationField> reservations = Arrays.asList(reservation1, reservation2);
+
+        when(soccerFieldRepository.findById(fieldId)).thenReturn(Optional.of(soccerField));
+        when(reservationFieldJPARepository.findBySoccerFieldIdAndReservedDateBetween(anyLong(), any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(reservations);
+
+        // When
+        FieldReservationInfoDTO resultInfoDTO = soccerFieldService.getReservationInfo(fieldId,date);
+
+        // Then
+        assertNotNull(resultInfoDTO);
+        assertEquals(Arrays.asList(
+                LocalTime.of(9,0),
+                LocalTime.of(13,0),
+                LocalTime.of(14,0),
+                LocalTime.of(18,0),
+                LocalTime.of(19,0),
+                LocalTime.of (20 ,00 ) ,
+                LocalTime. of (21 ,00 ),
+                LocalTime. of (22 ,00 )
+        ), resultInfoDTO.getAvailableTimes());
     }
 }

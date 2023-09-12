@@ -1,5 +1,6 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.fieldReservation.FieldReservationInfoDTO;
 import com.goalddae.dto.soccerField.SoccerFieldDTO;
 import com.goalddae.dto.soccerField.SoccerFieldInfoDTO;
 import com.goalddae.entity.SoccerField;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -84,4 +87,27 @@ public class SoccerFieldController {
             return ResponseEntity.status(500).build();
         }
     }
+
+    // 예약구장 조회 - 필터 이용, 예약유무 확인
+    @GetMapping("/reservation/list")
+    public ResponseEntity<List<SoccerFieldDTO>> getAvailableFieldsAndReservations(
+            @RequestParam Long userId,
+            @RequestParam LocalTime operatingHours,
+            @RequestParam LocalTime closingTime,
+            @RequestParam String inOutWhether,
+            @RequestParam String grassWhether) {
+
+        List<SoccerFieldDTO> availableFields = soccerFieldService.findAvailableField(userId, operatingHours,
+                                                                                    closingTime, inOutWhether,
+                                                                                    grassWhether);
+
+        for (SoccerFieldDTO field : availableFields) {
+            FieldReservationInfoDTO reservationInfo = soccerFieldService.getReservationInfo(field.getId(), LocalDate.now());
+
+            field.setReservationInfo(reservationInfo);
+        }
+
+        return ResponseEntity.ok(availableFields);
+    }
+
 }

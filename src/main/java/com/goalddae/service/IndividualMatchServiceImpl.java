@@ -65,7 +65,6 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
         }
     }
 
-
     // 신청 가능 상태
     private String determineStatus(IndividualMatch match) {
         long currentRequestsCount = match.getRequests().size();
