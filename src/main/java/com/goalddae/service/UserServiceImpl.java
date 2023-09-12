@@ -13,10 +13,15 @@ import com.goalddae.entity.User;
 import com.goalddae.util.CookieUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.goalddae.repository.UserJPARepository;
+import com.goalddae.util.CookieUtil;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import java.io.IOException;
 import java.time.Duration;
@@ -31,7 +36,7 @@ public class UserServiceImpl implements UserService{
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(2);
-    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofMinutes(30);
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(1);
     public static final String ACCESS_TOKEN_COOKIE_NAME = "token";
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
     private final FriendService friendService;
@@ -79,7 +84,6 @@ public class UserServiceImpl implements UserService{
         // 동적 테이블 생성
         friendService.createFriendAcceptTable(id);
         friendService.createFriendAddTable(id);
-        friendService.createFriendBlockTable(id);
         friendService.createFriendListTable(id);
     }
 
@@ -273,6 +277,10 @@ public class UserServiceImpl implements UserService{
             user = changeUserInfoDTO.toEntity();
 
             userJPARepository.save(user);
+
+            friendService.createFriendAcceptTable(user.getId());
+            friendService.createFriendAddTable(user.getId());
+            friendService.createFriendListTable(user.getId());
         }
     }
 

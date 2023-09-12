@@ -28,6 +28,9 @@ public class Team {
     @Column(nullable = false)
     private int averageAge; // 평균나이
 
+    @Column(nullable = false)
+    private boolean recruiting; // 모집중
+
     @Column
     private String teamIntroduce;   // 팀 소개글
 
@@ -52,9 +55,6 @@ public class Team {
     @Column(nullable = false)
     private String preferredTime;   // 선호 시간
 
-    @Column(nullable = false)
-    private boolean recruiting; // 모집중 유무
-  
     public Team(Long id, String teamName, String area, int averageAge, int entryFee, String entryGender,
                 String teamProfileImgUrl, String preferredDay, String preferredTime) {
         this.id = id;

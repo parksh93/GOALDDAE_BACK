@@ -1,0 +1,36 @@
+package com.goalddae.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ArticleWorld {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = true)
+    private Long id;
+
+    // 해외 기사 제목
+    @Column(updatable = true)
+    private String title;
+
+    // 해외 기사 URL
+    @Column(updatable = true)
+    private String url;
+
+    // 생성된 시간
+    @Column(updatable = true)
+    @CreationTimestamp // 현재시간
+    private LocalDateTime createdAt;
+}

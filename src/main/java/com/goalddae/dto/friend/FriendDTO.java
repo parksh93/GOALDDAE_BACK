@@ -5,11 +5,9 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@ToString
-@NoArgsConstructor
 @AllArgsConstructor
-public class FriendListDTO {
-    private long id;
-    private String friendId;
+@NoArgsConstructor
+public class FriendDTO {
     private long userId;
+    private long friendId;
 }

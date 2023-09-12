@@ -151,11 +151,19 @@ public class BoardController {
         return ResponseEntity.ok("좋아요를 취소합니다.");
     }
 
+
     @RequestMapping(value = "/mylist/{userId}", method = RequestMethod.GET)
     public ResponseEntity<?> viewUserPosts(@PathVariable long userId) {
         List<MyBoardListDTO> communicationBoardsList = boardService.getUserCommunicationBoardPosts(userId);
 
         return ResponseEntity.ok(communicationBoardsList);
+    }
+
+    // 조회수 탑5
+    @GetMapping("/top5")
+    public ResponseEntity<List<BoardListDTO>> getTopPosts() {
+        List<BoardListDTO> topPosts = boardService.findTop5Board();
+        return ResponseEntity.ok(topPosts);
     }
 
 }

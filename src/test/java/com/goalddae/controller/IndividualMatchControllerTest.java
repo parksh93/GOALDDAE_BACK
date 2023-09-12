@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class IndividualMatchControllerTest {
 
     @MockBean
-    private IndividualMatchService service;
+    private IndividualMatchService individualMatchService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -37,7 +37,7 @@ public class IndividualMatchControllerTest {
     @DisplayName("개인매치 조회 컨트롤러 테스트")
     public void findIndividualMatchControllerTest() throws Exception {
 
-        when(service.getMatchesByDateAndProvinceAndLevelAndGender(any(), any(), any(), any()))
+        when(individualMatchService.getMatchesByDateAndProvinceAndLevelAndGender(any(), any(), any(), any()))
                 .thenReturn(Collections.singletonList(new IndividualMatchDTO()));
 
         mockMvc.perform(get("/match/individual")
@@ -47,7 +47,7 @@ public class IndividualMatchControllerTest {
                         .param("gender", "남자"))
                 .andExpect(status().isOk());
 
-        verify(service, times(1)).getMatchesByDateAndProvinceAndLevelAndGender(any(), any(), any(), any());
+        verify(individualMatchService, times(1)).getMatchesByDateAndProvinceAndLevelAndGender(any(), any(), any(), any());
     }
 
     @Test
