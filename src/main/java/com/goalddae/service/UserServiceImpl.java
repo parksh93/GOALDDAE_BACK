@@ -1,31 +1,30 @@
 package com.goalddae.service;
 
 import com.goalddae.config.jwt.TokenProvider;
+import com.goalddae.util.S3Uploader;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
-
 import com.goalddae.entity.*;
 import com.goalddae.exception.NotFoundTokenException;
 import com.goalddae.exception.NotFoundUserException;
-
-import com.goalddae.repository.*;
-
-import com.goalddae.entity.User;
 import com.goalddae.repository.UserJPARepository;
-
+import com.goalddae.repository.*;
+import com.goalddae.entity.User;
 import com.goalddae.util.CookieUtil;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.goalddae.repository.CommunicationBoardRepository;
-import com.goalddae.repository.UsedTransactionBoardRepository;
-
+import com.goalddae.repository.UserJPARepository;
+import com.goalddae.util.CookieUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.Duration;
-import java.util.List;
 
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -34,33 +33,29 @@ import java.util.Random;
 public class UserServiceImpl implements UserService{
     private final UserJPARepository userJPARepository;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final CommunicationBoardRepository communicationBoardRepository;
-    private final UsedTransactionBoardRepository usedTransactionBoardRepository;
-
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(2);
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(1);
     public static final String ACCESS_TOKEN_COOKIE_NAME = "token";
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
-
     private final FriendService friendService;
+    private final S3Uploader s3Uploader;
 
 
     @Autowired
     public UserServiceImpl(UserJPARepository userRepository,
                            RefreshTokenRepository refreshTokenRepository,
                            TokenProvider tokenProvider,
-                           CommunicationBoardRepository communicationBoardRepository,
-                           UsedTransactionBoardRepository usedTransactionBoardRepository,
-                           FriendService friendService){
+                           FriendService friendService,
+                           S3Uploader s3Uploader){
+
         this.userJPARepository = userRepository;
         this.refreshTokenRepository = refreshTokenRepository;
         this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
         this.tokenProvider = tokenProvider;
-        this.communicationBoardRepository = communicationBoardRepository;
-        this.usedTransactionBoardRepository = usedTransactionBoardRepository;
         this.friendService = friendService;
+        this.s3Uploader = s3Uploader;
     }
 
     @Override
@@ -123,7 +118,7 @@ public class UserServiceImpl implements UserService{
     public boolean generateTokenFromLogin(LoginDTO loginDTO, HttpServletResponse response){
         User userInfo = getByCredentials(loginDTO.getLoginId());
 
-        if(userInfo != null){
+        if (userInfo != null && !userInfo.isAccountSuspersion()) {
             if (bCryptPasswordEncoder.matches(loginDTO.getPassword(), userInfo.getPassword())) {
                 String refreshToken = tokenProvider.generateToken(userInfo, REFRESH_TOKEN_DURATION);
                 saveRefreshToken(userInfo.getId(), refreshToken);
@@ -238,6 +233,7 @@ public class UserServiceImpl implements UserService{
             changeUserInfoDTO.setPreferredCity(getUserInfoDTO.getPreferredCity());
             changeUserInfoDTO.setPreferredArea(getUserInfoDTO.getPreferredArea());
             changeUserInfoDTO.setActivityClass(getUserInfoDTO.getActivityClass());
+            changeUserInfoDTO.setProfileUpdateDate(LocalDateTime.now());
 
             User updateduser = changeUserInfoDTO.toEntity();
 
@@ -246,6 +242,24 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public void updateProfileImg(GetUserInfoDTO getUserInfoDTO, MultipartFile multipartFile) {
+        User user = userJPARepository.findByLoginId(getUserInfoDTO.getLoginId());
+
+        String uploadImageUrl = null;
+        try {
+            uploadImageUrl = s3Uploader.uploadFiles(multipartFile, "profile");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
+        changeUserInfoDTO.setProfileImgUrl(uploadImageUrl);
+        changeUserInfoDTO.setProfileUpdateDate(LocalDateTime.now());
+
+        User profileUpdatedUser = changeUserInfoDTO.toEntity();
+        userJPARepository.save(profileUpdatedUser);
+    }
+
     public void updateSocialSignup(GetUserInfoDTO getUserInfoDTO){
         User user = userJPARepository.findByEmail(getUserInfoDTO.getEmail());
 
@@ -271,15 +285,6 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId) {
-        return communicationBoardRepository.findByUserId(userId);
-    }
-
-    @Override
-    public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(long userId) {
-        return usedTransactionBoardRepository.findByUserId(userId);
-    }
-
     public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
         try {
             String loginId = tokenProvider.getLoginId(changePasswordDTO.getLoginIdToken());
@@ -300,5 +305,15 @@ public class UserServiceImpl implements UserService{
     @Override
     public User findByEmail(String email) {
         return userJPARepository.findByEmail(email);
+    }
+
+    @Override
+    public void deleteUser(long id) {
+        try {
+            userJPARepository.updateUserAccountSuspersionById(id);
+        } catch (Exception e) {
+            System.out.println("예외가 발생했다.");
+            e.printStackTrace();
+        }
     }
 }

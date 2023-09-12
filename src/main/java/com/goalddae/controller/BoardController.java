@@ -3,9 +3,11 @@ package com.goalddae.controller;
 import com.goalddae.dto.board.BoardListDTO;
 import com.goalddae.dto.board.BoardUpdateDTO;
 import com.goalddae.dto.board.HeartInfoDTO;
+import com.goalddae.dto.board.MyBoardListDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
 import com.goalddae.entity.ReportedBoard;
+import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.service.BoardService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,10 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/board")
@@ -152,10 +151,19 @@ public class BoardController {
         return ResponseEntity.ok("좋아요를 취소합니다.");
     }
 
+
+    @RequestMapping(value = "/mylist/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<?> viewUserPosts(@PathVariable long userId) {
+        List<MyBoardListDTO> communicationBoardsList = boardService.getUserCommunicationBoardPosts(userId);
+
+        return ResponseEntity.ok(communicationBoardsList);
+    }
+
     // 조회수 탑5
     @GetMapping("/top5")
     public ResponseEntity<List<BoardListDTO>> getTopPosts() {
         List<BoardListDTO> topPosts = boardService.findTop5Board();
         return ResponseEntity.ok(topPosts);
     }
+
 }

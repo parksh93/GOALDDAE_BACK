@@ -1,8 +1,11 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.match.IndividualMatchDTO;
+import com.goalddae.dto.match.IndividualMatchRequestDTO;
 import com.goalddae.entity.IndividualMatch;
+import com.goalddae.entity.IndividualMatchRequest;
 import com.goalddae.repository.IndividualMatchJPARepository;
+import com.goalddae.repository.IndividualMatchRequestJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +20,15 @@ import java.util.stream.Collectors;
 public class IndividualMatchServiceImpl implements IndividualMatchService {
 
     private final IndividualMatchJPARepository individualMatchJPARepository;
+    private final IndividualMatchRequestJPARepository individualMatchRequestJPARepository;
     private final MatchStatusNotifier matchStatusNotifier;
 
     @Autowired
     public IndividualMatchServiceImpl(IndividualMatchJPARepository individualMatchJPARepository,
+                                      IndividualMatchRequestJPARepository individualMatchRequestJPARepository,
                                       MatchStatusNotifier matchStatusNotifier) {
         this.individualMatchJPARepository = individualMatchJPARepository;
+        this.individualMatchRequestJPARepository = individualMatchRequestJPARepository;
         this.matchStatusNotifier = matchStatusNotifier;
     }
 
@@ -63,6 +69,13 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
             e.printStackTrace();
             return Collections.emptyList();
         }
+    }
+
+    @Override
+    public List<IndividualMatchRequest> findAllByUserId(long userId) {
+        List<IndividualMatchRequest> individualMatchRequestList
+                = individualMatchRequestJPARepository.findAllByUserId(userId);
+        return individualMatchRequestList;
     }
 
 

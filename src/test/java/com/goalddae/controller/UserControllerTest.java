@@ -8,25 +8,22 @@ import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.service.UserServiceImpl;
 import com.goalddae.entity.User;
-import com.goalddae.repository.UserJPARepository;
 import com.goalddae.dto.user.*;
-import com.goalddae.dto.user.CheckLoginIdDTO;
-import com.goalddae.dto.user.CheckNicknameDTO;
 import com.goalddae.dto.user.RequestFindLoginIdDTO;
-import com.goalddae.dto.user.LoginDTO;
-import com.goalddae.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-import java.sql.Date;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,28 +138,6 @@ public class UserControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].nickname").value(nickname))
                 .andExpect(jsonPath("$[0].level").value(level));
-    }
-    @Test
-    @Transactional
-    @DisplayName("내가 쓴 게시글 조회 테스트")
-    public void getUserPostsTest() throws Exception {
-        // given
-        long userId = 123;
-        List<CommunicationBoard> communicationBoardPosts = new ArrayList<>();
-        List<UsedTransactionBoard> usedTransactionBoardPosts = new ArrayList<>();
-
-        // when
-        when(userService.getUserCommunicationBoardPosts(userId)).thenReturn(communicationBoardPosts);
-        when(userService.getUserUsedTransactionBoardPosts(userId)).thenReturn(usedTransactionBoardPosts);
-
-        ResultActions resultActions = mockMvc.perform(get("/posts/{userId}", userId)
-                .contentType(MediaType.APPLICATION_JSON));
-
-        // then
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.communicationBoardPosts").isArray())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.usedTransactionBoardPosts").isArray());
     }
 
     @Test
