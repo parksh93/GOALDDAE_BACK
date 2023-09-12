@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -30,11 +29,11 @@ public class ReservationField {
     @Column(nullable = false)
     private LocalDateTime reservedDate;
 
-    // 예약 시작 일정
+    // 경기 시작 일정
     @Column(nullable = false)
     private LocalDateTime startDate;
 
-    // 예약 종료 일정
+    // 경기 종료 일정
     @Column(nullable = false)
     private LocalDateTime endDate;
 
@@ -42,5 +41,4 @@ public class ReservationField {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
-
 }
