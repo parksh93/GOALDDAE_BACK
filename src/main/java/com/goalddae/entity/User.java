@@ -90,10 +90,10 @@ public class User implements UserDetails {
     private int noShowCnt;  // 노쇼 수
 
     @Column
-    private String preferredCity;   // 선호 도시
+    private String preferredCity;   // 선호 도시 - 서울, 경기, 인천 .....
 
     @Column
-    private String preferredArea;   // 선호 지역
+    private String preferredArea;   // 선호 지역 - 강남구, 강동구 .......
 
     @Column
     private int activityClass;   // 활동 반경
