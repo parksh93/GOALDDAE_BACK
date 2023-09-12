@@ -1,17 +1,20 @@
 package com.goalddae.controller;
 
 import com.goalddae.dto.match.IndividualMatchDTO;
+import com.goalddae.dto.match.IndividualMatchRequestDTO;
+import com.goalddae.entity.IndividualMatch;
+import com.goalddae.entity.IndividualMatchRequest;
 import com.goalddae.service.IndividualMatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/match")
@@ -35,4 +38,26 @@ public class IndividualMatchController {
         return individualMatchService.getMatchesByDateAndProvinceAndLevelAndGender(
                 startTime.toLocalDate(), province, level, gender);
     }
+
+
+    @GetMapping("/my-individual/{userId}")
+    public List<IndividualMatchRequestDTO> getIndividualMatchesRequest(@PathVariable long userId) {
+        return individualMatchService.findAllByUserId(userId)
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    public IndividualMatchRequestDTO convertToDto(IndividualMatchRequest  matchRequest) {
+        return IndividualMatchRequestDTO.builder()
+                .id(matchRequest.getIndividualMatch().getId())
+                .playerNumber(matchRequest.getIndividualMatch().getPlayerNumber())
+                .level(matchRequest.getIndividualMatch().getLevel())
+                .gender(matchRequest.getIndividualMatch().getGender())
+                .startTime(matchRequest.getIndividualMatch().getStartTime())
+                .endTime(matchRequest.getIndividualMatch().getEndTime())
+                .soccerField(matchRequest.getIndividualMatch().getReservationField().getSoccerField())
+                .build();
+    }
+
 }
