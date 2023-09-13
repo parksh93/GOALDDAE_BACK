@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/field")
@@ -91,22 +92,28 @@ public class SoccerFieldController {
     // 예약구장 조회 - 필터 이용, 예약유무 확인
     @GetMapping("/reservation/list")
     public ResponseEntity<List<SoccerFieldDTO>> getAvailableFieldsAndReservations(
-            @RequestParam Long userId,
+            @RequestParam(required = false) Long userId,
             @RequestParam LocalTime operatingHours,
             @RequestParam LocalTime closingTime,
             @RequestParam String inOutWhether,
             @RequestParam String grassWhether) {
 
-        List<SoccerFieldDTO> availableFields = soccerFieldService.findAvailableField(userId, operatingHours,
-                                                                                    closingTime, inOutWhether,
+        List<SoccerFieldDTO> availableFields = soccerFieldService.findAvailableField(Optional.ofNullable(userId),
+                                                                                    operatingHours,
+                                                                                    closingTime,
+                                                                                    inOutWhether,
                                                                                     grassWhether);
+        System.out.println("Received request for available fields: userId=" + userId +
+                ", operatingHours=" + operatingHours +
+                ", closingTime=" + closingTime +
+                ", inOutWhether=" + inOutWhether +
+                ", grassWhether=" + grassWhether);
 
         for (SoccerFieldDTO field : availableFields) {
             FieldReservationInfoDTO reservationInfo = soccerFieldService.getReservationInfo(field.getId(), LocalDate.now());
-
             field.setReservationInfo(reservationInfo);
         }
-
+        System.out.println("Returning " + availableFields.size() + " available fields");
         return ResponseEntity.ok(availableFields);
     }
 }

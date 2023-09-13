@@ -194,9 +194,10 @@ public class SoccerFieldServiceTest {
                                                         anyString(), anyString())).thenReturn(fields);
 
         // When
-        List<SoccerFieldDTO> resultFields = soccerFieldService.findAvailableField(userId, operatingHours,
-                                                                                closingTime, inOutWhether,
-                                                                                grassWhether);
+        List<SoccerFieldDTO> resultFields =
+                soccerFieldService.findAvailableField(Optional.ofNullable(userId), operatingHours,
+                        closingTime, inOutWhether,
+                        grassWhether);
 
         // Then
         assertNotNull(resultFields);

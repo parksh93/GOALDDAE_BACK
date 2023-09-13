@@ -21,6 +21,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -121,18 +122,20 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
 
     // 필터를 이용한 예약구장리스트 조회
     @Override
-    public List<SoccerFieldDTO> findAvailableField(Long userId,
+    public List<SoccerFieldDTO> findAvailableField(Optional<Long> userId,
                                                    LocalTime operatingHours,
                                                    LocalTime closingTime,
                                                    String inOutWhether,
                                                    String grassWhether) {
 
-        User user = userJPARepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
-        String preferredCity = user.getPreferredCity();
+        String preferredCity = "서울"; // default city
 
-        if (preferredCity == null || preferredCity.isEmpty()) {
-            preferredCity = "서울";
+        if (userId.isPresent()) {
+            User user = userJPARepository.findById(userId.get())
+                    .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId.get()));
+            if (user.getPreferredCity() != null && !user.getPreferredCity().isEmpty()) {
+                preferredCity = user.getPreferredCity();
+            }
         }
 
         List<SoccerField> field = soccerFieldRepository.findAvailableField(preferredCity, operatingHours,
