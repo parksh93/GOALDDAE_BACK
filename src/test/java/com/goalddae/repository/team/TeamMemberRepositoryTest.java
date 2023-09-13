@@ -37,6 +37,25 @@ public class TeamMemberRepositoryTest {
 
     @Test
     @Transactional
+    @DisplayName("teamId=3, userId=2 검색 시  teamManager=0")
+    public void findTeamManagerByUserIdTest(){
+        //given
+        long teamId = 3;
+        long userId = 2;
+        int teamManager = 0;
+
+        //when
+        int tM = teamMemberRepository.findTeamManagerByUserId(userId, teamId);
+
+        //then
+        assertEquals(teamManager, tM);
+
+    }
+
+
+
+    @Test
+    @Transactional
     @DisplayName("새로운 팀 멤버의 teamId=4")
     public void addTeamMemberTest() {
         // given

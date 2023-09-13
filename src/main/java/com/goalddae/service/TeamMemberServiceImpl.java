@@ -23,13 +23,20 @@ public class TeamMemberServiceImpl implements TeamMemberService{
     }
 
     @Override
+    public int findTeamManagerByUserId(long userId, long teamId) {
+        return teamMemberRepository.findTeamManagerByUserId(userId, teamId);
+    }
+
+    @Override
     public void addTeamMember(TeamMemberDTO teamMemberDTO) {
         long teamId = teamMemberDTO.getTeamId();
         long userId = teamMemberDTO.getUserId();
+        int teamManager = teamMemberDTO.getTeamManager();
 
         TeamMemberDTO newMember = new TeamMemberDTO();
         newMember.setTeamId(teamId);
         newMember.setUserId(userId);
+        newMember.setTeamManager(teamManager);    // 팀원
         newMember.setUserJoinDate(LocalDateTime.now());
 
         teamMemberRepository.addTeamMember(newMember);
