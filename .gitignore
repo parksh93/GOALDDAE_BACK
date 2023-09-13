@@ -44,3 +44,4 @@ application-ncloudChat.properties
 application-oauth2.yml
 application-kakaoDevelop.properties
 application-weather.properties
+application-s3.yml

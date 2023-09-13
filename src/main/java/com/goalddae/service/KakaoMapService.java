@@ -1,15 +1,11 @@
 package com.goalddae.service;
 
-import com.goalddae.entity.User;
-import com.goalddae.repository.UserJPARepository;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
-import retrofit2.http.Url;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -27,19 +23,11 @@ public class KakaoMapService {
     @Value("${restApiKey}")
     private String restAPIKey;
 
-    private final UserJPARepository userJPARepository;
-
-    @Autowired
-    public KakaoMapService(UserJPARepository userJPARepository){
-        this.userJPARepository = userJPARepository;
-    }
-
     public Map<String, String> getXY(String address) {
+        address = URLEncoder.encode(address);
         Map xyMap = new HashMap<>();
 
         try {
-            address = URLEncoder.encode(address);
-
             URL url = new URL(GEOCODE_URL + address);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
@@ -65,8 +53,6 @@ public class KakaoMapService {
 
             xyMap.put("x", x.substring(0, x.indexOf(".")));
             xyMap.put("y", y.substring(0, y.indexOf(".")));
-            System.out.println("x : " + xyMap.get("x"));
-            System.out.println("y : " + xyMap.get("y"));
         } catch (Exception e) {
             e.printStackTrace();
         }
