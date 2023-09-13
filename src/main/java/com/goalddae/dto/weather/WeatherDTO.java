@@ -1,6 +1,5 @@
 package com.goalddae.dto.weather;
 
-import com.goalddae.entity.Weather;
 import lombok.*;
 
 @Getter
@@ -18,19 +17,4 @@ public class WeatherDTO {
     private String windSpeed;   // 풍속
     private String city;
     private String fcstTime;
-
-    public Weather toEntity(){
-        Weather weather = Weather.builder()
-                .id(id)
-                .temperature(temperature)
-                .precipitation(precipitation)
-                .sky(sky)
-                .windDirection(windDirection)
-                .windSpeed(windSpeed)
-                .city(city)
-                .fcstTime(fcstTime)
-                .build();
-
-        return weather;
-    }
 }
