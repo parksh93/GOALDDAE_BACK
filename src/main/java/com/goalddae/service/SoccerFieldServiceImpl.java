@@ -135,11 +135,9 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
             preferredCity = "서울";
         }
 
-        List<SoccerField> field = soccerFieldRepository.findAvailableField(preferredCity,
-                operatingHours,
-                closingTime,
-                inOutWhether,
-                grassWhether);
+        List<SoccerField> field = soccerFieldRepository.findAvailableField(preferredCity, operatingHours,
+                                                                            closingTime, inOutWhether,
+                                                                            grassWhether);
 
         List<SoccerFieldDTO> fieldDTO = field.stream()
                 .map(fields -> SoccerFieldDTO.builder()
