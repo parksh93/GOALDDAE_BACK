@@ -3,6 +3,7 @@ package com.goalddae.service;
 import com.goalddae.dto.board.BoardListDTO;
 import com.goalddae.dto.board.BoardUpdateDTO;
 import com.goalddae.dto.board.HeartInfoDTO;
+import com.goalddae.dto.board.MyBoardListDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
 import com.goalddae.entity.ReportedBoard;
@@ -38,6 +39,9 @@ public interface BoardService {
 
     void approveReportedBoard(long reportId);
 
+    List<MyBoardListDTO> getUserCommunicationBoardPosts(long userId);
+
     // 조회수 탑5 게시글 조회
     List<BoardListDTO> findTop5Board();
+
 }
