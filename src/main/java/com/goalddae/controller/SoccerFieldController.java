@@ -109,5 +109,4 @@ public class SoccerFieldController {
 
         return ResponseEntity.ok(availableFields);
     }
-
 }
