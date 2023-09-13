@@ -24,6 +24,13 @@ public class TeamMemberController {
         return teamMemberService.findAllTeamMembersByTeamId(teamId);
     }
 
+    @GetMapping(value="/checkManager")
+    public ResponseEntity<Integer> checkManager(@RequestParam long userId,
+                                                @RequestParam long teamId){
+        int manager = teamMemberService.findTeamManagerByUserId(userId, teamId);
+        return ResponseEntity.ok(manager);
+    }
+
 
     @PostMapping(value = "/add")
     public ResponseEntity<String> addTeamMember(@RequestBody TeamMemberDTO teamMemberDTO){

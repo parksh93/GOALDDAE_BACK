@@ -10,6 +10,7 @@ import java.util.List;
 public interface TeamMemberRepository {
     void createTeamMemberTable(@Param("teamId") Long teamId);
     List<TeamMemberDTO> findAllTeamMembersByTeamId(long teamId);
+    int findTeamManagerByUserId(long userId, long teamId);
     void addTeamMember(TeamMemberDTO teamMemberDTO);
     void deleteMemberByUserId(long userId);
 

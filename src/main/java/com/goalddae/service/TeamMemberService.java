@@ -7,6 +7,7 @@ import java.util.List;
 public interface TeamMemberService {
 
     List<TeamMemberDTO> findAllTeamMembersByTeamId(long teamId);
+    int findTeamManagerByUserId(long userId, long teamId);
 
     void addTeamMember(TeamMemberDTO teamMemberDTO);
 
