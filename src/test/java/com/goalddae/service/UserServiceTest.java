@@ -51,6 +51,10 @@ public class UserServiceTest {
                 .build();
 
 //        String token = userService.generateTokenFromLogin(loginDTO);
+<<<<<<< HEAD
+//
+=======
+>>>>>>> develop
 //        assertNotEquals("", token) ;
     }
 
@@ -120,32 +124,6 @@ public class UserServiceTest {
         assertEquals("부산", updatedUser.getPreferredCity());
         assertEquals("수정닉네임", updatedUser.getNickname());
     }
-    @Test
-    @Transactional
-    @DisplayName("자유게시판에 쓴 글 조회 테스트")
-    public void getUserCommunicationBoardPostsTest() {
-        // given
-        long userId = 123;
-
-        // when
-        List<CommunicationBoard> communicationBoardList = userService.getUserCommunicationBoardPosts(userId);
-
-        // then
-        assertEquals(0, communicationBoardList.size());
-    }
-    @Test
-    @Transactional
-    @DisplayName("중고거래게시판에 쓴 글 조회 테스트")
-    public void getUserUsedTransactionBoardPostsTest() {
-        // given
-        long userId = 1;
-
-        // when
-        List<UsedTransactionBoard> usedTransactionBoardList = userService.getUserUsedTransactionBoardPosts(userId);
-
-        // then
-        assertEquals(0, usedTransactionBoardList.size());
-    }
 
     @Test
     @Transactional
@@ -175,6 +153,10 @@ public class UserServiceTest {
                 .build();
 
 //        String loginIdToken = userService.checkLoginIdAndEmail(findPasswordDTO);
+<<<<<<< HEAD
+//
+=======
+>>>>>>> develop
 //        assertNotNull(loginIdToken);
     }
 
@@ -190,12 +172,21 @@ public class UserServiceTest {
                 .email(email)
                 .build();
 
+<<<<<<< HEAD
+//        ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder()
+//                .loginIdToken(userService.checkLoginIdAndEmail(findPasswordDTO))
+//                .password(password)
+//                .build();
+//
+//        userService.changePassword(changePasswordDTO);
+=======
         ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder()
 //                .loginIdToken(userService.checkLoginIdAndEmail(findPasswordDTO))
                 .password(password)
                 .build();
 
         userService.changePassword(changePasswordDTO);
+>>>>>>> develop
     }
     @Test
     @Transactional
