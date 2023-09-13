@@ -40,8 +40,10 @@ application-db.yml
 application-jwt.yml
 application-email.properties
 application-payment.properties
+application-s3.yml
 application-ncloudChat.properties
 application-oauth2.yml
 application-kakaoDevelop.properties
 application-weather.properties
 application-s3.yml
+

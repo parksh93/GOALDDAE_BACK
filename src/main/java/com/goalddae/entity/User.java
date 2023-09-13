@@ -1,5 +1,9 @@
 package com.goalddae.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import lombok.Builder;
@@ -9,6 +13,8 @@ import lombok.Setter;
 
 import lombok.*;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.*;
+
 
 @Entity
 @Getter
@@ -78,6 +85,7 @@ public class User implements UserDetails {
     private LocalDateTime profileUpdateDate;    // 프로필 수정일자
 
     // 외래키 형성 - 사용자가 생성한 개인 매치 목록
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<IndividualMatch> individualMatches;
 
