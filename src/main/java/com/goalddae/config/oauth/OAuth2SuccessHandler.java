@@ -3,6 +3,7 @@ package com.goalddae.config.oauth;
 import com.goalddae.config.jwt.TokenProvider;
 import com.goalddae.entity.RefreshToken;
 import com.goalddae.entity.User;
+import com.goalddae.exception.NotFoundUserException;
 import com.goalddae.repository.RefreshTokenRepository;
 import com.goalddae.service.UserService;
 import com.goalddae.util.CookieUtil;
@@ -35,27 +36,32 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        String email = (String)oAuth2User.getAttributes().get("email");
+        String email = (String) oAuth2User.getAttributes().get("email");
 
-        if(email == null){
-            Map<String, Object> attribute = (Map)oAuth2User.getAttributes().get("response");
+        if (email == null) {
+            Map<String, Object> attribute = (Map) oAuth2User.getAttributes().get("response");
             email = (String) attribute.get("email");
         }
 
         User user = userService.findByEmail(email);
 
-        String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
+        if (user != null && !user.isAccountSuspersion()) {
 
-        saveRefreshToken(user.getId(), refreshToken);
+            String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
 
-        String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
-        CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE_NAME, accessToken);
-        CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken);
+            saveRefreshToken(user.getId(), refreshToken);
 
-        // 인증 관련 설정값, 쿠키 제거
-        clearAuthenticationAttributes(request, response);
+            String accessToken = tokenProvider.generateToken(user, ACCESS_TOKEN_DURATION);
+            CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE_NAME, accessToken);
+            CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken);
 
-        getRedirectStrategy().sendRedirect(request, response, REDIRECT_PATH);
+            // 인증 관련 설정값, 쿠키 제거
+            clearAuthenticationAttributes(request, response);
+
+            getRedirectStrategy().sendRedirect(request, response, REDIRECT_PATH);
+        } else {
+            throw new NotFoundUserException("login fail");
+        }
     }
 
     private void saveRefreshToken(Long userId, String newRefreshToken){
