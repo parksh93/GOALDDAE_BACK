@@ -8,11 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest
 public class SoccerFieldRepositoryTest {
@@ -132,4 +135,45 @@ public class SoccerFieldRepositoryTest {
 
         assertEquals("테스트 구장", soccerField.getFieldName());
     }
+
+    @Test
+    @Transactional
+    @DisplayName("예약할 구장 조회")
+    public void findByProvinceAndInOutWhetherAndGrassWhetherTest(){
+        // Given
+        String province = "서울";
+        String inOutWhether = "실내";
+        String grassWhether = "인조";
+        LocalTime operatingHours = LocalTime.of(06,00);
+        LocalTime closingTime = LocalTime.of(22,00);
+
+        SoccerField soccerField = SoccerField.builder()
+                .id(1L)
+                .fieldName("테스트구장 생성")
+                .operatingHours(operatingHours)
+                .closingTime(closingTime)
+                .region("분당")
+                .province("서울")
+                .reservationFee(10000)
+                .inOutWhether("실내")
+                .grassWhether("인조")
+                .fieldSize("14x15")
+                .toiletStatus(true)
+                .showerStatus(true)
+                .parkingStatus(true)
+                .fieldImg1("테스트이미지1")
+                .build();
+
+        soccerFieldRepository.save(soccerField);
+
+        // When
+        List<SoccerField> resultFields =
+                soccerFieldRepository.findByProvinceAndInOutWhetherAndGrassWhether(province, inOutWhether, grassWhether);
+
+        // Then
+        assertNotNull(resultFields);
+        assertEquals(1, resultFields.size());
+        assertEquals(soccerField.getProvince(), resultFields.get(0).getProvince());
+    }
+
 }

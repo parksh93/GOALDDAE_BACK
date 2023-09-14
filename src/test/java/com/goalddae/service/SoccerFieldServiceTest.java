@@ -179,8 +179,8 @@ public class SoccerFieldServiceTest {
 
         SoccerField soccerField2 = SoccerField.builder()
                 .id(2L)
-                .province("서울")
                 .fieldName("테스트 구장2")
+                .province("서울")
                 .inOutWhether("실내")
                 .grassWhether("천연")
                 .operatingHours(LocalTime.of(9, 0))
@@ -189,8 +189,12 @@ public class SoccerFieldServiceTest {
 
         List<SoccerField> fields = Arrays.asList(soccerField1, soccerField2);
 
-        when(soccerFieldRepository.findAvailableField(anyString(), anyString(), anyString())).thenReturn(fields);
-        when(soccerFieldRepository.findById(anyLong())).thenAnswer(invocation -> Optional.of(fields.get(((Long)invocation.getArgument(0)).intValue() - 1)));
+        when(soccerFieldRepository.findById(1L)).thenReturn(Optional.of(soccerField1));
+        when(soccerFieldRepository.findById(2L)).thenReturn(Optional.of(soccerField2));
+        when(soccerFieldRepository.findAllByProvince(anyString())).thenReturn(fields);
+        when(soccerFieldRepository.findByProvinceAndGrassWhether(anyString(), anyString())).thenReturn(fields);
+        when(soccerFieldRepository.findByProvinceAndInOutWhether(anyString(), anyString())).thenReturn(fields);
+        when(soccerFieldRepository.findByProvinceAndInOutWhetherAndGrassWhether(anyString(), anyString(), anyString())).thenReturn(fields);
 
         // When
         List<SoccerFieldDTO> resultFields =
@@ -202,6 +206,7 @@ public class SoccerFieldServiceTest {
         assertEquals(fields.size(), resultFields.size());
     }
 
+
     @Test
     @Transactional
     @DisplayName("특정 날짜에 해당 구장에서 이미 예약된 시간과 예약 가능 시간 조회")
@@ -209,6 +214,8 @@ public class SoccerFieldServiceTest {
         // Given
         Long fieldId = 1L;
         LocalDate date = LocalDate.of(2023, 9, 12);
+        LocalTime startTime = LocalTime.of(9, 0);
+        LocalTime endTime = LocalTime.of(22, 0);
 
         SoccerField soccerField = SoccerField.builder()
                 .id(fieldId)
@@ -219,16 +226,14 @@ public class SoccerFieldServiceTest {
 
         ReservationField reservation1 = ReservationField.builder()
                 .soccerField(soccerField)
-                .reservedDate(date.atStartOfDay().plusHours(8)) // 예약 : 8시
-                .startDate(date.atStartOfDay().plusHours(10)) // 경기 시작: 10시
-                .endDate(date.atStartOfDay().plusHours(12)) // 경기 종료: 12시
+                .startDate(date.atStartOfDay().plusHours(10))
+                .endDate(date.atStartOfDay().plusHours(12))
                 .build();
 
         ReservationField reservation2 = ReservationField.builder()
                 .soccerField(soccerField)
-                .reservedDate(date.atStartOfDay().plusHours(13)) // 예약 : 13시
-                .startDate(date.atStartOfDay().plusHours(15)) // 경기 시작: 15시
-                .endDate(date.atStartOfDay().plusHours(17)) // 경기 종료: 17시
+                .startDate(date.atStartOfDay().plusHours(15))
+                .endDate(date.atStartOfDay().plusHours(17))
                 .build();
 
         List<ReservationField> reservations = Arrays.asList(reservation1, reservation2);
@@ -238,19 +243,20 @@ public class SoccerFieldServiceTest {
                 .thenReturn(reservations);
 
         // When
-        FieldReservationInfoDTO resultInfoDTO = soccerFieldService.getReservationInfo(fieldId,date);
+        FieldReservationInfoDTO resultInfoDTO = soccerFieldService.getReservationInfo(fieldId, date, startTime, endTime);
 
         // Then
         assertNotNull(resultInfoDTO);
         assertEquals(Arrays.asList(
                 LocalTime.of(9,0),
+                LocalTime.of(12,0),
                 LocalTime.of(13,0),
                 LocalTime.of(14,0),
+                LocalTime.of(17,0),
                 LocalTime.of(18,0),
-                LocalTime.of(19,0),
-                LocalTime.of (20 ,00 ) ,
-                LocalTime. of (21 ,00 ),
-                LocalTime. of (22 ,00 )
-        ), resultInfoDTO.getAvailableTimes());
+                LocalTime.of (19 ,00 ),
+                LocalTime.of (20 ,00 ),
+                LocalTime.of (21 ,00 )
+                ), resultInfoDTO.getAvailableTimes());
     }
 }
