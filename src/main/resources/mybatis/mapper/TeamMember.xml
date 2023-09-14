@@ -5,7 +5,7 @@
                                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                         user_join_date DATETIME NOT NULL,
                                         team_manager BIGINT NOT NULL,
-                                        users_id BIGINT NOT NULL,
+                                        users_id BIGINT NOT NULL UNIQUE,
                                         team_id BIGINT NOT NULL
         );
     </update>

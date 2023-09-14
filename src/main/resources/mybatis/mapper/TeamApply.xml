@@ -9,14 +9,18 @@
                                        team_id BIGINT NOT NULL
         );
     </update>
-    <select id="findAllApplyByTeamId" resultType="com.goalddae.dto.team.TeamApplyDTO">
-        SELECT id as id,
-               team_apply_date as teamApplyDate,
-               team_accept_status as teamAcceptStatus,
-               users_id as userId,
-               team_id as teamId
-        FROM team_apply_#{teamId}
-        WHERE team_id = #{teamId}
+    <select id="findStatus0ByTeamId" parameterType="long" resultType="com.goalddae.dto.team.TeamMemberCheckDTO">
+        SELECT ta.id as id,
+               ta.team_accept_status as teamAcceptStatus,
+               ta.users_id as userId,
+               ta.team_id as teamId,
+               u.name as name,
+               u.profile_img_url as profileImgUrl,
+               u.preferred_city as preferredCity,
+               u.preferred_area as preferredArea
+        FROM team_apply_#{teamId} ta
+        JOIN users u ON ta.users_id = u.id
+        WHERE team_accept_status = 0
     </select>
     <select id="findApplyById" parameterType="long" resultType="com.goalddae.dto.team.TeamApplyDTO">
         SELECT id as id,
