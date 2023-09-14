@@ -14,8 +14,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -149,6 +151,20 @@ public class BoardController {
     public ResponseEntity<String> deleteHeart(@RequestBody CommunicationHeart communicationHeart) {
         boardService.heartDelete(communicationHeart.getBoardId(), communicationHeart.getUserId());
         return ResponseEntity.ok("좋아요를 취소합니다.");
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+
+        long maxSize = 5120 * 1024;
+
+        if (file.getSize() > maxSize) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일 크기가 초과되었습니다.");
+        }
+
+        String imageUrl = boardService.uploadImage(file);
+        return ResponseEntity.ok(imageUrl);
+
     }
 
 
