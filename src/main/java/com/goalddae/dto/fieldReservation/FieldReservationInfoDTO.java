@@ -2,6 +2,7 @@ package com.goalddae.dto.fieldReservation;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -12,8 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FieldReservationInfoDTO {
-    // 예약 가능 시간
-    private List<LocalTime> availableTimes;
-    // 예약 불가능 시간
-    private List<LocalTime> reservedTimes;
+    private LocalDate date;
+    private List<LocalTime> availableTimes;  // 예약 가능한 시간대
+    private List<LocalTime> unavailableTimes;  // 예약 불가능한 시간대
 }

@@ -22,10 +22,12 @@ public interface SoccerFieldService {
     public SoccerFieldInfoDTO findById(long id);
     // 필터를 이용한 예약구장리스트 조회
     List<SoccerFieldDTO> findAvailableField(Optional<Long> userId,
-                                            LocalTime operatingHours,
-                                            LocalTime closingTime,
+                                            String province,
                                             String inOutWhether,
-                                            String grassWhether);
+                                            String grassWhether,
+                                            LocalDate reservationDate,
+                                            String reservationPeriod);
+
     // 특정 날짜에 대해 해당 구장에서 이미 예약된 시간과 아직 예약 가능한 시간을 조회
     FieldReservationInfoDTO getReservationInfo(Long fieldId, LocalDate date);
 }

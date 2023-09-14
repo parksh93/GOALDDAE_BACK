@@ -15,12 +15,13 @@ public interface SoccerFieldRepository extends JpaRepository<SoccerField, Long> 
     List<SoccerField> findByRegionContainingOrFieldNameContaining(String region, String fieldName);
     // 예약구장리스트 조회
     @Query("SELECT s FROM SoccerField s WHERE " +
-            "s.region = :region AND " +
-            "s.operatingHours <= :operatingHours AND s.closingTime >= :closingTime AND " +
+            "s.province = :province AND " +
             "s.inOutWhether = :inOutWhether AND s.grassWhether = :grassWhether")
-    List<SoccerField> findAvailableField(@Param("region") String region,
-                                          @Param("operatingHours") LocalTime operatingHours,
-                                          @Param("closingTime") LocalTime closingTime,
-                                          @Param("inOutWhether") String inOutWhether,
-                                          @Param("grassWhether") String grassWhether);
+    List<SoccerField> findAvailableField(@Param("province") String province,
+                                         @Param("inOutWhether") String inOutWhether,
+                                         @Param("grassWhether") String grassWhether);
+    List<SoccerField> findAllByProvince(String province);
+    List<SoccerField> findByProvinceAndGrassWhether(String province, String grassWhether);
+    List<SoccerField> findByProvinceAndInOutWhether(String province, String inOutWhether);
+    List<SoccerField> findByProvinceAndInOutWhetherAndGrassWhether(String province, String inOutWhether, String grassRather);
 }
