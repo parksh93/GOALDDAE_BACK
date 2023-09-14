@@ -84,8 +84,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private LocalDateTime profileUpdateDate;    // 프로필 수정일자
 
-    // 외래키 형성 - 사용자가 생성한 개인 매치 목록
 
+    // 외래키 형성 - 사용자가 생성한 개인 매치 목록
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<IndividualMatch> individualMatches;
 
@@ -144,7 +144,7 @@ public class User implements UserDetails {
 
     @PrePersist
     public void setInformation() {
-        this.profileImgUrl = "./img/userProfileImg/goalddae_default_profile.Webp";
+        this.profileImgUrl = "https://kr.object.ncloudstorage.com/goalddae-bucket/profile/goalddae_default_profile.Webp";
         this.matchesCnt = 0;
         this.level = "유망주";
         this.signupDate = LocalDateTime.now();

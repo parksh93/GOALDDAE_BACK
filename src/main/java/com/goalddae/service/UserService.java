@@ -20,6 +20,7 @@ public interface UserService {
     public boolean generateTokenFromLogin(LoginDTO loginDTO, HttpServletResponse response);
 //    public boolean validToken(String token, String refreshTokenCookie, HttpServletResponse response);
     public GetUserInfoDTO getUserInfo(String token);
+    public GetUserInfoDTO getFriendInfo(long id);
     public boolean checkLoginId(CheckLoginIdDTO checkLoginIdDTO);
     public boolean checkEmail(SendEmailDTO checkEmailDTO);
     public boolean checkNickname(CheckNicknameDTO checkNicknameDTO);

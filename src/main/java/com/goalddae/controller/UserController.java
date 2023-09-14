@@ -39,6 +39,13 @@ public class UserController {
         return ResponseEntity.ok(userInfoDTO);
     }
 
+    @RequestMapping(value = "/getFriendInfo/{id}", method = RequestMethod.POST)
+    public ResponseEntity<?> getFriendInfo(@PathVariable long id) {
+        GetUserInfoDTO friendInfo = userService.getFriendInfo(id);
+
+        return ResponseEntity.ok(friendInfo);
+    }
+
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public ResponseEntity<Boolean> logout(HttpServletResponse response){
         Cookie cookieToken = new Cookie("token", null);

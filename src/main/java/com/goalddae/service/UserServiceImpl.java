@@ -158,6 +158,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public GetUserInfoDTO getFriendInfo(long id) {
+        User user = userJPARepository.findById(id).get();
+        GetUserInfoDTO friendInfo = new GetUserInfoDTO(user);
+        return friendInfo;
+    }
+
+    @Override
     public boolean checkLoginId(CheckLoginIdDTO checkLoginIdDTO){
         int checkLoginIdCnt = userJPARepository.countByLoginId(checkLoginIdDTO.getLoginId());
 
