@@ -1,6 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.config.jwt.TokenProvider;
+import com.goalddae.dto.admin.GetAdminListDTO;
 import com.goalddae.util.S3Uploader;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
@@ -24,9 +25,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -72,8 +78,13 @@ public class UserServiceImpl implements UserService{
                 .preferredCity(user.getPreferredCity())
                 .preferredArea(user.getPreferredArea())
                 .activityClass(user.getActivityClass())
-                .authority(user.getAuthority())
+                .authority("user")
                 .userCode(createUserCode())
+                .profileImgUrl("https://kr.object.ncloudstrage.com/goalddae-bucket/profile/goalddae_default_profile.Webp")
+                .matchesCnt(0)
+                .level("유망주")
+                .noShowCnt(0)
+                .teamId(-1L)
                 .build();
 
         userJPARepository.save(newUser);
@@ -109,14 +120,11 @@ public class UserServiceImpl implements UserService{
 
         return code.toString();
     }
-    @Override
-    public User getByCredentials(String loginId){
-        return userJPARepository.findByLoginId(loginId);
-    }
 
     @Override
     public boolean generateTokenFromLogin(LoginDTO loginDTO, HttpServletResponse response){
-        User userInfo = getByCredentials(loginDTO.getLoginId());
+        System.out.println(bCryptPasswordEncoder.encode(loginDTO.getPassword()));
+        User userInfo = userJPARepository.findByLoginId(loginDTO.getLoginId());
 
         if (userInfo != null && !userInfo.isAccountSuspersion()) {
             if (bCryptPasswordEncoder.matches(loginDTO.getPassword(), userInfo.getPassword())) {
@@ -315,5 +323,23 @@ public class UserServiceImpl implements UserService{
             System.out.println("예외가 발생했다.");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<GetAdminListDTO> findByAuthority(String authority) {
+        List<User> userList = userJPARepository.findByAuthority("admin");
+
+        List<GetAdminListDTO> adminList = new ArrayList<>();
+
+        for (User user:userList) {
+            GetAdminListDTO getAdminListDTO = new GetAdminListDTO(user);
+
+            String signUpDate = user.getSignupDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+            getAdminListDTO.setSignUpDate(signUpDate);
+            adminList.add(getAdminListDTO);
+        }
+
+        return adminList;
     }
 }

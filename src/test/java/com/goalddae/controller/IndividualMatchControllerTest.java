@@ -64,7 +64,7 @@ public class IndividualMatchControllerTest {
                 .build();
         // IndividualMatchRequest 리스트 생성 후 리턴
         List<IndividualMatchRequest> matchRequests = Collections.singletonList(matchRequest);
-        when(service.findAllByUserId(userId)).thenReturn(matchRequests);
+        when(individualMatchService.findAllByUserId(userId)).thenReturn(matchRequests);
 
         // IndividualMatchRequestDTO 생성
         IndividualMatchRequestDTO expectedDto = IndividualMatchRequestDTO.builder()
