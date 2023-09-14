@@ -3,7 +3,6 @@ package com.goalddae.service;
 import com.goalddae.entity.ArticleWorld;
 
 import com.goalddae.repository.ArticleWorldJpaRepository;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -27,7 +26,7 @@ public class WebCrawlerServiceImpl implements WebCrawlerService {
         this.articleWorldJpaRepository = articleWorldJpaRepository;
     }
 
-//    @PostConstruct  // 서버가 시작될 때 즉시 크롤링 시작
+    //    @PostConstruct  // 서버가 시작될 때 즉시 크롤링 시작
     @Scheduled(cron = "0 0 6,12,18,0 * * ?", zone = "Asia/Seoul")
     public void crawlArticles() {
         String URL = "https://sports.news.naver.com/wfootball/index.nhn";
