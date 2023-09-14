@@ -16,4 +16,5 @@ public class FieldReservationInfoDTO {
     private LocalDate date;
     private List<LocalTime> availableTimes;  // 예약 가능한 시간대
     private List<LocalTime> unavailableTimes;  // 예약 불가능한 시간대
+    private List<LocalTime> ReservedTimes;
 }

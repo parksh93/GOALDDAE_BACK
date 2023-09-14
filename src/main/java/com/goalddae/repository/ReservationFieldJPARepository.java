@@ -14,5 +14,3 @@ public interface ReservationFieldJPARepository extends JpaRepository<Reservation
                                                                      LocalDateTime startDate,
                                                                      LocalDateTime endDate);
 }
-
-

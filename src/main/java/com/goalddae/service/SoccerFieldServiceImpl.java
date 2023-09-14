@@ -19,10 +19,7 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -121,7 +118,7 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
         return new SoccerFieldInfoDTO(soccerField);
     }
 
-    // 필터를 이용한 예약구장리스트 조회
+    // 필터를 이용한 예약 구장 조회
     @Override
     public List<SoccerFieldDTO> findAvailableField(Optional<Long> userId,
                                                    String province,
@@ -156,7 +153,7 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
 
         switch (reservationPeriod) {
             case "오전":
-                startTime = LocalTime.of(0, 0);
+                startTime = LocalTime.of(6, 0);
                 endTime = LocalTime.of(12, 0);
                 break;
             case "오후":
@@ -176,10 +173,15 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
                 fields.stream()
                         .map(field -> {
                             SoccerFieldDTO dto = convertToDto(field);
-                            FieldReservationInfoDTO reservationInfo = getReservationInfo(field.getId(), reservationDate);
-                            dto.setReservationInfo(reservationInfo);
-                            return dto;
+                            FieldReservationInfoDTO reservationInfo = getReservationInfo(field.getId(), reservationDate, startTime, endTime);
+                            if (isAvailableForReservation(reservationInfo, startTime, endTime)) {
+                                dto.setReservationInfo(reservationInfo);
+                                return dto;
+                            } else {
+                                return null;
+                            }
                         })
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toList());
 
         return fieldDTOs;
@@ -193,38 +195,39 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
         List<LocalTime> availableTimes = new ArrayList<>(info.getAvailableTimes());
         availableTimes.removeAll(reservedTimes);
 
-        // 원하는 시간대에 예약 가능한지 확인
-        for (LocalTime time = startTime; !time.isAfter(endTime); time = time.plusHours(1)) {
-            if (!availableTimes.contains(time)) {
-                return false;
+        // 원하는 시간대 중에서 한 번이라도 예약 가능한 시간을 발견하면 true 반환
+        for (LocalTime time = startTime; time.isBefore(endTime); time = time.plusHours(1)) {
+            if (availableTimes.contains(time)) {
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
-        private SoccerFieldDTO convertToDto(SoccerField field) {
-            return SoccerFieldDTO.builder()
-                    .id(field.getId())
-                    .fieldName(field.getFieldName())
-                    .operatingHours(field.getOperatingHours())
-                    .closingTime(field.getClosingTime())
-                    .province(field.getProvince())
-                    .reservationFee(field.getReservationFee())
-                    .fieldSize(field.getFieldSize())
-                    .inOutWhether(field.getInOutWhether())
-                    .grassWhether(field.getGrassWhether())
-                    .toiletStatus(field.isToiletStatus())
-                    .showerStatus(field.isShowerStatus())
-                    .parkingStatus(field.isParkingStatus())
-                    .fieldImg1(field.getFieldImg1())
-                    .fieldImg2(field.getFieldImg2())
-                    .fieldImg2(field.getFieldImg3())
-                    .build();
+
+    private SoccerFieldDTO convertToDto(SoccerField field) {
+        return SoccerFieldDTO.builder()
+                .id(field.getId())
+                .fieldName(field.getFieldName())
+                .operatingHours(field.getOperatingHours())
+                .closingTime(field.getClosingTime())
+                .province(field.getProvince())
+                .reservationFee(field.getReservationFee())
+                .fieldSize(field.getFieldSize())
+                .inOutWhether(field.getInOutWhether())
+                .grassWhether(field.getGrassWhether())
+                .toiletStatus(field.isToiletStatus())
+                .showerStatus(field.isShowerStatus())
+                .parkingStatus(field.isParkingStatus())
+                .fieldImg1(field.getFieldImg1())
+                .fieldImg2(field.getFieldImg2())
+                .fieldImg2(field.getFieldImg3())
+                .build();
     }
 
     // 특정 날짜에 대해 해당 구장에서 예약 가능한 시간 조회
     @Override
-    public FieldReservationInfoDTO getReservationInfo(Long fieldId, LocalDate date) {
+    public FieldReservationInfoDTO getReservationInfo(Long fieldId, LocalDate date, LocalTime startTime, LocalTime endTime) {
         SoccerField soccerField = soccerFieldRepository.findById(fieldId)
                 .orElseThrow(() -> new EntityNotFoundException("SoccerField not found with id: " + fieldId));
 
@@ -234,7 +237,7 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
 
         // 전체 운영시각 리스트 생성
         List<LocalTime> allTimes = new ArrayList<>();
-        for (LocalTime time = operatingStart; !time.isAfter(operatingEnd); time = time.plusHours(1)) {
+        for (LocalTime time = operatingStart; !time.isAfter(operatingEnd.minusHours(1)); time = time.plusHours(1)) {
             allTimes.add(time);
         }
 
@@ -249,7 +252,7 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
         List<LocalTime> reservedTimes = reservations.stream()
                 .flatMap(reservation ->
                         Stream.iterate(reservation.getStartDate().toLocalTime(),
-                                time -> !time.isAfter(reservation.getEndDate().toLocalTime()),
+                                time -> time.isBefore(reservation.getEndDate().toLocalTime()),
                                 time -> time.plusHours(1)))
                 .collect(Collectors.toList());
 
@@ -258,7 +261,13 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
         availableTimes.removeAll(reservedTimes);
 
         FieldReservationInfoDTO infoDTO = new FieldReservationInfoDTO();
-        infoDTO.setAvailableTimes(availableTimes);
+
+        infoDTO.setAvailableTimes(
+                availableTimes.stream()
+                        .filter(time -> !time.isBefore(startTime) && (time.equals(endTime) || !time.isAfter(endTime)))
+                        .collect(Collectors.toList())
+        );
+
         infoDTO.setReservedTimes(reservedTimes);
 
         return infoDTO;

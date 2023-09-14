@@ -13,13 +13,8 @@ public interface SoccerFieldRepository extends JpaRepository<SoccerField, Long> 
     SoccerField findByFieldName(String fieldName);
     // 검색 기능 - cityNames.json
     List<SoccerField> findByRegionContainingOrFieldNameContaining(String region, String fieldName);
-    // 예약구장리스트 조회
-    @Query("SELECT s FROM SoccerField s WHERE " +
-            "s.province = :province AND " +
-            "s.inOutWhether = :inOutWhether AND s.grassWhether = :grassWhether")
-    List<SoccerField> findAvailableField(@Param("province") String province,
-                                         @Param("inOutWhether") String inOutWhether,
-                                         @Param("grassWhether") String grassWhether);
+
+    // 예약할 구장 조회
     List<SoccerField> findAllByProvince(String province);
     List<SoccerField> findByProvinceAndGrassWhether(String province, String grassWhether);
     List<SoccerField> findByProvinceAndInOutWhether(String province, String inOutWhether);

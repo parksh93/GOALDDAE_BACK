@@ -90,7 +90,7 @@ public class SoccerFieldController {
     }
 
     @GetMapping("/reservation/list")
-    public ResponseEntity<List<SoccerFieldDTO>> getAvailableFieldsAndReservations(
+    public ResponseEntity<List<SoccerFieldDTO>> findReservationField(
             @RequestParam(required = false) Long userId,
             @RequestParam String province,
             @RequestParam String inOutWhether,
@@ -101,5 +101,4 @@ public class SoccerFieldController {
         List<SoccerFieldDTO> availableFields = soccerFieldService.findAvailableField(Optional.ofNullable(userId), province, inOutWhether, grassWhether, reservationDate, reservationPeriod);
         return ResponseEntity.ok(availableFields);
     }
-
 }
