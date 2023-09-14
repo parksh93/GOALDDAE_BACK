@@ -2,6 +2,7 @@ package com.goalddae.repository.team;
 
 
 import com.goalddae.dto.team.TeamApplyDTO;
+import com.goalddae.dto.team.TeamMemberCheckDTO;
 import com.goalddae.repository.TeamApplyRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,17 +24,18 @@ public class TeamApplyRepositoryTest {
     @Test
     @Transactional
     @DisplayName("teamId=3으로 확인 시 사이즈=1,userId= 2")
-    public void findAllApplyByTeamIdTest(){
+    public void findStatus0ByTeamIdTest(){
         //given
         long teamId = 3;
         long userId = 2;
+        String name = "유정원";
 
         //when
-        List<TeamApplyDTO> applys = teamApplyRepository.findAllApplyByTeamId(teamId);
+        List<TeamMemberCheckDTO> applys = teamApplyRepository.findStatus0ByTeamId(teamId);
 
         //then
         assertEquals(1, applys.size());
-        assertEquals(userId, applys.get(0).getUserId());
+        assertEquals(name, applys.get(0).getName());
     }
 
     @Test
@@ -53,7 +55,6 @@ public class TeamApplyRepositoryTest {
 
     }
 
-
     @Test
     @Transactional
     @DisplayName("teamAcceptStatus=1, 사이즈=1")
@@ -64,7 +65,7 @@ public class TeamApplyRepositoryTest {
 
         TeamApplyDTO newApply = TeamApplyDTO.builder()
                 .teamId(teamId)
-                .teamAcceptStatus(1)
+                .teamAcceptStatus(0)
                 .userId(userId)
                 .build();
 

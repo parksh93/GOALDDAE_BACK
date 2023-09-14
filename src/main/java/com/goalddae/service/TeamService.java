@@ -1,11 +1,8 @@
 package com.goalddae.service;
 
-import com.goalddae.dto.team.TeamApplyDTO;
-import com.goalddae.dto.team.TeamListDTO;
-import com.goalddae.dto.team.TeamUpdateDTO;
+import com.goalddae.dto.team.*;
 import com.goalddae.entity.Team;
 
-import com.goalddae.dto.team.TeamSaveDTO;
 import com.goalddae.entity.Team;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,7 +28,7 @@ public interface TeamService {
     Long getAutoIncrementValue();
 
 
-    List<TeamApplyDTO> findAllApplyByTeamId(long teamId);
+    List<TeamMemberCheckDTO> findStatus0ByTeamId(long teamId);
     TeamApplyDTO findApplyById(long id, long teamId);
     void addTeamApply(TeamApplyDTO teamApplyDTO);
     void updateAcceptStatus(TeamApplyDTO teamApplyDTO);

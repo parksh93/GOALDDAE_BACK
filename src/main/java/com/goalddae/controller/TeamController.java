@@ -145,5 +145,15 @@ public class TeamController {
         }
     }
 
+    @GetMapping(value="/checkApply")
+    public ResponseEntity<?> findStatus0ByTeamId(@RequestParam long teamId){
+        try{
+            List<TeamMemberCheckDTO> applys = teamService.findStatus0ByTeamId(teamId);
+            return ResponseEntity.ok(applys);
+
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 }

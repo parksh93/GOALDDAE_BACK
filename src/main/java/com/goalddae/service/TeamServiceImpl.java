@@ -1,14 +1,11 @@
 package com.goalddae.service;
 
-import com.goalddae.dto.team.TeamApplyDTO;
-import com.goalddae.dto.team.TeamListDTO;
-import com.goalddae.dto.team.TeamUpdateDTO;
+import com.goalddae.dto.team.*;
 import com.goalddae.entity.Team;
 import com.goalddae.repository.TeamJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.goalddae.dto.team.TeamSaveDTO;
 import com.goalddae.repository.TeamApplyRepository;
 import com.goalddae.repository.TeamMatchResultRepository;
 import com.goalddae.repository.TeamMemberRepository;
@@ -157,7 +154,8 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public void save(TeamSaveDTO teamSaveDTO){
+    public void save(TeamSaveDTO teamSaveDTO
+    ){
         Team newTeam = Team.builder()
                 .teamName(teamSaveDTO.getTeamName())
                 .area(teamSaveDTO.getArea())
@@ -194,10 +192,9 @@ public class TeamServiceImpl implements TeamService {
     }
 
 
-
     @Override
-    public List<TeamApplyDTO> findAllApplyByTeamId(long teamId) {
-        return teamApplyRepository.findAllApplyByTeamId(teamId);
+    public List<TeamMemberCheckDTO> findStatus0ByTeamId(long teamId) {
+        return teamApplyRepository.findStatus0ByTeamId(teamId);
     }
 
     @Override
