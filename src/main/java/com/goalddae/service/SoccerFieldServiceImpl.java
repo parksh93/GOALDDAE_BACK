@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -123,50 +124,103 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
     // 필터를 이용한 예약구장리스트 조회
     @Override
     public List<SoccerFieldDTO> findAvailableField(Optional<Long> userId,
-                                                   LocalTime operatingHours,
-                                                   LocalTime closingTime,
+                                                   String province,
                                                    String inOutWhether,
-                                                   String grassWhether) {
+                                                   String grassWhether,
+                                                   LocalDate reservationDate,
+                                                   String reservationPeriod) {
 
-        String preferredCity = "서울"; // default city
+        String defaultCity = "서울";
 
-        if (userId.isPresent()) {
+        if (userId != null && userId.isPresent()) {
             User user = userJPARepository.findById(userId.get())
                     .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId.get()));
             if (user.getPreferredCity() != null && !user.getPreferredCity().isEmpty()) {
-                preferredCity = user.getPreferredCity();
+                defaultCity = user.getPreferredCity();
             }
         }
 
-        List<SoccerField> field = soccerFieldRepository.findAvailableField(preferredCity, operatingHours,
-                                                                            closingTime, inOutWhether,
-                                                                            grassWhether);
+        List<SoccerField> fields;
+        if ("".equals(inOutWhether) && "".equals(grassWhether)) {
+            fields = soccerFieldRepository.findAllByProvince(province);
+        } else if ("".equals(inOutWhether)) {
+            fields = soccerFieldRepository.findByProvinceAndGrassWhether(province, grassWhether);
+        } else if ("".equals(grassWhether)) {
+            fields = soccerFieldRepository.findByProvinceAndInOutWhether(province, inOutWhether);
+        } else {
+            fields = soccerFieldRepository.findByProvinceAndInOutWhetherAndGrassWhether(province, inOutWhether, grassWhether);
+        }
 
-        List<SoccerFieldDTO> fieldDTO = field.stream()
-                .map(fields -> SoccerFieldDTO.builder()
-                        .id(fields.getId())
-                        .fieldName(fields.getFieldName())
-                        .operatingHours(fields.getOperatingHours())
-                        .closingTime(fields.getClosingTime())
-                        .region(fields.getRegion())
-                        .reservationFee(fields.getReservationFee())
-                        .fieldSize(fields.getFieldSize())
-                        .inOutWhether(fields.getInOutWhether())
-                        .grassWhether(fields.getGrassWhether())
-                        .toiletStatus(fields.isToiletStatus())
-                        .showerStatus(fields.isShowerStatus())
-                        .parkingStatus(fields.isParkingStatus())
-                        .fieldImg1(fields.getFieldImg1())
-                        .fieldImg2(fields.getFieldImg2())
-                        .fieldImg3(fields.getFieldImg3())
-                        .build()
+        LocalTime startTime;
+        LocalTime endTime;
 
-                )
-                .collect(Collectors.toList());
+        switch (reservationPeriod) {
+            case "오전":
+                startTime = LocalTime.of(0, 0);
+                endTime = LocalTime.of(12, 0);
+                break;
+            case "오후":
+                startTime = LocalTime.of(12, 0);
+                endTime = LocalTime.of(18, 0);
+                break;
+            case "저녁":
+                startTime = LocalTime.of(18, 0);
+                endTime = LocalTime.MAX;
+                break;
+            default:
+                startTime = LocalTime.MIN;
+                endTime = LocalTime.MAX;
+        }
 
-        return fieldDTO;
+        List<SoccerFieldDTO> fieldDTOs =
+                fields.stream()
+                        .map(field -> {
+                            SoccerFieldDTO dto = convertToDto(field);
+                            FieldReservationInfoDTO reservationInfo = getReservationInfo(field.getId(), reservationDate);
+                            dto.setReservationInfo(reservationInfo);
+                            return dto;
+                        })
+                        .collect(Collectors.toList());
+
+        return fieldDTOs;
     }
 
+    private boolean isAvailableForReservation(FieldReservationInfoDTO info, LocalTime startTime, LocalTime endTime) {
+        // 이미 예약된 시각들 리스트 생성
+        List<LocalTime> reservedTimes = info.getReservedTimes();
+
+        // 전체 운영시각에서 이미 예약된 것들 제거하여 예약 가능한 시간 목록 생성
+        List<LocalTime> availableTimes = new ArrayList<>(info.getAvailableTimes());
+        availableTimes.removeAll(reservedTimes);
+
+        // 원하는 시간대에 예약 가능한지 확인
+        for (LocalTime time = startTime; !time.isAfter(endTime); time = time.plusHours(1)) {
+            if (!availableTimes.contains(time)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+        private SoccerFieldDTO convertToDto(SoccerField field) {
+            return SoccerFieldDTO.builder()
+                    .id(field.getId())
+                    .fieldName(field.getFieldName())
+                    .operatingHours(field.getOperatingHours())
+                    .closingTime(field.getClosingTime())
+                    .province(field.getProvince())
+                    .reservationFee(field.getReservationFee())
+                    .fieldSize(field.getFieldSize())
+                    .inOutWhether(field.getInOutWhether())
+                    .grassWhether(field.getGrassWhether())
+                    .toiletStatus(field.isToiletStatus())
+                    .showerStatus(field.isShowerStatus())
+                    .parkingStatus(field.isParkingStatus())
+                    .fieldImg1(field.getFieldImg1())
+                    .fieldImg2(field.getFieldImg2())
+                    .fieldImg2(field.getFieldImg3())
+                    .build();
+    }
 
     // 특정 날짜에 대해 해당 구장에서 예약 가능한 시간 조회
     @Override

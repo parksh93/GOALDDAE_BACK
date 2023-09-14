@@ -161,49 +161,46 @@ public class SoccerFieldServiceTest {
     @DisplayName("필터를 이용하여 예약구장 조회")
     public void findFieldReservationTest() {
         // Given
-        Long userId = 1L;
-        LocalTime operatingHours = LocalTime.of(9, 0);
-        LocalTime closingTime = LocalTime.of(22, 0);
+        String province = "서울";
+        LocalDate reservationDate = LocalDate.of(2023, 9, 14);
+        String reservationPeriod = "저녁";
         String inOutWhether = "실내";
         String grassWhether = "천연";
-
-        User user = User.builder()
-                .id(userId)
-                .preferredCity("서울")
-                .build();
 
         SoccerField soccerField1 = SoccerField.builder()
                 .id(1L)
                 .fieldName("테스트 구장1")
-                .region("서울")
+                .province("서울")
                 .inOutWhether("실내")
                 .grassWhether("천연")
+                .operatingHours(LocalTime.of(9, 0))
+                .closingTime(LocalTime.of(22, 0))
                 .build();
 
         SoccerField soccerField2 = SoccerField.builder()
                 .id(2L)
+                .province("서울")
                 .fieldName("테스트 구장2")
-                .inOutWhether("실외")
-                .grassWhether("인조")
+                .inOutWhether("실내")
+                .grassWhether("천연")
+                .operatingHours(LocalTime.of(9, 0))
+                .closingTime(LocalTime.of(22, 0))
                 .build();
 
         List<SoccerField> fields = Arrays.asList(soccerField1, soccerField2);
 
-        when(userJPARepository.findById(userId)).thenReturn(Optional.of(user));
-        when(soccerFieldRepository.findAvailableField(anyString(), any(LocalTime.class), any(LocalTime.class),
-                                                        anyString(), anyString())).thenReturn(fields);
+        when(soccerFieldRepository.findAvailableField(anyString(), anyString(), anyString())).thenReturn(fields);
+        when(soccerFieldRepository.findById(anyLong())).thenAnswer(invocation -> Optional.of(fields.get(((Long)invocation.getArgument(0)).intValue() - 1)));
 
         // When
         List<SoccerFieldDTO> resultFields =
-                soccerFieldService.findAvailableField(Optional.ofNullable(userId), operatingHours,
-                        closingTime, inOutWhether,
-                        grassWhether);
+                soccerFieldService.findAvailableField(Optional.empty(), province, inOutWhether, grassWhether,
+                        reservationDate,reservationPeriod);
 
         // Then
         assertNotNull(resultFields);
         assertEquals(fields.size(), resultFields.size());
     }
-
 
     @Test
     @Transactional
