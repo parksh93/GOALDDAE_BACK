@@ -125,5 +125,17 @@ public class SoccerField {
         this.closingTime = closingTime;
     }
 
+    public void changeProvince(String province) {
+        this.province = province;
+    }
+
+    public void changeAddress(String address) {
+        this.address = address;
+    }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
+
     }
 

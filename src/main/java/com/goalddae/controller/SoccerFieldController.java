@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -83,5 +84,19 @@ public class SoccerFieldController {
             e.printStackTrace();
             return ResponseEntity.status(500).build();
         }
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+
+        long maxSize = 20000 * 1024;
+
+        if (file.getSize() > maxSize) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일 크기가 초과되었습니다.");
+        }
+
+        String imageUrl = soccerFieldService.uploadImage(file);
+        return ResponseEntity.ok(imageUrl);
+
     }
 }

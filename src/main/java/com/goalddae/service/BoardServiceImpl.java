@@ -8,6 +8,7 @@ import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
 import com.goalddae.entity.ReportedBoard;
 import com.goalddae.repository.*;
+import com.goalddae.util.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,6 +32,8 @@ public class BoardServiceImpl implements BoardService{
     ReplyJPARepository replyJPARepository;
     HeartJPARepository heartJPARepository;
     ReportedBoardJPARepository reportedBoardJPARepository;
+
+    S3Uploader s3Uploader;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -41,12 +47,13 @@ public class BoardServiceImpl implements BoardService{
     private String jdbcPassword;
 
     @Autowired
-    public BoardServiceImpl(BoardJPARepository boardJPARepository, ReplyJPARepository replyJPARepository, HeartJPARepository heartJPARepository, ReportedBoardJPARepository reportedBoardJPARepository, JdbcTemplate jdbcTemplate){
+    public BoardServiceImpl(BoardJPARepository boardJPARepository, ReplyJPARepository replyJPARepository, HeartJPARepository heartJPARepository, ReportedBoardJPARepository reportedBoardJPARepository, JdbcTemplate jdbcTemplate, S3Uploader s3Uploader){
         this.boardJPARepository = boardJPARepository;
         this.replyJPARepository = replyJPARepository;
         this.heartJPARepository = heartJPARepository;
         this.reportedBoardJPARepository = reportedBoardJPARepository;
         this.jdbcTemplate = jdbcTemplate;
+        this.s3Uploader = s3Uploader;
     }
 
     @Override
@@ -186,9 +193,7 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public void heartDelete(long boardId, long userId) {
         Optional<CommunicationHeart> communicationHeart = heartJPARepository.findByBoardIdAndUserId(boardId, userId);
-        if(communicationHeart.isPresent()){
-            heartJPARepository.delete(communicationHeart.get());
-        }
+        communicationHeart.ifPresent(heart -> heartJPARepository.delete(heart));
     }
 
     @Override
@@ -199,7 +204,13 @@ public class BoardServiceImpl implements BoardService{
     @Transactional
     @Override
     public void saveReportedBoard(ReportedBoard reportedBoard) {
-        reportedBoardJPARepository.save(reportedBoard);
+
+        Optional<ReportedBoard> reportedBoardOptional =
+                reportedBoardJPARepository.findByBoardIdAndReporterUserId(reportedBoard.getBoardId(), reportedBoard.getReporterUserId());
+
+        if(reportedBoardOptional.isEmpty()){
+            reportedBoardJPARepository.save(reportedBoard);
+        }
     }
 
     @Transactional
@@ -215,6 +226,21 @@ public class BoardServiceImpl implements BoardService{
 
         boardJPARepository.deleteById(reportedBoard.getBoardId());
         reportedBoardJPARepository.delete(reportedBoard);
+    }
+
+    @Transactional
+    @Override
+    public String uploadImage(MultipartFile multipartFile) {
+
+        String uploadImageUrl = null;
+
+        try {
+            uploadImageUrl = s3Uploader.uploadFiles(multipartFile, "board");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return uploadImageUrl;
     }
 
     // 금일 조회수 탑5 게시글 조회
