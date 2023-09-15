@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface UserJPARepository extends JpaRepository<User, Long> {
     User findByLoginId(String loginId);
     int countByLoginId(String loginId);
@@ -20,6 +22,5 @@ public interface UserJPARepository extends JpaRepository<User, Long> {
     @Transactional
     @Query(value = "UPDATE User u SET u.accountSuspersion = true WHERE u.id = :id")
     void updateUserAccountSuspersionById(long id);
-
-
+    List<User> findByAuthority(String authority);
 }

@@ -1,5 +1,7 @@
 package com.goalddae.service;
 
+import com.goalddae.dto.admin.DeleteAdminDTO;
+import com.goalddae.dto.admin.GetAdminListDTO;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
 
@@ -28,19 +30,6 @@ public class UserServiceTest {
     @Autowired
     UserJPARepository userJPARepository;
 
-
-    @Test
-    @Transactional
-    @DisplayName("로그인 아이디를 이용한 유저 정보 조회")
-    public void getByCredentialsTest(){
-        String loginId = "asd";
-
-        User user = userService.getByCredentials(loginId);
-
-        assertEquals(1, user.getId());
-        assertEquals("박상현", user.getNickname());
-    }
-
     @Test
     @Transactional
     @DisplayName("로그인 정보 확인 및 토큰발행")
@@ -51,10 +40,7 @@ public class UserServiceTest {
                 .build();
 
 //        String token = userService.generateTokenFromLogin(loginDTO);
-<<<<<<< HEAD
 //
-=======
->>>>>>> develop
 //        assertNotEquals("", token) ;
     }
 
@@ -153,10 +139,7 @@ public class UserServiceTest {
                 .build();
 
 //        String loginIdToken = userService.checkLoginIdAndEmail(findPasswordDTO);
-<<<<<<< HEAD
 //
-=======
->>>>>>> develop
 //        assertNotNull(loginIdToken);
     }
 
@@ -172,21 +155,12 @@ public class UserServiceTest {
                 .email(email)
                 .build();
 
-<<<<<<< HEAD
-//        ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder()
-//                .loginIdToken(userService.checkLoginIdAndEmail(findPasswordDTO))
-//                .password(password)
-//                .build();
-//
-//        userService.changePassword(changePasswordDTO);
-=======
         ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder()
 //                .loginIdToken(userService.checkLoginIdAndEmail(findPasswordDTO))
                 .password(password)
                 .build();
 
         userService.changePassword(changePasswordDTO);
->>>>>>> develop
     }
     @Test
     @Transactional
@@ -197,5 +171,45 @@ public class UserServiceTest {
         User user = userService.findByEmail(email);
 
         assertNotNull(user);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("관리자 조회")
+    public void getAdminListTest() {
+        String auth = "admin";
+        List<GetAdminListDTO> adminList = userService.findByAuthority(auth);
+
+        assertEquals("2023-09-14", adminList.get(0).getSignUpDate());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("관리자 추가")
+    public void saveAdminTest() {
+        SaveUserInfoDTO user = SaveUserInfoDTO.builder()
+                .loginId("qweqw")
+                .password("1234")
+                .name("새관리자")
+                .email("weq@nave.com")
+                .phoneNumber("010-2321-2312")
+                .build();
+
+        userService.saveAdmin(user);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("관리자 삭제")
+    public void deleteAdmin() {
+        DeleteAdminDTO deleteAdminDTO = DeleteAdminDTO.builder()
+                .deleteAdminList(List.of(10L)).build();
+
+        userService.deleteAdmin(deleteAdminDTO);
+
+        String auth = "admin";
+        List<GetAdminListDTO> adminList = userService.findByAuthority(auth);
+
+        assertEquals(3, adminList.size());
     }
 }
