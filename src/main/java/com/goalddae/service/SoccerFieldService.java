@@ -3,6 +3,8 @@ package com.goalddae.service;
 import com.goalddae.dto.soccerField.SoccerFieldDTO;
 import com.goalddae.dto.soccerField.SoccerFieldInfoDTO;
 import com.goalddae.entity.SoccerField;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -16,5 +18,6 @@ public interface SoccerFieldService {
     SoccerField findSoccerFieldByName(String fieldName);
     void delete(long id);
     public SoccerFieldInfoDTO findById(long id);
+    String uploadImage (MultipartFile multipartFile);
 }
 
