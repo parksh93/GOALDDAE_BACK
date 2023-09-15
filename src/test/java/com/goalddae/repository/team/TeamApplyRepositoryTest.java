@@ -80,21 +80,20 @@ public class TeamApplyRepositoryTest {
 
     @Test
     @Transactional
-    @DisplayName("")
+    @DisplayName("userId=2, teamId=3인 열에서 teamAcceptStatus=2로 수정하면 조회 시 teamAcceptStatus=2")
     public void updateAcceptStatusTest(){
-        long id = 1;
-        long teamId = 3;
+        long userId = 2;
+        long teamId = 5;
         int teamAcceptStatus = 2;
 
         TeamApplyDTO apply = TeamApplyDTO.builder()
-                .id(id)
+                .userId(userId)
                 .teamId(teamId)
-                .teamAcceptStatus(teamAcceptStatus)
+                .teamAcceptStatus(2)
                 .build();
 
         teamApplyRepository.updateAcceptStatus(apply);
 
         assertEquals(teamAcceptStatus, apply.getTeamAcceptStatus());
-
     }
 }

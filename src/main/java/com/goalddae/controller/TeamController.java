@@ -1,9 +1,11 @@
 package com.goalddae.controller;
 
 import com.goalddae.dto.team.*;
+import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.entity.Team;
 import com.goalddae.service.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import retrofit2.http.POST;
 
 @RestController
 @RequestMapping("/team")
@@ -153,6 +156,31 @@ public class TeamController {
 
         }catch(Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/acceptApply")
+    public ResponseEntity<?> acceptApply(@RequestBody TeamAcceptApplyDTO teamAcceptApplyDTO) {
+        System.out.println(teamAcceptApplyDTO);
+
+        try{
+            teamService.acceptApply(teamAcceptApplyDTO);
+            return ResponseEntity.ok("가입 수락");
+
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("가입 수락 중 오류 발생");
+        }
+
+    }
+
+    @RequestMapping(value = "/rejectApply", method = RequestMethod.PATCH)
+    public ResponseEntity<?> rejectApply(@RequestBody TeamApplyDTO teamApplyDTO){
+
+        try{
+            teamService.rejectApply(teamApplyDTO);
+            return ResponseEntity.ok("가입 거절");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("가입 거절 중 오류 발생");
         }
     }
 

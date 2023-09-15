@@ -14,5 +14,4 @@ public interface TeamMemberRepository {
     void addTeamMember(TeamMemberDTO teamMemberDTO);
     void deleteMemberByUserId(long userId);
 
-
 }

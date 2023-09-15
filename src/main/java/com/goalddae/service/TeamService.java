@@ -1,6 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.team.*;
+import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.entity.Team;
 
 import com.goalddae.entity.Team;
@@ -31,7 +32,7 @@ public interface TeamService {
     List<TeamMemberCheckDTO> findStatus0ByTeamId(long teamId);
     TeamApplyDTO findApplyById(long id, long teamId);
     void addTeamApply(TeamApplyDTO teamApplyDTO);
-    void updateAcceptStatus(TeamApplyDTO teamApplyDTO);
-
+    void acceptApply(TeamAcceptApplyDTO teamAcceptApplyDTO);
+    void rejectApply(TeamApplyDTO teamApplyDTO);
 
 }
