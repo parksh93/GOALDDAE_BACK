@@ -143,7 +143,7 @@ public class User implements UserDetails {
         this.profileUpdateDate = LocalDateTime.now();
         this.accountSuspersion = false;
         this.noShowCnt = 0;
-        this.teamId = -1L;
+        this.teamId = null;
     }
 
     @Override
