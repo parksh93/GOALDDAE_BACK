@@ -1,6 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.config.jwt.TokenProvider;
+import com.goalddae.dto.admin.DeleteAdminDTO;
 import com.goalddae.dto.admin.GetAdminListDTO;
 import com.goalddae.util.S3Uploader;
 import com.goalddae.dto.email.SendEmailDTO;
@@ -341,5 +342,22 @@ public class UserServiceImpl implements UserService{
         }
 
         return adminList;
+    }
+
+    @Override
+    public void saveAdmin(SaveUserInfoDTO user) {
+        user.setNickname("관리자");
+        user.setAuthority("admin");
+
+        userJPARepository.save(user.toEntity());
+    }
+
+    @Override
+    public void deleteAdmin(DeleteAdminDTO deleteAdminDTO) {
+        List<Long> adminList = deleteAdminDTO.getDeleteAdminList();
+
+        for (long id : adminList) {
+            userJPARepository.deleteById(id);
+        }
     }
 }

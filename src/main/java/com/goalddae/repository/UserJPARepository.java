@@ -22,7 +22,5 @@ public interface UserJPARepository extends JpaRepository<User, Long> {
     @Transactional
     @Query(value = "UPDATE User u SET u.accountSuspersion = true WHERE u.id = :id")
     void updateUserAccountSuspersionById(long id);
-
     List<User> findByAuthority(String authority);
-
 }
