@@ -1,16 +1,14 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.admin.DeleteAdminDTO;
 import com.goalddae.dto.admin.GetAdminListDTO;
 import com.goalddae.dto.user.GetUserInfoDTO;
+import com.goalddae.dto.user.SaveUserInfoDTO;
 import com.goalddae.entity.User;
 import com.goalddae.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,6 +34,16 @@ public class AdminController {
         List<GetAdminListDTO> adminList = userService.findByAuthority("admin");
 
         return adminList;
+    }
+
+    @RequestMapping(value = "/saveAdmin", method = RequestMethod.POST)
+    public void saveAdmin(@RequestBody SaveUserInfoDTO user){
+        userService.saveAdmin(user);
+    }
+
+    @DeleteMapping("/deleteAdmin")
+    public void deleteAdmin(@RequestBody DeleteAdminDTO deleteAdminDTO){
+        userService.deleteAdmin(deleteAdminDTO);
     }
 
 }

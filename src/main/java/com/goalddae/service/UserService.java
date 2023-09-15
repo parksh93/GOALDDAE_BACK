@@ -1,6 +1,7 @@
 package com.goalddae.service;
 
 
+import com.goalddae.dto.admin.DeleteAdminDTO;
 import com.goalddae.dto.admin.GetAdminListDTO;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
@@ -32,4 +33,6 @@ public interface UserService {
     public User findByEmail(String email);
     public void deleteUser(long id);
     public List<GetAdminListDTO> findByAuthority(String authority);
+    public void saveAdmin(SaveUserInfoDTO user);
+    public void deleteAdmin(DeleteAdminDTO deleteAdminDTO);
 }
