@@ -15,7 +15,6 @@ public class SoccerFieldDTO {
     private String  fieldName;
     private LocalTime operatingHours;
     private LocalTime closingTime;
-    private int playerCapacity;
     private String region;
     private int reservationFee;
     private String fieldSize;
@@ -28,4 +27,6 @@ public class SoccerFieldDTO {
     private String fieldImg2;
     private String fieldImg3;
     private String province;
+    private String address;
+    private String content;
 }
