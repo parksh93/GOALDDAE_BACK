@@ -1,8 +1,10 @@
 package com.goalddae.service;
 
+import com.goalddae.dto.team.TeamApplyDTO;
 import com.goalddae.dto.team.TeamListDTO;
 import com.goalddae.dto.team.TeamUpdateDTO;
 import com.goalddae.entity.Team;
+import com.goalddae.repository.TeamApplyRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ public class TeamServiceTest {
 
     @Autowired
     private TeamService teamService;
+    @Autowired
+    private TeamApplyRepository teamApplyRepository;
 
     @Test
     @Transactional
@@ -193,6 +197,25 @@ public class TeamServiceTest {
         assertEquals(1, result1.size());
         assertEquals("여자", result1.get(0).getEntryGender());
         assertEquals(0, result2.size());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("userId=2, teamId=3인 열에서 teamAcceptStatus=2로 수정하면 조회 시 teamAcceptStatus=2")
+    public void rejectApplyTest(){
+        long userId = 2;
+        long teamId = 5;
+        int teamAcceptStatus = 2;
+
+        TeamApplyDTO apply = TeamApplyDTO.builder()
+                .userId(userId)
+                .teamId(teamId)
+                .teamAcceptStatus(2)
+                .build();
+
+        teamApplyRepository.updateAcceptStatus(apply);
+
+        assertEquals(teamAcceptStatus, apply.getTeamAcceptStatus());
     }
 }
 

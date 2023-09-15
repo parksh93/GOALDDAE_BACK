@@ -45,6 +45,6 @@
         SET
             team_accept_status = #{teamAcceptStatus}
         WHERE
-            id = #{id}
+            users_id = #{userId}
     </update>
 </mapper>

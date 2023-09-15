@@ -1,20 +1,18 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.team.*;
+import com.goalddae.dto.user.ChangeUserInfoDTO;
+import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.entity.Team;
-import com.goalddae.repository.TeamJPARepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.goalddae.entity.User;
+import com.goalddae.repository.*;
 import org.springframework.stereotype.Service;
 
-import com.goalddae.repository.TeamApplyRepository;
-import com.goalddae.repository.TeamMatchResultRepository;
-import com.goalddae.repository.TeamMemberRepository;
 import com.goalddae.util.MyBatisUtil;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,15 +23,19 @@ public class TeamServiceImpl implements TeamService {
     private final TeamMemberRepository teamMemberRepository;
     private final TeamApplyRepository teamApplyRepository;
     private final TeamMatchResultRepository teamMatchResultRepository;
+    private final UserJPARepository userJPARepository;
+
 
     public TeamServiceImpl(TeamJPARepository teamJPARepository,
                            TeamMemberRepository teamMemberRepository,
                            TeamApplyRepository teamApplyRepository,
-                           TeamMatchResultRepository teamMatchResultRepository) {
+                           TeamMatchResultRepository teamMatchResultRepository,
+                           UserJPARepository userJPARepository) {
         this.teamJPARepository = teamJPARepository;
         this.teamMemberRepository = teamMemberRepository;
         this.teamApplyRepository = teamApplyRepository;
         this.teamMatchResultRepository = teamMatchResultRepository;
+        this.userJPARepository = userJPARepository;
     }
 
     @Override
@@ -154,8 +156,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public void save(TeamSaveDTO teamSaveDTO
-    ){
+    public void save(TeamSaveDTO teamSaveDTO){
         Team newTeam = Team.builder()
                 .teamName(teamSaveDTO.getTeamName())
                 .area(teamSaveDTO.getArea())
@@ -216,18 +217,63 @@ public class TeamServiceImpl implements TeamService {
         teamApplyRepository.addTeamApply(newApply);
     }
 
+    @Transactional
     @Override
-    public void updateAcceptStatus(TeamApplyDTO teamApplyDTO) {
-        long id = teamApplyDTO.getId();
-        long teamId = teamApplyDTO.getTeamId();
-        int teamAcceptStatus = teamApplyDTO.getTeamAcceptStatus();
+    public void acceptApply(TeamAcceptApplyDTO teamAcceptApplyDTO) {
 
-        TeamApplyDTO apply = TeamApplyDTO.builder()
-                .id(id)
+        try {
+            // acceptStatus 수락(1) 업데이트
+            long userId = teamAcceptApplyDTO.getTeamApplyDTO().getUserId();
+            long teamId = teamAcceptApplyDTO.getTeamApplyDTO().getTeamId();
+
+            TeamApplyDTO acceptApply = TeamApplyDTO.builder()
+                    .userId(userId)
+                    .teamId(teamId)
+                    .teamAcceptStatus(1)
+                    .build();
+
+            teamApplyRepository.updateAcceptStatus(acceptApply);
+
+            // 팀멤버 추가
+            long memberTeamId = teamAcceptApplyDTO.getTeamMemberDTO().getTeamId();
+            long memberUserId = teamAcceptApplyDTO.getTeamMemberDTO().getUserId();
+
+            TeamMemberDTO newMember = TeamMemberDTO.builder()
+                    .teamId(memberTeamId)
+                    .userId(memberUserId)
+                    .teamManager(1)
+                    .userJoinDate(LocalDateTime.now())
+                    .build();
+
+            teamMemberRepository.addTeamMember(newMember);
+
+            // 유저 teamId 변경
+            User user = userJPARepository.findById(teamAcceptApplyDTO.getGetUserInfoDTO().getId()).get();
+
+            if (user != null) {
+                ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
+                changeUserInfoDTO.setTeamId(teamAcceptApplyDTO.getGetUserInfoDTO().getTeamId());
+                user = changeUserInfoDTO.toEntity();
+
+                userJPARepository.save(user);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("트랜잭션 처리 실패", e);
+        }
+    }
+
+    @Override
+    public void rejectApply(TeamApplyDTO teamApplyDTO) {
+        // acceptStatus 거절(2) 업데이트
+        long userId = teamApplyDTO.getUserId();
+        long teamId = teamApplyDTO.getTeamId();
+
+        TeamApplyDTO rejectApply = TeamApplyDTO.builder()
+                .userId(userId)
                 .teamId(teamId)
-                .teamAcceptStatus(teamAcceptStatus)
+                .teamAcceptStatus(2)
                 .build();
 
-        teamApplyRepository.updateAcceptStatus(apply);
+        teamApplyRepository.updateAcceptStatus(rejectApply);
     }
 }
