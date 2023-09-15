@@ -193,9 +193,7 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public void heartDelete(long boardId, long userId) {
         Optional<CommunicationHeart> communicationHeart = heartJPARepository.findByBoardIdAndUserId(boardId, userId);
-        if(communicationHeart.isPresent()){
-            heartJPARepository.delete(communicationHeart.get());
-        }
+        communicationHeart.ifPresent(heart -> heartJPARepository.delete(heart));
     }
 
     @Override
@@ -206,7 +204,13 @@ public class BoardServiceImpl implements BoardService{
     @Transactional
     @Override
     public void saveReportedBoard(ReportedBoard reportedBoard) {
-        reportedBoardJPARepository.save(reportedBoard);
+
+        Optional<ReportedBoard> reportedBoardOptional =
+                reportedBoardJPARepository.findByBoardIdAndReporterUserId(reportedBoard.getBoardId(), reportedBoard.getReporterUserId());
+
+        if(reportedBoardOptional.isEmpty()){
+            reportedBoardJPARepository.save(reportedBoard);
+        }
     }
 
     @Transactional
