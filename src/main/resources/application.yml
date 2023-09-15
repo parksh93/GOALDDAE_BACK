@@ -30,14 +30,14 @@ spring:
             scope: name, email, profile_image
             client-name: Naver
 
-#          kakao:
-#            client-id: 카카오 클라이언트 ID
-#            client-secret: 카카오 클라이언트 Secret
-#            redirect-uri: 세팅한 URL
-#            client-authentication-method: POST
-#            authorization-grant-type: authorization_code
-#            scope: profile_nickname, profile_image
-#            client-name: Kakao
+        #          kakao:
+        #            client-id: 카카오 클라이언트 ID
+        #            client-secret: 카카오 클라이언트 Secret
+        #            redirect-uri: 세팅한 URL
+        #            client-authentication-method: POST
+        #            authorization-grant-type: authorization_code
+        #            scope: profile_nickname, profile_image
+        #            client-name: Kakao
 
         provider:
           naver:
@@ -54,4 +54,3 @@ spring:
 jwt:
   issuer: ${issuer}
   secret_key: ${secret_key}
-
