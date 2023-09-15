@@ -301,7 +301,6 @@ public class BoardServiceTest {
 
     @Test
     @Transactional
-<<<<<<< HEAD
     @DisplayName("해당 유저의 게시글 리스트 조회하기")
     public void getUserCommunicationBoardPostsTest() {
         // given
@@ -314,7 +313,6 @@ public class BoardServiceTest {
         assertEquals(11, myBoardList.size());
     }
 
-=======
     @DisplayName("조회수가 가장 많은 객체 조회 테스트")
     public void findTop5BoardTest() {
         // Given
@@ -327,7 +325,6 @@ public class BoardServiceTest {
                     .boardSortation(i % 2)
                     .count(100L - i)
                     .build();
->>>>>>> develop
 
             boardJPARepository.save(board);
         }
