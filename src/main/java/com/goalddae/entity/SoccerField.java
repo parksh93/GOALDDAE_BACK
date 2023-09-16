@@ -31,9 +31,6 @@ public class SoccerField {
     private LocalTime closingTime; // 운영 종료 시간
 
     @Column(nullable = false)
-    private String region;          // 지역
-
-    @Column(nullable = false)
     private int reservationFee;    // 대관비
 
     @Column(nullable = false)
