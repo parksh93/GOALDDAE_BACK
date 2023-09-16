@@ -14,8 +14,10 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import com.goalddae.util.S3Uploader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +32,7 @@ import java.util.stream.Stream;
 public class SoccerFieldServiceImpl implements SoccerFieldService {
 
     private final SoccerFieldRepository soccerFieldRepository;
+    private final S3Uploader s3Uploader;
 
     private final UserJPARepository userJPARepository;
 
@@ -37,10 +40,12 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
 
     public SoccerFieldServiceImpl(SoccerFieldRepository soccerFieldRepository,
                                   UserJPARepository userJPARepository,
-                                  ReservationFieldJPARepository reservationFieldJPARepository) {
+                                  ReservationFieldJPARepository reservationFieldJPARepository,
+                                  S3Uploader s3Uploader) {
         this.soccerFieldRepository = soccerFieldRepository;
         this.userJPARepository = userJPARepository;
         this.reservationFieldJPARepository = reservationFieldJPARepository;
+        this.s3Uploader = s3Uploader;
     }
 
     // 구장 조회
@@ -105,6 +110,9 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
         soccerField.changeImages(soccerFieldDto.getFieldImg1(), soccerFieldDto.getFieldImg2(), soccerFieldDto.getFieldImg3());
         soccerField.changeInOutWhether(soccerFieldDto.getInOutWhether());
         soccerField.changeGrassWhether(soccerFieldDto.getGrassWhether());
+        soccerField.changeAddress(soccerFieldDto.getAddress());
+        soccerField.changeContent(soccerFieldDto.getContent());
+        soccerField.changeProvince(soccerFieldDto.getProvince());
 
         return soccerField;
     }
@@ -280,5 +288,19 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
         infoDTO.setReservedTimes(reservedTimes);
 
         return infoDTO;
+
+      @Transactional
+    @Override
+    public String uploadImage(MultipartFile multipartFile) {
+
+        String uploadImageUrl = null;
+
+        try {
+            uploadImageUrl = s3Uploader.uploadFiles(multipartFile, "field");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return uploadImageUrl;
     }
 }

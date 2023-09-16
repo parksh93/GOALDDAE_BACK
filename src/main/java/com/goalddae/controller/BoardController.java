@@ -3,22 +3,23 @@ package com.goalddae.controller;
 import com.goalddae.dto.board.BoardListDTO;
 import com.goalddae.dto.board.BoardUpdateDTO;
 import com.goalddae.dto.board.HeartInfoDTO;
+import com.goalddae.dto.board.MyBoardListDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
 import com.goalddae.entity.ReportedBoard;
+import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.service.BoardService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/board")
@@ -152,10 +153,33 @@ public class BoardController {
         return ResponseEntity.ok("좋아요를 취소합니다.");
     }
 
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+
+        long maxSize = 5120 * 1024;
+
+        if (file.getSize() > maxSize) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일 크기가 초과되었습니다.");
+        }
+
+        String imageUrl = boardService.uploadImage(file);
+        return ResponseEntity.ok(imageUrl);
+
+    }
+
+
+    @RequestMapping(value = "/mylist/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<?> viewUserPosts(@PathVariable long userId) {
+        List<MyBoardListDTO> communicationBoardsList = boardService.getUserCommunicationBoardPosts(userId);
+
+        return ResponseEntity.ok(communicationBoardsList);
+    }
+
     // 조회수 탑5
     @GetMapping("/top5")
     public ResponseEntity<List<BoardListDTO>> getTopPosts() {
         List<BoardListDTO> topPosts = boardService.findTop5Board();
         return ResponseEntity.ok(topPosts);
     }
+
 }
