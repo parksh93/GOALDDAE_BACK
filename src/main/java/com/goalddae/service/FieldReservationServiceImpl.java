@@ -96,7 +96,6 @@ public class FieldReservationServiceImpl implements FieldReservationService {
                     .build();
             individualMatchJPARepository.save(individualMatch);
         }
-
     }
 
     public List<Integer> getReservationTimesByFieldIdAndDate(long fieldId, String date) {
@@ -116,5 +115,4 @@ public class FieldReservationServiceImpl implements FieldReservationService {
                 .map(reservationField -> reservationField.getStartDate().toLocalTime().getHour())
                 .collect(Collectors.toList());
     }
-
 }
