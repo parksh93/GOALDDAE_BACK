@@ -32,7 +32,4 @@ public interface UserService {
     public boolean changePassword(ChangePasswordDTO changePasswordDTO);
     public User findByEmail(String email);
     public void deleteUser(long id);
-    public List<GetAdminListDTO> findByAuthority(String authority);
-    public void saveAdmin(SaveUserInfoDTO user);
-    public void deleteAdmin(DeleteAdminDTO deleteAdminDTO);
 }

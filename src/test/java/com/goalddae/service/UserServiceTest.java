@@ -172,44 +172,4 @@ public class UserServiceTest {
 
         assertNotNull(user);
     }
-
-    @Test
-    @Transactional
-    @DisplayName("관리자 조회")
-    public void getAdminListTest() {
-        String auth = "admin";
-        List<GetAdminListDTO> adminList = userService.findByAuthority(auth);
-
-        assertEquals("2023-09-14", adminList.get(0).getSignUpDate());
-    }
-
-    @Test
-    @Transactional
-    @DisplayName("관리자 추가")
-    public void saveAdminTest() {
-        SaveUserInfoDTO user = SaveUserInfoDTO.builder()
-                .loginId("qweqw")
-                .password("1234")
-                .name("새관리자")
-                .email("weq@nave.com")
-                .phoneNumber("010-2321-2312")
-                .build();
-
-        userService.saveAdmin(user);
-    }
-
-    @Test
-    @Transactional
-    @DisplayName("관리자 삭제")
-    public void deleteAdmin() {
-        DeleteAdminDTO deleteAdminDTO = DeleteAdminDTO.builder()
-                .deleteAdminList(List.of(10L)).build();
-
-        userService.deleteAdmin(deleteAdminDTO);
-
-        String auth = "admin";
-        List<GetAdminListDTO> adminList = userService.findByAuthority(auth);
-
-        assertEquals(3, adminList.size());
-    }
 }
