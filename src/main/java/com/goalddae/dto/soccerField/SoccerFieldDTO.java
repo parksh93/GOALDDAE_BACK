@@ -29,4 +29,6 @@ public class SoccerFieldDTO {
     private String fieldImg2;
     private String fieldImg3;
     private FieldReservationInfoDTO reservationInfo;
+    private String address;
+    private String content;
 }

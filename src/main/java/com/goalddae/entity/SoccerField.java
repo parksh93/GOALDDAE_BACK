@@ -31,6 +31,9 @@ public class SoccerField {
     private LocalTime closingTime; // 운영 종료 시간
 
     @Column(nullable = false)
+    private String region;          // 지역
+
+    @Column(nullable = false)
     private int reservationFee;    // 대관비
 
     @Column(nullable = false)
@@ -56,6 +59,9 @@ public class SoccerField {
 
     @Column(nullable = false)
     private String region;        // 선호 지역 - 강남구, 강동구 .......
+
+    @Column(nullable = false)
+    private String address; // 상세 주소
 
     // 이미지의 경우 최소 하나 이상 최대 3개이하로 저장 가능
     @Column(nullable = false)
@@ -121,4 +127,18 @@ public class SoccerField {
     public void changeClosingTime(LocalTime closingTime) {
         this.closingTime = closingTime;
     }
-}
+
+    public void changeProvince(String province) {
+        this.province = province;
+    }
+
+    public void changeAddress(String address) {
+        this.address = address;
+    }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
+
+    }
+
