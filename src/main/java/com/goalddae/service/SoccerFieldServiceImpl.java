@@ -11,6 +11,9 @@ import com.goalddae.repository.ReservationFieldJPARepository;
 import com.goalddae.repository.SoccerFieldRepository;
 import com.goalddae.repository.UserJPARepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -120,12 +123,14 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
 
     // 필터를 이용한 예약 구장 조회
     @Override
-    public List<SoccerFieldDTO> findAvailableField(Optional<Long> userId,
+    public Page<SoccerFieldDTO> findAvailableField(Optional<Long> userId,
                                                    String province,
                                                    String inOutWhether,
                                                    String grassWhether,
                                                    LocalDate reservationDate,
-                                                   String reservationPeriod) {
+                                                   String reservationPeriod,
+                                                   int pageNumber,
+                                                   int pageSize) {
 
         String defaultCity = "서울";
 
@@ -137,15 +142,19 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
             }
         }
 
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1 , pageSize);
+
         List<SoccerField> fields;
+
         if ("".equals(inOutWhether) && "".equals(grassWhether)) {
-            fields = soccerFieldRepository.findAllByProvince(province);
+            fields = soccerFieldRepository.findAllByProvince(province , pageRequest).getContent();
         } else if ("".equals(inOutWhether)) {
-            fields = soccerFieldRepository.findByProvinceAndGrassWhether(province, grassWhether);
+            fields = soccerFieldRepository.findByProvinceAndGrassWhether(province , grassWhether , pageRequest).getContent();
         } else if ("".equals(grassWhether)) {
-            fields = soccerFieldRepository.findByProvinceAndInOutWhether(province, inOutWhether);
+            fields = soccerFieldRepository.findByProvinceAndInOutWhether(province , inOutWhether , pageRequest).getContent();
         } else {
-            fields = soccerFieldRepository.findByProvinceAndInOutWhetherAndGrassWhether(province, inOutWhether, grassWhether);
+            fields = soccerFieldRepository.findByProvinceAndInOutWhetherAndGrassWhether(province, inOutWhether ,grassWhether ,pageRequest)
+                    .getContent();
         }
 
         LocalTime startTime;
@@ -184,7 +193,7 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList());
 
-        return fieldDTOs;
+        return new PageImpl<>(fieldDTOs, pageRequest, fieldDTOs.size());
     }
 
     private boolean isAvailableForReservation(FieldReservationInfoDTO info, LocalTime startTime, LocalTime endTime) {
@@ -205,7 +214,7 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
         return false;
     }
 
-    private SoccerFieldDTO convertToDto(SoccerField field) {
+    public SoccerFieldDTO convertToDto(SoccerField field) {
         return SoccerFieldDTO.builder()
                 .id(field.getId())
                 .fieldName(field.getFieldName())

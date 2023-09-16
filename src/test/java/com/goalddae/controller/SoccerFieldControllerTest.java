@@ -8,10 +8,13 @@ import com.goalddae.service.SoccerFieldService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -177,11 +180,18 @@ public class SoccerFieldControllerTest {
         String reservationPeriod = "오전";
 
         SoccerFieldDTO mockSoccerFieldDTO = new SoccerFieldDTO();
-
         List<SoccerFieldDTO> mockResultList = Arrays.asList(mockSoccerFieldDTO);
 
-        when(soccerFieldService.findAvailableField(Optional.ofNullable(userId), province, inOutWhether, grassWhether, reservationDate, reservationPeriod))
-                .thenReturn(mockResultList);
+        when(soccerFieldService.findAvailableField(
+                Mockito.eq(Optional.ofNullable(userId)),
+                Mockito.eq(province),
+                Mockito.eq(inOutWhether),
+                Mockito.eq(grassWhether),
+                Mockito.eq(reservationDate),
+                Mockito.eq(reservationPeriod),
+                Mockito.anyInt(),
+                Mockito.anyInt()
+        )).thenReturn(new PageImpl<>(mockResultList, PageRequest.of(0, 10), mockResultList.size()));
 
         // When & Then
         mockMvc.perform(get("/field/reservation/list")
@@ -190,7 +200,10 @@ public class SoccerFieldControllerTest {
                         .param("inOutWhether", inOutWhether)
                         .param("grassWhether", grassWhether)
                         .param("reservationDate", reservationDate.toString())
-                        .param("reservationPeriod", reservationPeriod))
+                        .param("reservationPeriod", reservationPeriod)
+                        .param("pageNumber", "1")
+                        .param("pageSize", "10")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 }
