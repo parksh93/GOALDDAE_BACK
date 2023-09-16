@@ -7,7 +7,6 @@ spring:
     driver-class-name: ${driver-class-name}
   profiles:
     active: db, jwt, payment, oauth2, s3
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -55,7 +54,6 @@ spring:
 jwt:
   issuer: ${issuer}
   secret_key: ${secret_key}
-
 
 cloud:
   aws:
