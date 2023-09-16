@@ -6,6 +6,7 @@ import com.goalddae.dto.soccerField.SoccerFieldInfoDTO;
 import com.goalddae.entity.SoccerField;
 import com.goalddae.service.SoccerFieldService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -89,16 +90,19 @@ public class SoccerFieldController {
         }
     }
 
+    // 예약할 구장 리스트 조회
     @GetMapping("/reservation/list")
-    public ResponseEntity<List<SoccerFieldDTO>> findReservationField(
+    public ResponseEntity<Page<SoccerFieldDTO>> findReservationField(
             @RequestParam(required = false) Long userId,
             @RequestParam String province,
             @RequestParam String inOutWhether,
             @RequestParam String grassWhether,
             @RequestParam LocalDate reservationDate,
-            @RequestParam String reservationPeriod) {
+            @RequestParam String reservationPeriod,
+            @RequestParam int pageNumber,
+            @RequestParam int pageSize) {
 
-        List<SoccerFieldDTO> availableFields = soccerFieldService.findAvailableField(Optional.ofNullable(userId), province, inOutWhether, grassWhether, reservationDate, reservationPeriod);
+        Page<SoccerFieldDTO> availableFields = soccerFieldService.findAvailableField(Optional.ofNullable(userId), province, inOutWhether, grassWhether, reservationDate, reservationPeriod, pageNumber, pageSize);
         return ResponseEntity.ok(availableFields);
     }
 }

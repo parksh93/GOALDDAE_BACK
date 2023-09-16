@@ -7,10 +7,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -166,14 +167,16 @@ public class SoccerFieldRepositoryTest {
 
         soccerFieldRepository.save(soccerField);
 
+        Pageable pageable = PageRequest.of(0, 10); // Page request
+
         // When
-        List<SoccerField> resultFields =
-                soccerFieldRepository.findByProvinceAndInOutWhetherAndGrassWhether(province, inOutWhether, grassWhether);
+        Page<SoccerField> resultFields =
+                soccerFieldRepository.findByProvinceAndInOutWhetherAndGrassWhether(province, inOutWhether, grassWhether,
+                        pageable);
 
         // Then
         assertNotNull(resultFields);
-        assertEquals(1, resultFields.size());
-        assertEquals(soccerField.getProvince(), resultFields.get(0).getProvince());
+        assertEquals(1, resultFields.getTotalElements());
+        assertEquals(soccerField.getProvince(), resultFields.getContent().get(0).getProvince());
     }
-
 }

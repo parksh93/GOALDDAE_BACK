@@ -14,6 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -131,13 +134,13 @@ public class SoccerFieldServiceTest {
                 .parkingStatus(true)
                 .build();
 
-                        when(soccerFieldRepository.findById(anyLong())).thenReturn(Optional.of(existing));
+        when(soccerFieldRepository.findById(anyLong())).thenReturn(Optional.of(existing));
         when(soccerFieldRepository.save(any(SoccerField.class))).thenReturn(existing);
 
-        // When: 서비스 메소드 호출
+        // When
         SoccerField result = soccerFieldService.update(updateDto);
 
-        // Then: 결과 확인
+        // Then
         assertThat(result.getFieldName()).isEqualTo(updateDto.getFieldName());
         assertThat(result.isToiletStatus()).isEqualTo(updateDto.isToiletStatus());
     }
@@ -188,23 +191,30 @@ public class SoccerFieldServiceTest {
                 .build();
 
         List<SoccerField> fields = Arrays.asList(soccerField1, soccerField2);
+        Page<SoccerField> pageFields= new PageImpl<>(fields);
 
-        when(soccerFieldRepository.findById(1L)).thenReturn(Optional.of(soccerField1));
-        when(soccerFieldRepository.findById(2L)).thenReturn(Optional.of(soccerField2));
-        when(soccerFieldRepository.findAllByProvince(anyString())).thenReturn(fields);
-        when(soccerFieldRepository.findByProvinceAndGrassWhether(anyString(), anyString())).thenReturn(fields);
-        when(soccerFieldRepository.findByProvinceAndInOutWhether(anyString(), anyString())).thenReturn(fields);
-        when(soccerFieldRepository.findByProvinceAndInOutWhetherAndGrassWhether(anyString(), anyString(), anyString())).thenReturn(fields);
+        when(soccerFieldRepository.findById(anyLong())).thenReturn(Optional.of(soccerField1));
+        when(soccerFieldRepository.findAllByProvince(anyString(), any(PageRequest.class))).thenReturn(pageFields);
+        when(soccerFieldRepository.findByProvinceAndGrassWhether(anyString(), anyString(), any(PageRequest.class))).thenReturn(pageFields);
+        when(soccerFieldRepository.findByProvinceAndInOutWhether(anyString(), anyString(), any(PageRequest.class))).thenReturn(pageFields);
+        when(soccerFieldRepository.findByProvinceAndInOutWhetherAndGrassWhether(anyString(), anyString(),anyString() ,any(PageRequest.class))).thenReturn(pageFields);
 
         // When
-        List<SoccerFieldDTO> resultFields =
-                soccerFieldService.findAvailableField(Optional.empty(), province, inOutWhether, grassWhether,
-                        reservationDate,reservationPeriod);
+        Page<SoccerFieldDTO> resultPage =
+                soccerFieldService.findAvailableField(Optional.empty(),
+                        province,
+                        inOutWhether,
+                        grassWhether,
+                        reservationDate,
+                        reservationPeriod,
+                        1,
+                        fields.size());
 
         // Then
-        assertNotNull(resultFields);
-        assertEquals(fields.size(), resultFields.size());
+        assertFalse(resultPage.isEmpty());
+        assertEquals(fields.size(), resultPage.getTotalElements());
     }
+
 
 
     @Test
@@ -257,6 +267,6 @@ public class SoccerFieldServiceTest {
                 LocalTime.of (19 ,00 ),
                 LocalTime.of (20 ,00 ),
                 LocalTime.of (21 ,00 )
-                ), resultInfoDTO.getAvailableTimes());
+        ), resultInfoDTO.getAvailableTimes());
     }
 }
