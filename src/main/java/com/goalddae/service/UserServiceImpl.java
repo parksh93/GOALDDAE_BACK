@@ -325,39 +325,4 @@ public class UserServiceImpl implements UserService{
             e.printStackTrace();
         }
     }
-
-    @Override
-    public List<GetAdminListDTO> findByAuthority(String authority) {
-        List<User> userList = userJPARepository.findByAuthority("admin");
-
-        List<GetAdminListDTO> adminList = new ArrayList<>();
-
-        for (User user:userList) {
-            GetAdminListDTO getAdminListDTO = new GetAdminListDTO(user);
-
-            String signUpDate = user.getSignupDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
-            getAdminListDTO.setSignUpDate(signUpDate);
-            adminList.add(getAdminListDTO);
-        }
-
-        return adminList;
-    }
-
-    @Override
-    public void saveAdmin(SaveUserInfoDTO user) {
-        user.setNickname("관리자");
-        user.setAuthority("admin");
-
-        userJPARepository.save(user.toEntity());
-    }
-
-    @Override
-    public void deleteAdmin(DeleteAdminDTO deleteAdminDTO) {
-        List<Long> adminList = deleteAdminDTO.getDeleteAdminList();
-
-        for (long id : adminList) {
-            userJPARepository.deleteById(id);
-        }
-    }
 }

@@ -177,12 +177,10 @@ public class ReplyJPARepositoryTest {
         System.out.println(Arrays.toString(result.get(1)));
     }
 
+    @Test
+    @Transactional
+    @DisplayName("신고 댓글 조회")
+    public void findReportReply() {
 
-
-
-
-
-
-
-
+    }
 }
