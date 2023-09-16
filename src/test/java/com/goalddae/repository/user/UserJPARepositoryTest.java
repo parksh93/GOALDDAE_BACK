@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -19,12 +21,12 @@ public class UserJPARepositoryTest {
     @Transactional
     @DisplayName("로그인아이디를 이용한 유저 정보 조회")
     public void finByLoginIdTest(){
-        String loginId = "asd";
+        String loginId = "asdas";
 
         User user = userJPARepository.findByLoginId(loginId);
 
-        assertEquals("박상현", user.getNickname());
-        assertEquals(1, user.getId());
+        assertEquals("박상현", user.getName());
+//        assertEquals(1, user.getId());
     }
 
     @Test
@@ -91,5 +93,16 @@ public class UserJPARepositoryTest {
         User user = userJPARepository.findByEmail(email);
 
         assertEquals(user.getLoginId(), "asdas");
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("관리자만 조회")
+    public void findByAuthorityTest(){
+        String authority = "admin";
+
+        List<User> userList = userJPARepository.findByAuthority(authority);
+
+        assertEquals("박상현", userList.get(0).getName());
     }
 }

@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ReplyServiceImpl implements ReplyService{
@@ -140,7 +137,14 @@ public class ReplyServiceImpl implements ReplyService{
     @Transactional
     @Override
     public void saveReportedReply(ReportedReply reportedReply) {
-        reportedReplyJPARepository.save(reportedReply);
+
+        Optional<ReportedReply> reportedReplyOptional =
+                reportedReplyJPARepository.findByReplyIdAndReporterUserId(reportedReply.getReplyId(), reportedReply.getReporterUserId());
+
+        if(reportedReplyOptional.isEmpty()){
+            reportedReplyJPARepository.save(reportedReply);
+        }
+
     }
 
     @Transactional
