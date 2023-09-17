@@ -9,14 +9,18 @@
                                         team_id BIGINT NOT NULL
         );
     </update>
-    <select id="findAllTeamMembersByTeamId" resultType="com.goalddae.dto.team.TeamMemberDTO">
-        SELECT id as id,
-               user_join_date as userJoinDate,
-               team_manager as teamManager,
-               users_id as userId,
-               team_id as teamId
-        FROM team_member_#{teamId}
-        WHERE team_id = #{teamId}
+    <select id="findAllTeamMembersByTeamId" parameterType="long" resultType="com.goalddae.dto.team.TeamMemberCheckDTO">
+        SELECT tm.id as id,
+               tm.team_manager as teamManager,
+               tm.users_id as userId,
+               tm.team_id as teamId,
+               u.name as name,
+               u.profile_img_url as profileImgUrl,
+               u.preferred_city as preferredCity,
+               u.preferred_area as preferredArea
+        FROM team_member_#{teamId} tm
+        JOIN users u ON tm.users_id = u.id
+        WHERE tm.team_id = #{teamId}
     </select>
     <select id="findTeamManagerByUserId" parameterType="long" resultType="int">
         SELECT team_manager

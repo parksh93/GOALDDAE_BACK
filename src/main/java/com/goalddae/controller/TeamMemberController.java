@@ -1,5 +1,6 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.team.TeamMemberCheckDTO;
 import com.goalddae.dto.team.TeamMemberDTO;
 import com.goalddae.service.TeamMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,14 @@ public class TeamMemberController {
     }
 
     @GetMapping(value = "/list")
-    public List<TeamMemberDTO> teamMemberList(@RequestParam long teamId) {
+    public ResponseEntity<?> teamMemberList(@RequestParam long teamId) {
+        try{
+            List<TeamMemberCheckDTO> members = teamMemberService.findAllTeamMembersByTeamId(teamId);
+            return ResponseEntity.ok(members);
 
-        return teamMemberService.findAllTeamMembersByTeamId(teamId);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping(value="/checkManager")
