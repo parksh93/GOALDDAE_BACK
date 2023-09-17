@@ -1,18 +1,20 @@
 package com.goalddae.service;
 
-import com.goalddae.dto.admin.DeleteAdminDTO;
-import com.goalddae.dto.admin.GetAdminListDTO;
-import com.goalddae.dto.admin.BoardReportProcessDTO;
-import com.goalddae.dto.admin.GetReportBoardDTO;
+import com.goalddae.dto.admin.*;
 import com.goalddae.dto.user.SaveUserInfoDTO;
+import com.goalddae.entity.SoccerField;
 import com.goalddae.entity.User;
-import com.goalddae.repository.BoardJPARepository;
-import com.goalddae.repository.ReportedBoardJPARepository;
-import com.goalddae.repository.UserJPARepository;
+import com.goalddae.exception.UnValidTokenException;
+import com.goalddae.exception.UnValidUserException;
+import com.goalddae.repository.*;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +25,20 @@ public class AdminServiceImpl implements AdminService{
     private BoardJPARepository boardJPARepository;
     private UserJPARepository userJPARepository;
     private ReportedBoardJPARepository reportedBoardJPARepository;
+    private ReplyJPARepository replyJPARepository;
+    private ReportedReplyJPARepository reportedReplyJPARepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public AdminServiceImpl(BoardJPARepository boardJPARepository, UserJPARepository userJPARepository, ReportedBoardJPARepository reportedBoardJPARepository){
+    public AdminServiceImpl(BoardJPARepository boardJPARepository, UserJPARepository userJPARepository,
+                            ReportedBoardJPARepository reportedBoardJPARepository, ReplyJPARepository replyJPARepository,
+                            ReportedReplyJPARepository reportedReplyJPARepository, @Lazy BCryptPasswordEncoder bCryptPasswordEncoder){
         this.boardJPARepository = boardJPARepository;
         this.userJPARepository = userJPARepository;
         this.reportedBoardJPARepository =reportedBoardJPARepository;
+        this.replyJPARepository = replyJPARepository;
+        this.reportedReplyJPARepository = reportedReplyJPARepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -38,7 +48,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public List<GetAdminListDTO> findByAuthority(String authority) {
-        List<User> userList = userJPARepository.findByAuthority("admin");
+        List<User> userList = userJPARepository.findByAuthority(authority);
 
         List<GetAdminListDTO> adminList = new ArrayList<>();
 
@@ -56,10 +66,15 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public void saveAdmin(SaveUserInfoDTO user) {
-        user.setNickname("관리자");
-        user.setAuthority("admin");
+        try{
+            user.setNickname("관리자");
+            user.setAuthority("admin");
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
-        userJPARepository.save(user.toEntity());
+            userJPARepository.save(user.toEntity());
+        }catch (Exception e){
+            throw new UnValidUserException("유효하지 않은 사용자 정보로 가입");
+        }
     }
 
     @Override
@@ -72,12 +87,23 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
+    public void saveManager(SaveUserInfoDTO user) {
+        try{
+            user.setNickname("매니저");
+            user.setAuthority("manager");
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+
+            userJPARepository.save(user.toEntity());
+        }catch (Exception e){
+            throw new UnValidUserException("유효하지 않은 사용자 정보로 가입");
+        }
+    }
+
+    @Override
     public void approvalBoardReport(BoardReportProcessDTO boardReportProcessDTO) {
         for (long boardId:boardReportProcessDTO.getBoardList()) {
             boardJPARepository.deleteById(boardId);
-            System.out.println("신고 내역 삭제");
             reportedBoardJPARepository.deleteByBoardId(boardId);
-            System.out.println("게시글 삭제");
         }
     }
 
@@ -87,5 +113,27 @@ public class AdminServiceImpl implements AdminService{
             reportedBoardJPARepository.deleteByBoardId(boardId);
         }
     }
+
+    @Override
+    public List<GetReportReplyDTO> findReportReply() {
+        return replyJPARepository.findReportReply();
+    }
+
+    @Override
+    public void approvalReplyReport(ReplyReportProcessDTO replyReportProcessDTO) {
+        for(long replyId:replyReportProcessDTO.getReplyList()){
+            reportedReplyJPARepository.deleteByReplyId(replyId);
+            replyJPARepository.deleteById(replyId);
+        }
+    }
+
+    @Override
+    public void notApprovalReplyReport(ReplyReportProcessDTO replyReportProcessDTO) {
+        for(long replyId:replyReportProcessDTO.getReplyList()){
+            reportedReplyJPARepository.deleteByReplyId(replyId);
+        }
+    }
+
+
 
 }

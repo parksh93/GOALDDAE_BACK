@@ -3,6 +3,7 @@ package com.goalddae.service;
 import com.goalddae.config.jwt.TokenProvider;
 import com.goalddae.dto.admin.DeleteAdminDTO;
 import com.goalddae.dto.admin.GetAdminListDTO;
+import com.goalddae.exception.UnValidUserException;
 import com.goalddae.util.S3Uploader;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
@@ -88,15 +89,19 @@ public class UserServiceImpl implements UserService{
                 .teamId(-1L)
                 .build();
 
-        userJPARepository.save(newUser);
+        try{
+            userJPARepository.save(newUser);
 
-        // 로그인 아이디를 가져와 테이블 생성에 사용
-        Long id = newUser.getId();
+            // 로그인 아이디를 가져와 테이블 생성에 사용
+            Long id = newUser.getId();
 
-        // 동적 테이블 생성
-        friendService.createFriendAcceptTable(id);
-        friendService.createFriendAddTable(id);
-        friendService.createFriendListTable(id);
+            // 동적 테이블 생성
+            friendService.createFriendAcceptTable(id);
+            friendService.createFriendAddTable(id);
+            friendService.createFriendListTable(id);
+        }catch (Exception e){
+            throw new UnValidUserException("유효하지 않은 사용자 정보");
+        }
     }
 
     public static String createUserCode() {

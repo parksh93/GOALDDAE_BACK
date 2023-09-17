@@ -1,5 +1,6 @@
 package com.goalddae.repository.board;
 
+import com.goalddae.dto.admin.GetReportReplyDTO;
 import com.goalddae.entity.CommunicationReply;
 import com.goalddae.entity.ReportedReply;
 import com.goalddae.repository.ReplyJPARepository;
@@ -181,6 +182,8 @@ public class ReplyJPARepositoryTest {
     @Transactional
     @DisplayName("신고 댓글 조회")
     public void findReportReply() {
+        List<GetReportReplyDTO> replyDTOList = replyJPARepository.findReportReply();
 
+        assertEquals(1, replyDTOList.size());
     }
 }
