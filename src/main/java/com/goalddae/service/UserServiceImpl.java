@@ -14,11 +14,6 @@ import com.goalddae.util.CookieUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.goalddae.repository.UserJPARepository;
-import com.goalddae.util.CookieUtil;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +22,7 @@ import java.io.IOException;
 import java.time.Duration;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -308,6 +304,36 @@ public class UserServiceImpl implements UserService{
         }
         return true;
     }
+
+    @Override
+    public void changePasswordInMypage(ChangePasswordInMypageDTO changePasswordInMypageDTO) {
+        try {
+            Optional<User> userOptional = userJPARepository.findById(changePasswordInMypageDTO.getId());
+
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+
+                if (bCryptPasswordEncoder.matches(changePasswordInMypageDTO.getOldPassword(), user.getPassword())) {
+                    String newPassword = bCryptPasswordEncoder.encode(changePasswordInMypageDTO.getNewPassword());
+
+                    ChangeUserInfoDTO userInfoDTO = new ChangeUserInfoDTO(user);
+                    userInfoDTO.setPassword(newPassword);
+                    userInfoDTO.setProfileUpdateDate(LocalDateTime.now());
+                    User updateUser = userInfoDTO.toEntity();
+
+                    userJPARepository.save(updateUser);
+                } else {
+                    System.out.println("비밀번호가 일치하지 않습니다.");
+                }
+            } else {
+                System.out.println("사용자를 찾을 수 없습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     @Override
     public User findByEmail(String email) {

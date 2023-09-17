@@ -118,6 +118,12 @@ public class UserController {
         return List.of(changeCheck);
     }
 
+    @RequestMapping(value = "/changePasswordInMypage", method = RequestMethod.PATCH)
+    public ResponseEntity<String> changePasswordInMypage(@RequestBody ChangePasswordInMypageDTO changePasswordInMypageDTO) {
+        userService.changePasswordInMypage(changePasswordInMypageDTO);
+        return ResponseEntity.ok("비밀번호가 변경되었습니다.");
+    }
+
     @RequestMapping(value = "/deleteAccount/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> deleteAccount(@PathVariable long id) {
         userService.deleteUser(id);

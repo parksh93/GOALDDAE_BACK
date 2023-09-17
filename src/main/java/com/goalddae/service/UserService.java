@@ -3,14 +3,8 @@ package com.goalddae.service;
 
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
-import com.goalddae.entity.CommunicationBoard;
-import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.entity.User;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.List;
-import com.goalddae.dto.email.SendEmailDTO;
-import com.goalddae.dto.user.*;
-import com.goalddae.entity.User;
 import jakarta.servlet.http.HttpServletResponse;
 
 
@@ -30,6 +24,7 @@ public interface UserService {
     public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO);
     public boolean checkLoginIdAndEmail(RequestFindPasswordDTO requestFindPasswordDTO, HttpServletResponse response);
     public boolean changePassword(ChangePasswordDTO changePasswordDTO);
+    public void changePasswordInMypage(ChangePasswordInMypageDTO changePasswordInMypageDTO);
     public User findByEmail(String email);
     public void deleteUser(long id);
 }
