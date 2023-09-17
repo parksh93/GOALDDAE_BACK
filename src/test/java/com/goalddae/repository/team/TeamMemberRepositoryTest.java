@@ -1,5 +1,6 @@
 package com.goalddae.repository.team;
 
+import com.goalddae.dto.team.TeamMemberCheckDTO;
 import com.goalddae.dto.team.TeamMemberDTO;
 import com.goalddae.repository.TeamMemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.SimpleTimeZone;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,16 +25,17 @@ public class TeamMemberRepositoryTest {
     @DisplayName("teamId=3의 사이즈 1, userId=1 ")
     public void findAllTeamMembersByTeamIdTest() {
         //given
-        long teamId = 3;
+        long teamId = 1;
         long userId = 1;
+        String name = "김재원";
 
         //when
-        List<TeamMemberDTO> members = teamMemberRepository.findAllTeamMembersByTeamId(teamId);
+        List<TeamMemberCheckDTO> members = teamMemberRepository.findAllTeamMembersByTeamId(teamId);
 
         //then
-        assertEquals(1, members.size());
-        //assertEquals(teamId, members.get(0).getTeamId());
+        assertEquals(2, members.size());
         assertEquals(userId, members.get(0).getUserId());
+        assertEquals(name, members.get(0).getName());
     }
 
     @Test
