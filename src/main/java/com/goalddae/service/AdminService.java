@@ -1,10 +1,9 @@
 package com.goalddae.service;
 
-import com.goalddae.dto.admin.DeleteAdminDTO;
-import com.goalddae.dto.admin.GetAdminListDTO;
-import com.goalddae.dto.admin.BoardReportProcessDTO;
-import com.goalddae.dto.admin.GetReportBoardDTO;
+import com.goalddae.dto.admin.*;
+import com.goalddae.dto.soccerField.SoccerFieldDTO;
 import com.goalddae.dto.user.SaveUserInfoDTO;
+import com.goalddae.entity.SoccerField;
 
 import java.util.List;
 
@@ -12,8 +11,12 @@ public interface AdminService {
     public List<GetAdminListDTO> findByAuthority(String authority);
     public void saveAdmin(SaveUserInfoDTO user);
     public void deleteAdmin(DeleteAdminDTO deleteAdminDTO);
+    public void saveManager(SaveUserInfoDTO user);
     List<GetReportBoardDTO> findReportBoard();
-    void approvalBoardReport(BoardReportProcessDTO reportProcessDTO);
-    void notApprovalBoardReport(BoardReportProcessDTO reportProcessDTO);
+    void approvalBoardReport(BoardReportProcessDTO boardReportProcessDTO);
+    void notApprovalBoardReport(BoardReportProcessDTO boardReportProcessDTO);
+    List<GetReportReplyDTO> findReportReply();
+    void approvalReplyReport(ReplyReportProcessDTO replyReportProcessDTO);
+    void notApprovalReplyReport(ReplyReportProcessDTO replyReportProcessDTO);
 
 }

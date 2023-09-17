@@ -19,6 +19,6 @@ public interface ReplyJPARepository extends JpaRepository<CommunicationReply, Lo
     @Query("SELECT r.boardId, COUNT(r) FROM CommunicationReply r WHERE r.boardId IN :boardIds AND r.status = 0 GROUP BY r.boardId")
     List<Object[]> countRepliesByBoardIds(@Param("boardIds") List<Long> boardIds);
 
-    @Query(value = "SELECT c.id, c.content, c.writer, c.reply_write_date AS replyWriterDate, r.reported_date AS reportDate, r.reason, u.nickname AS reporterFROM communication_reply c JOIN reported_reply r ON c.id = r.reply_id JOIN users u ON u.id = r.reporter_user_id", nativeQuery = true)
+    @Query(value = "SELECT c.id, c.board_id AS boardId, c.content, c.writer, c.reply_write_date AS replyWriteDate, r.reported_date AS reportDate, r.reason, u.nickname AS reporter,b.title FROM communication_reply c JOIN reported_reply r ON c.id = r.reply_id JOIN users u ON u.id = r.reporter_user_id JOIN communication_board b ON c.board_id = b.id", nativeQuery = true)
     List<GetReportReplyDTO> findReportReply();
 }

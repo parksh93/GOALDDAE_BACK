@@ -1,10 +1,8 @@
 package com.goalddae.service;
 
-import com.goalddae.dto.admin.DeleteAdminDTO;
-import com.goalddae.dto.admin.GetAdminListDTO;
-import com.goalddae.dto.admin.BoardReportProcessDTO;
-import com.goalddae.dto.admin.GetReportBoardDTO;
+import com.goalddae.dto.admin.*;
 import com.goalddae.dto.user.SaveUserInfoDTO;
+import com.goalddae.entity.SoccerField;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,11 +80,43 @@ public class AdminServiceTest {
 
     @Test
     @Transactional
-    @DisplayName("신고 게시글 승인")
+    @DisplayName("신고 게시글 미승인")
     public void notApprovalReport() {
         long boardId = 3;
 
         BoardReportProcessDTO reportProcessDTO = BoardReportProcessDTO.builder().boardList(List.of(boardId)).build();
         adminService.notApprovalBoardReport(reportProcessDTO);
     }
+
+    @Test
+    @Transactional
+    @DisplayName("신고 댓글 조회")
+    public void findReportReplyTest() {
+        List<GetReportReplyDTO> replyDTOList = adminService.findReportReply();
+
+        assertEquals("aa", replyDTOList.get(0).getReason());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("신고 댓글 승인")
+    public void approvalReplyReportTest() {
+        long replyId = 3;
+
+        ReplyReportProcessDTO reportProcessDTO = ReplyReportProcessDTO.builder().replyList(List.of(replyId)).build();
+
+        adminService.approvalReplyReport(reportProcessDTO);
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("신고 게시글 미승인")
+    public void notApprovalReplyReportTest() {
+        long replyId = 3;
+
+        ReplyReportProcessDTO reportProcessDTO = ReplyReportProcessDTO.builder().replyList(List.of(replyId)).build();
+
+        adminService.notApprovalReplyReport(reportProcessDTO);
+    }
+
 }
