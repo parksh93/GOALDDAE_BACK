@@ -19,5 +19,6 @@ public interface SoccerFieldService {
     void delete(long id);
     public SoccerFieldInfoDTO findById(long id);
     String uploadImage (MultipartFile multipartFile);
+    List<SoccerField> getSoccerFieldList();
 }
 

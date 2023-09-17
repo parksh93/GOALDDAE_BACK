@@ -146,4 +146,13 @@ public class SoccerFieldServiceTest {
         // Then
         verify(soccerFieldRepository, times(1)).deleteById(id);
     }
+
+    @Test
+    @Transactional
+    @DisplayName("구장 전체 조회")
+    public void getSoccerFieldListTest() {
+        List<SoccerField> soccerFieldList = soccerFieldService.getSoccerFieldList();
+
+        assertEquals("테스트 구장", soccerFieldList.get(0).getFieldName());
+    }
 }

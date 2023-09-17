@@ -123,27 +123,9 @@ public class SoccerFieldControllerTest {
     @Test
     @DisplayName("구장 객체 삭제 테스트")
     public void deleteSoccerFieldTest() throws Exception {
-        // Given
-        Long soccerFieldId = 1L;
-        SoccerField soccerField = SoccerField.builder()
-                .id(soccerFieldId)
-                .fieldName("테스트 풋살장")
-                .toiletStatus(true)
-                .showerStatus(true)
-                .parkingStatus(true)
-                .fieldSize("14x16")
-                .fieldImg1("테스트이미지1")
-                .inOutWhether("실외")
-                .grassWhether("인조")
-                .province("서울")
-                .region("서울")
-                .reservationFee(8000)
-                .build();
 
         // When
-        mockMvc.perform(post("/field/delete")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(soccerField)))
+        mockMvc.perform(post("/field/delete/1"))
                 .andExpect(status().isOk());
 
         // Then
