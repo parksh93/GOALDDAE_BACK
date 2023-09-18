@@ -92,6 +92,7 @@ public class SoccerFieldController {
     }
 
     // 예약할 구장 리스트 조회
+    // 예약할 구장 리스트 조회
     @GetMapping("/reservation/list")
     public ResponseEntity<Page<SoccerFieldDTO>> findReservationField(
             @RequestParam(required = false) Long userId,
@@ -107,16 +108,16 @@ public class SoccerFieldController {
         return ResponseEntity.ok(availableFields);
     }
 
-      @PostMapping("/upload")
+    @PostMapping("/upload")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
 
-        long maxSize = 20000 * 1024;
+    long maxSize = 20000 * 1024;
 
-        if (file.getSize() > maxSize) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일 크기가 초과되었습니다.");
-        }
+    if (file.getSize() > maxSize) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일 크기가 초과되었습니다.");
+    }
 
-        String imageUrl = soccerFieldService.uploadImage(file);
-        return ResponseEntity.ok(imageUrl);
+    String imageUrl = soccerFieldService.uploadImage(file);
+    return ResponseEntity.ok(imageUrl);
     }
 }
