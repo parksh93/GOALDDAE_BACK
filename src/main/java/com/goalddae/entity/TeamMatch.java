@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -71,4 +72,7 @@ public class TeamMatch {
     @JoinColumn(name="reservation_field")
     private ReservationField reservationField;
 
+    // 외래키 형성 - 매치요청
+    @OneToMany(mappedBy = "teamMatch")
+    private List<TeamMatchRequest> requests;
 }
