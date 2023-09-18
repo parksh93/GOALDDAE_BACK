@@ -1,9 +1,7 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.admin.*;
-import com.goalddae.dto.soccerField.SoccerFieldDTO;
 import com.goalddae.dto.user.SaveUserInfoDTO;
-import com.goalddae.entity.SoccerField;
 
 import java.util.List;
 
@@ -19,4 +17,5 @@ public interface AdminService {
     void approvalReplyReport(ReplyReportProcessDTO replyReportProcessDTO);
     void notApprovalReplyReport(ReplyReportProcessDTO replyReportProcessDTO);
 
+    List<GetUserListDTO> findUserList(String authority);
 }

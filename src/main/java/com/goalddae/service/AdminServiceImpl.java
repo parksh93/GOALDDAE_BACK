@@ -2,19 +2,17 @@ package com.goalddae.service;
 
 import com.goalddae.dto.admin.*;
 import com.goalddae.dto.user.SaveUserInfoDTO;
-import com.goalddae.entity.SoccerField;
+import com.goalddae.entity.CommunicationReply;
 import com.goalddae.entity.User;
-import com.goalddae.exception.UnValidTokenException;
 import com.goalddae.exception.UnValidUserException;
 import com.goalddae.repository.*;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +98,7 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
+    @Transactional
     public void approvalBoardReport(BoardReportProcessDTO boardReportProcessDTO) {
         for (long boardId:boardReportProcessDTO.getBoardList()) {
             boardJPARepository.deleteById(boardId);
@@ -108,6 +107,7 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
+    @Transactional
     public void notApprovalBoardReport(BoardReportProcessDTO boardReportProcessDTO) {
         for (long boardId:boardReportProcessDTO.getBoardList()) {
             reportedBoardJPARepository.deleteByBoardId(boardId);
@@ -120,20 +120,35 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
+    @Transactional
     public void approvalReplyReport(ReplyReportProcessDTO replyReportProcessDTO) {
         for(long replyId:replyReportProcessDTO.getReplyList()){
             reportedReplyJPARepository.deleteByReplyId(replyId);
-            replyJPARepository.deleteById(replyId);
+            CommunicationReply communicationReply = replyJPARepository.findById(replyId).get();
+            communicationReply.deleteByAdmin();
         }
     }
 
     @Override
+    @Transactional
     public void notApprovalReplyReport(ReplyReportProcessDTO replyReportProcessDTO) {
         for(long replyId:replyReportProcessDTO.getReplyList()){
             reportedReplyJPARepository.deleteByReplyId(replyId);
         }
     }
 
+    @Override
+    public List<GetUserListDTO> findUserList(String authority){
+        List<User> userList = userJPARepository.findByAuthority(authority);
+        List<GetUserListDTO> userListDTO = new ArrayList<>();
+        for(User user: userList){
+            GetUserListDTO getUserListDTO = new GetUserListDTO(user);
+            String signUpDate = user.getSignupDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            getUserListDTO.setSignupDate(signUpDate);
 
+            userListDTO.add(getUserListDTO);
+        }
 
+        return userListDTO;
+    }
 }

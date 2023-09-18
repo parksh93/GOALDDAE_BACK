@@ -119,4 +119,13 @@ public class AdminServiceTest {
         adminService.notApprovalReplyReport(reportProcessDTO);
     }
 
+    @Test
+    @Transactional
+    @DisplayName("유저 리스트 조회")
+    public void findUserListTest() {
+        List<GetUserListDTO> userListDTOList = adminService.findUserList("user");
+
+        assertEquals("안녕", userListDTOList.get(0).getNickname());
+    }
+
 }

@@ -86,7 +86,6 @@ public class UserServiceImpl implements UserService{
                 .matchesCnt(0)
                 .level("유망주")
                 .noShowCnt(0)
-                .teamId(-1L)
                 .build();
 
         try{
@@ -287,6 +286,11 @@ public class UserServiceImpl implements UserService{
             changeUserInfoDTO.setPreferredCity(getUserInfoDTO.getPreferredCity());
             changeUserInfoDTO.setPreferredArea(getUserInfoDTO.getPreferredArea());
             changeUserInfoDTO.setActivityClass(getUserInfoDTO.getActivityClass());
+            changeUserInfoDTO.setAuthority("user");
+            changeUserInfoDTO.setProfileImgUrl("https://kr.object.ncloudstorage.com/goalddae-bucket/profile/goalddae_default_profile.Webp");
+            changeUserInfoDTO.setMatchesCnt(0);
+            changeUserInfoDTO.setLevel("유망주");
+            changeUserInfoDTO.setNoShowCnt(0);
 
             user = changeUserInfoDTO.toEntity();
 
