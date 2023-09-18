@@ -71,4 +71,12 @@ public class TeamMatch {
     @JoinColumn(name="reservation_field")
     private ReservationField reservationField;
 
+    // 매니저 id
+    @Column
+    private long managerId;
+
+    public void setManagerId(long managerId){
+        this.managerId = managerId;
+    }
+
 }
