@@ -1,20 +1,26 @@
 package com.goalddae.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.goalddae.dto.soccerField.SoccerFieldDTO;
 import com.goalddae.entity.SoccerField;
 import com.goalddae.repository.SoccerFieldRepository;
 import com.goalddae.service.SoccerFieldService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -132,15 +138,54 @@ public class SoccerFieldControllerTest {
         verify(soccerFieldService, times(1)).delete(anyLong());
     }
 
-        @Test
-        @Transactional
-        @DisplayName("구장 정보 가져오기")
-        public void getFieldInfo() throws Exception{
-            String url = "/field/getFieldInfo/1";
+    @Test
+    @Transactional
+    @DisplayName("구장 정보 가져오기")
+    public void getFieldInfo() throws Exception{
+        String url = "/field/getFieldInfo/1";
 
-            ResultActions result = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
+        ResultActions result = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
 
-            result.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.fieldName").value("테스트 구장"));
-        }
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.fieldName").value("테스트 구장"));
     }
+
+    @Test
+    @DisplayName("예약할 구장 찾아보기 테스트")
+    public void findReservationFieldTest() throws Exception {
+        // Given
+        Long userId = 1L;
+        String province = "서울";
+        String inOutWhether = "실내";
+        String grassWhether = "잔디";
+        LocalDate reservationDate = LocalDate.now();
+        String reservationPeriod = "오전";
+
+        SoccerFieldDTO mockSoccerFieldDTO = new SoccerFieldDTO();
+        List<SoccerFieldDTO> mockResultList = Arrays.asList(mockSoccerFieldDTO);
+
+        when(soccerFieldService.findAvailableField(
+                Mockito.eq(Optional.ofNullable(userId)),
+                Mockito.eq(province),
+                Mockito.eq(inOutWhether),
+                Mockito.eq(grassWhether),
+                Mockito.eq(reservationDate),
+                Mockito.eq(reservationPeriod),
+                Mockito.anyInt(),
+                Mockito.anyInt()
+        )).thenReturn(new PageImpl<>(mockResultList, PageRequest.of(0, 10), mockResultList.size()));
+
+        // When & Then
+        mockMvc.perform(get("/field/reservation/list")
+                        .param("userId", String.valueOf(userId))
+                        .param("province", province)
+                        .param("inOutWhether", inOutWhether)
+                        .param("grassWhether", grassWhether)
+                        .param("reservationDate", reservationDate.toString())
+                        .param("reservationPeriod", reservationPeriod)
+                        .param("pageNumber", "1")
+                        .param("pageSize", "10")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+}
