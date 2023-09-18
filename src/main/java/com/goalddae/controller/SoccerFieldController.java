@@ -1,10 +1,12 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.soccerField.DeleteSoccerFieldListDTO;
 import com.goalddae.dto.fieldReservation.FieldReservationInfoDTO;
 import com.goalddae.dto.soccerField.SoccerFieldDTO;
 import com.goalddae.dto.soccerField.SoccerFieldInfoDTO;
 import com.goalddae.entity.SoccerField;
 import com.goalddae.service.SoccerFieldService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -56,7 +58,7 @@ public class SoccerFieldController {
     }
 
     // 구장 등록
-    @PostMapping("/save")
+    @PutMapping("/save")
     public ResponseEntity<SoccerField> saveSoccerField(@RequestBody SoccerField soccerField) {
         try {
             SoccerField saveSoccerField = soccerFieldService.save(soccerField);
@@ -68,7 +70,7 @@ public class SoccerFieldController {
     }
 
     // 구장 수정
-    @PutMapping("/update")
+    @PatchMapping("/update")
     public ResponseEntity<SoccerField> updateSoccerField(@RequestBody SoccerFieldDTO soccerFieldDTO) {
         try {
             SoccerField updatedSoccerField = soccerFieldService.update(soccerFieldDTO);
@@ -80,10 +82,12 @@ public class SoccerFieldController {
     }
 
     // 구장 삭제
-    @PostMapping("/delete")
-    public ResponseEntity<Void> deleteSoccerField(@RequestBody SoccerField soccerField) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteSoccerField(@RequestBody DeleteSoccerFieldListDTO deleteSoccerFieldListDTO) {
         try {
-            soccerFieldService.delete(soccerField.getId());
+            for (long soccerFieldId:deleteSoccerFieldListDTO.getSoccerFieldList()) {
+                soccerFieldService.delete(soccerFieldId);
+            }
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             e.printStackTrace();
