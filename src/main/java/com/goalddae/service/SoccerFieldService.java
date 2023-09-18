@@ -25,7 +25,6 @@ public interface SoccerFieldService {
     public SoccerFieldInfoDTO findById(long id);
     String uploadImage (MultipartFile multipartFile);
     List<SoccerField> getSoccerFieldList();
-}
 
   // 필터를 이용한 예약구장리스트 조회
     Page<SoccerFieldDTO> findAvailableField(Optional<Long> userId,
