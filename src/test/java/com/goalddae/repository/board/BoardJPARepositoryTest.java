@@ -1,13 +1,13 @@
 package com.goalddae.repository.board;
 
 import com.goalddae.dto.board.BoardListDTO;
+import com.goalddae.dto.admin.GetReportBoardDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
 import com.goalddae.entity.ReportedBoard;
 import com.goalddae.repository.BoardJPARepository;
 import com.goalddae.repository.HeartJPARepository;
 import com.goalddae.repository.ReportedBoardJPARepository;
-import com.goalddae.service.BoardService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -359,5 +358,15 @@ public class BoardJPARepositoryTest {
             assertTrue(top5Boards.get(i).getCount() >= top5Boards.get(i + 1).getCount());
             assertEquals(LocalDate.now(), top5Boards.get(i).getWriteDate().toLocalDate());
         }
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("신고 당한 게시글 조회")
+    public void findReportBoard() {
+        List<GetReportBoardDTO> reportBoardList = boardJPARepository.findReportBoard();
+
+        assertEquals(1, reportBoardList.size());
+        assertEquals("그냥", reportBoardList.get(0).getReason());
     }
 }

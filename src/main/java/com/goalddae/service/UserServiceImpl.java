@@ -3,6 +3,7 @@ package com.goalddae.service;
 import com.goalddae.config.jwt.TokenProvider;
 import com.goalddae.dto.admin.DeleteAdminDTO;
 import com.goalddae.dto.admin.GetAdminListDTO;
+import com.goalddae.exception.UnValidUserException;
 import com.goalddae.util.S3Uploader;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
@@ -85,18 +86,21 @@ public class UserServiceImpl implements UserService{
                 .matchesCnt(0)
                 .level("유망주")
                 .noShowCnt(0)
-                .teamId(-1L)
                 .build();
 
-        userJPARepository.save(newUser);
+        try{
+            userJPARepository.save(newUser);
 
-        // 로그인 아이디를 가져와 테이블 생성에 사용
-        Long id = newUser.getId();
+            // 로그인 아이디를 가져와 테이블 생성에 사용
+            Long id = newUser.getId();
 
-        // 동적 테이블 생성
-        friendService.createFriendAcceptTable(id);
-        friendService.createFriendAddTable(id);
-        friendService.createFriendListTable(id);
+            // 동적 테이블 생성
+            friendService.createFriendAcceptTable(id);
+            friendService.createFriendAddTable(id);
+            friendService.createFriendListTable(id);
+        }catch (Exception e){
+            throw new UnValidUserException("유효하지 않은 사용자 정보");
+        }
     }
 
     public static String createUserCode() {
@@ -282,6 +286,11 @@ public class UserServiceImpl implements UserService{
             changeUserInfoDTO.setPreferredCity(getUserInfoDTO.getPreferredCity());
             changeUserInfoDTO.setPreferredArea(getUserInfoDTO.getPreferredArea());
             changeUserInfoDTO.setActivityClass(getUserInfoDTO.getActivityClass());
+            changeUserInfoDTO.setAuthority("user");
+            changeUserInfoDTO.setProfileImgUrl("https://kr.object.ncloudstorage.com/goalddae-bucket/profile/goalddae_default_profile.Webp");
+            changeUserInfoDTO.setMatchesCnt(0);
+            changeUserInfoDTO.setLevel("유망주");
+            changeUserInfoDTO.setNoShowCnt(0);
 
             user = changeUserInfoDTO.toEntity();
 
@@ -323,41 +332,6 @@ public class UserServiceImpl implements UserService{
         } catch (Exception e) {
             System.out.println("예외가 발생했다.");
             e.printStackTrace();
-        }
-    }
-
-    @Override
-    public List<GetAdminListDTO> findByAuthority(String authority) {
-        List<User> userList = userJPARepository.findByAuthority("admin");
-
-        List<GetAdminListDTO> adminList = new ArrayList<>();
-
-        for (User user:userList) {
-            GetAdminListDTO getAdminListDTO = new GetAdminListDTO(user);
-
-            String signUpDate = user.getSignupDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
-            getAdminListDTO.setSignUpDate(signUpDate);
-            adminList.add(getAdminListDTO);
-        }
-
-        return adminList;
-    }
-
-    @Override
-    public void saveAdmin(SaveUserInfoDTO user) {
-        user.setNickname("관리자");
-        user.setAuthority("admin");
-
-        userJPARepository.save(user.toEntity());
-    }
-
-    @Override
-    public void deleteAdmin(DeleteAdminDTO deleteAdminDTO) {
-        List<Long> adminList = deleteAdminDTO.getDeleteAdminList();
-
-        for (long id : adminList) {
-            userJPARepository.deleteById(id);
         }
     }
 }

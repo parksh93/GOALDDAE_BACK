@@ -1,9 +1,6 @@
 package com.goalddae.service;
 
-import com.goalddae.dto.board.BoardListDTO;
-import com.goalddae.dto.board.BoardUpdateDTO;
-import com.goalddae.dto.board.HeartInfoDTO;
-import com.goalddae.dto.board.MyBoardListDTO;
+import com.goalddae.dto.board.*;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
 import com.goalddae.entity.ReportedBoard;

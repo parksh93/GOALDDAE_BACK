@@ -303,4 +303,8 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
 
         return uploadImageUrl;
     }
+    @Override
+    public List<SoccerField> getSoccerFieldList() {
+        return soccerFieldRepository.findAll();
+    }
 }
