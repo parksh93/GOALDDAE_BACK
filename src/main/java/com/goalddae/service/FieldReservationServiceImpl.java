@@ -98,6 +98,7 @@ public class FieldReservationServiceImpl implements FieldReservationService {
         }
     }
 
+    @Transactional
     public List<Integer> getReservationTimesByFieldIdAndDate(long fieldId, String date) {
         // 문자열 형식의 date를 LocalDateTime으로 변환
         LocalDateTime localDateTime = LocalDateTime.of(
@@ -107,7 +108,6 @@ public class FieldReservationServiceImpl implements FieldReservationService {
                 0, 0
         );
 
-        // ReservationField 엔티티 조회
         List<ReservationField> reservationFields = reservationFieldJPARepository
                 .findBySoccerFieldIdAndReservedDate(fieldId, localDateTime);
 
