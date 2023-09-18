@@ -94,7 +94,6 @@ public class AdminController {
 
     @DeleteMapping("/approvalReplyReport")
     public void approvalReplyReport(@RequestBody ReplyReportProcessDTO replyReportProcessDTO){
-        System.out.println(replyReportProcessDTO.toString());
         adminService.approvalReplyReport(replyReportProcessDTO);
     }
 
@@ -106,5 +105,10 @@ public class AdminController {
     @GetMapping("/getSoccerFieldList")
     public List<SoccerField> getSoccerFieldList(){
         return soccerFieldService.getSoccerFieldList();
+    }
+
+    @GetMapping("getUserList")
+    public List<GetUserListDTO> getUserList(){
+        return adminService.findUserList("user");
     }
 }
