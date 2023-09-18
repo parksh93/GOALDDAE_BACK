@@ -93,12 +93,15 @@ public class TeamController {
         }
     }
   
-    @RequestMapping(value="/teamUpdate", method= {RequestMethod.PUT, RequestMethod.PATCH})
+    @RequestMapping(value="/update", method= {RequestMethod.PUT, RequestMethod.PATCH})
     public ResponseEntity<String> teamUpdate(@RequestBody TeamUpdateDTO teamUpdateDTO){
-
-        teamService.update(teamUpdateDTO);
-        return ResponseEntity
-                .ok("팀 수정이 완료되었습니다.");
+        try{
+            teamService.update(teamUpdateDTO);
+            return ResponseEntity
+                    .ok("팀 수정이 완료되었습니다.");
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("팀 수정 중 오류 발생");
+        }
     }
 
 
