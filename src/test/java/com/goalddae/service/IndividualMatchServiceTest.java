@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -73,5 +74,19 @@ public class IndividualMatchServiceTest {
         // Then
         assertThat(result).isNotEmpty();
         verify(individualmatchJPARepository, times(1)).findMatches(any(LocalDateTime.class), any(LocalDateTime.class), eq(province), eq(level), eq(gender));
+    }
+
+    @Test
+    @DisplayName("개인매치 신청내역 조회 테스트")
+    public void findAllByUserIdTest() {
+        // given
+        long userId = 1;
+
+        // when
+        List<IndividualMatchRequest> individualMatchRequestList = individualMatchService.findAllByUserId(userId);
+
+        // then
+        assertEquals("남자", individualMatchRequestList.get(0).getIndividualMatch().getGender());
+        assertEquals(1, individualMatchRequestList.get(0).getIndividualMatch().getReservationField().getSoccerField().getId());
     }
 }

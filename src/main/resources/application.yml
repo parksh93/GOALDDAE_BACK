@@ -6,7 +6,7 @@ spring:
     password: ${password}
     driver-class-name: ${driver-class-name}
   profiles:
-    active: db, jwt, payment, oauth2
+    active: db, jwt, payment, oauth2, s3
   jpa:
     hibernate:
       ddl-auto: update
@@ -54,3 +54,16 @@ spring:
 jwt:
   issuer: ${issuer}
   secret_key: ${secret_key}
+
+cloud:
+  aws:
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
+    credentials:
+      access-key: ${access-key}
+      secret-key: ${secret-key}
+    s3:
+      bucket: goalddae-bucket
+      endpoint: https://kr.object.ncloudstorage.com
