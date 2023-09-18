@@ -1,13 +1,22 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.match.TeamMatchDTO;
 import com.goalddae.dto.team.TeamListDTO;
 import com.goalddae.dto.team.TeamUpdateDTO;
 import com.goalddae.entity.Team;
+import com.goalddae.entity.TeamMatchRequest;
+import com.goalddae.service.TeamMatchService;
 import com.goalddae.service.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
 import com.goalddae.dto.team.TeamSaveDTO;
 import com.goalddae.service.TeamService;
 import org.springframework.http.HttpStatus;
@@ -23,8 +32,13 @@ public class TeamController {
 
     private final TeamService teamService;
 
-    public TeamController(TeamService teamService) {
+    private final TeamMatchService teamMatchService;
+
+    @Autowired
+    public TeamController(TeamService teamService,
+                          TeamMatchService teamMatchService) {
         this.teamService = teamService;
+        this.teamMatchService = teamMatchService;
     }
 
     @GetMapping(value = "/list")
@@ -125,4 +139,16 @@ public class TeamController {
         return teamService.findByAreaAndRecruiting(area, true);
     }
 
+    @GetMapping(value = "/match/list")
+    public ResponseEntity<Page<TeamMatchDTO>> findTeamMatches(
+            @RequestParam(required = false) Long userId,
+            @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+            @RequestParam("province") String province,
+            @RequestParam(value = "gender", required = false) String gender,
+            @RequestParam int page,
+            @RequestParam int size) {
+
+        Page<TeamMatchDTO> matches = teamMatchService.getTeamMatches(Optional.ofNullable(userId), startTime.toLocalDate(), province, gender, page, size);
+        return new ResponseEntity<>(matches, HttpStatus.OK);
+    }
 }

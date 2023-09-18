@@ -44,10 +44,6 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
                 gender = null;
             }
 
-            if ("레벨".equals(level) || level == null || "".equals(level)) {
-                level = null;
-            }
-
             List<IndividualMatch> matchesInProvince = individualMatchJPARepository
                     .findMatches(
                             startTime, endTime, province, level, gender);
