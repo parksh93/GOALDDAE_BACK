@@ -22,6 +22,13 @@
         JOIN users u ON tm.users_id = u.id
         WHERE tm.team_id = #{teamId}
     </select>
+    <select id="findByUserId" parameterType="com.goalddae.dto.team.TeamMemberCheckDTO">
+        SELECT id as id,
+               users_id as userId,
+               team_id as teamId
+        FROM team_member_#{teamId}
+        WHERE users_id = #{userId}
+    </select>
     <select id="findTeamManagerByUserId" parameterType="long" resultType="int">
         SELECT team_manager
         FROM team_member_#{teamId}
@@ -32,6 +39,7 @@
         VALUES (now(), #{teamManager}, #{teamId}, #{userId})
     </insert>
     <delete id="deleteMemberByUserId" parameterType="com.goalddae.dto.team.TeamMemberDTO">
-        DELETE FROM team_member_#{teamId} WHERE users_id = #{userId}
+        DELETE FROM team_member_#{teamId}
+        WHERE users_id = #{userId}
     </delete>
 </mapper>

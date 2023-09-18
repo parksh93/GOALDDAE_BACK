@@ -2,8 +2,13 @@ package com.goalddae.service;
 
 import com.goalddae.dto.team.TeamMemberCheckDTO;
 import com.goalddae.dto.team.TeamMemberDTO;
+import com.goalddae.dto.user.ChangeUserInfoDTO;
+import com.goalddae.dto.user.GetUserInfoDTO;
+import com.goalddae.entity.User;
 import com.goalddae.repository.TeamMemberRepository;
+import com.goalddae.repository.UserJPARepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,14 +18,22 @@ public class TeamMemberServiceImpl implements TeamMemberService{
 
 
     private TeamMemberRepository teamMemberRepository;
+    private UserJPARepository userJPARepository;
 
-    public TeamMemberServiceImpl(TeamMemberRepository teamMemberRepository){
+    public TeamMemberServiceImpl(TeamMemberRepository teamMemberRepository,
+                                 UserJPARepository userJPARepository){
         this.teamMemberRepository = teamMemberRepository;
+        this.userJPARepository = userJPARepository;
     }
 
     @Override
     public List<TeamMemberCheckDTO> findAllTeamMembersByTeamId(long teamId) {
         return teamMemberRepository.findAllTeamMembersByTeamId(teamId);
+    }
+
+    @Override
+    public TeamMemberCheckDTO findByUserId(long userId, long teamId) {
+        return teamMemberRepository.findByUserId(userId, teamId);
     }
 
     @Override
@@ -43,8 +56,28 @@ public class TeamMemberServiceImpl implements TeamMemberService{
         teamMemberRepository.addTeamMember(newMember);
     }
 
+    @Transactional
     @Override
-    public void deleteMemberByUserId(long usersId) {
-        teamMemberRepository.deleteMemberByUserId(usersId);
+    public void removeTeamMember(long usersId, long teamId, GetUserInfoDTO getUserInfoDTO) {
+
+        try{
+            // 팀 멤버 삭제
+            teamMemberRepository.deleteMemberByUserId(usersId, teamId);
+
+            // 유저 teamId 변경
+            User user = userJPARepository.findById(getUserInfoDTO.getId()).get();
+
+            if (user != null) {
+                ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
+                changeUserInfoDTO.setTeamId(0L);
+                user = changeUserInfoDTO.toEntity();
+
+                userJPARepository.save(user);
+            }
+
+        } catch (Exception e){
+            throw new RuntimeException("트랜잭션 처리 실패", e);
+        }
     }
+
 }
