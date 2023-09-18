@@ -30,11 +30,11 @@ public class ReservationField {
     @Column(nullable = false)
     private LocalDateTime reservedDate;
 
-    // 예약 시작 일정
+    // 경기 시작 일정
     @Column(nullable = false)
     private LocalDateTime startDate;
 
-    // 예약 종료 일정
+    // 경기 종료 일정
     @Column(nullable = false)
     private LocalDateTime endDate;
 
@@ -43,10 +43,8 @@ public class ReservationField {
     @JoinColumn(name="user_id")
     private User user;
 
-
     // 외래키 형성 - 개인매치
     @OneToMany(mappedBy = "reservationField")
     private List<IndividualMatch> individualMatches;
-
-    }
+}
 

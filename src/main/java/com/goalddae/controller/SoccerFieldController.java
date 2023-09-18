@@ -1,19 +1,24 @@
 package com.goalddae.controller;
 
 import com.goalddae.dto.soccerField.DeleteSoccerFieldListDTO;
+import com.goalddae.dto.fieldReservation.FieldReservationInfoDTO;
 import com.goalddae.dto.soccerField.SoccerFieldDTO;
 import com.goalddae.dto.soccerField.SoccerFieldInfoDTO;
 import com.goalddae.entity.SoccerField;
 import com.goalddae.service.SoccerFieldService;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/field")
@@ -90,17 +95,33 @@ public class SoccerFieldController {
         }
     }
 
+    // 예약할 구장 리스트 조회
+    // 예약할 구장 리스트 조회
+    @GetMapping("/reservation/list")
+    public ResponseEntity<Page<SoccerFieldDTO>> findReservationField(
+            @RequestParam(required = false) Long userId,
+            @RequestParam String province,
+            @RequestParam String inOutWhether,
+            @RequestParam String grassWhether,
+            @RequestParam LocalDate reservationDate,
+            @RequestParam String reservationPeriod,
+            @RequestParam int pageNumber,
+            @RequestParam int pageSize) {
+
+        Page<SoccerFieldDTO> availableFields = soccerFieldService.findAvailableField(Optional.ofNullable(userId), province, inOutWhether, grassWhether, reservationDate, reservationPeriod, pageNumber, pageSize);
+        return ResponseEntity.ok(availableFields);
+    }
+
     @PostMapping("/upload")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
 
-        long maxSize = 20000 * 1024;
+    long maxSize = 20000 * 1024;
 
-        if (file.getSize() > maxSize) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일 크기가 초과되었습니다.");
-        }
+    if (file.getSize() > maxSize) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일 크기가 초과되었습니다.");
+    }
 
-        String imageUrl = soccerFieldService.uploadImage(file);
-        return ResponseEntity.ok(imageUrl);
-
+    String imageUrl = soccerFieldService.uploadImage(file);
+    return ResponseEntity.ok(imageUrl);
     }
 }
