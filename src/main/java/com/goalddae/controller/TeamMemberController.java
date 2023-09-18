@@ -2,7 +2,6 @@ package com.goalddae.controller;
 
 import com.goalddae.dto.team.TeamMemberCheckDTO;
 import com.goalddae.dto.team.TeamMemberDTO;
-import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.service.TeamMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,12 +50,10 @@ public class TeamMemberController {
         }
     }
 
-    @DeleteMapping(value = "/remove")
-    public ResponseEntity<?> removeTeamMember(@PathVariable long usersId,
-                                              @PathVariable long teamId,
-                                              @RequestBody GetUserInfoDTO getUserInfoDTO){
+    @RequestMapping(value = "/remove", method = RequestMethod.DELETE)
+    public ResponseEntity<?> removeTeamMember(@RequestBody TeamMemberDTO teamMemberDTO){
         try {
-            teamMemberService.removeTeamMember(usersId, teamId, getUserInfoDTO);
+            teamMemberService.removeTeamMember(teamMemberDTO);
             return ResponseEntity.ok("팀 멤버가 삭제되었습니다.");
 
         } catch (Exception e) {
