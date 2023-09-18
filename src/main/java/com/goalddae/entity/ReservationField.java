@@ -46,5 +46,5 @@ public class ReservationField {
     // 외래키 형성 - 개인매치
     @OneToMany(mappedBy = "reservationField")
     private List<IndividualMatch> individualMatches;
-    }
+}
 
