@@ -14,6 +14,6 @@ public interface TeamMemberRepository {
     TeamMemberCheckDTO findByUserId(long userId, long teamId);
     int findTeamManagerByUserId(long userId, long teamId);
     void addTeamMember(TeamMemberDTO teamMemberDTO);
-    void deleteMemberByUserId(long userId, long teamId);
+    void deleteMemberByUserId(TeamMemberDTO teamMemberDTO);
 
 }

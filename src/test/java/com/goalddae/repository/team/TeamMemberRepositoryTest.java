@@ -81,16 +81,17 @@ public class TeamMemberRepositoryTest {
     @DisplayName("")
     public void deleteMemberByUserIdTest(){
         //given
-        long userId = 7;
-        long teamId = 1;
+        TeamMemberDTO teamMemberDTO = TeamMemberDTO.builder()
+                .userId(2)
+                .teamId(2)
+                .build();
 
         //when
-        teamMemberRepository.deleteMemberByUserId(userId, teamId);
-
-        List<TeamMemberCheckDTO> members = teamMemberRepository.findAllTeamMembersByTeamId(teamId);
+        teamMemberRepository.deleteMemberByUserId(teamMemberDTO);
+        List<TeamMemberCheckDTO> members = teamMemberRepository.findAllTeamMembersByTeamId(teamMemberDTO.getTeamId());
 
         //then
-        assertEquals(1, members.size());
+        assertEquals(0, members.size());
+//        assertNull();
     }
-
 }
