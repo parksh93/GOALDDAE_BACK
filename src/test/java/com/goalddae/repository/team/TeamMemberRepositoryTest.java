@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.SimpleTimeZone;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 public class TeamMemberRepositoryTest {
@@ -55,8 +56,6 @@ public class TeamMemberRepositoryTest {
 
     }
 
-
-
     @Test
     @Transactional
     @DisplayName("새로운 팀 멤버의 teamId=4")
@@ -77,5 +76,21 @@ public class TeamMemberRepositoryTest {
         assertEquals(5, newTeamMember.getUserId());
     }
 
+    @Test
+    @Transactional
+    @DisplayName("")
+    public void deleteMemberByUserIdTest(){
+        //given
+        long userId = 7;
+        long teamId = 1;
+
+        //when
+        teamMemberRepository.deleteMemberByUserId(userId, teamId);
+
+        List<TeamMemberCheckDTO> members = teamMemberRepository.findAllTeamMembersByTeamId(teamId);
+
+        //then
+        assertEquals(1, members.size());
+    }
 
 }
