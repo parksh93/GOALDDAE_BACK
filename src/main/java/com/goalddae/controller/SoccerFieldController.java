@@ -105,6 +105,7 @@ public class SoccerFieldController {
 
         Page<SoccerFieldDTO> availableFields = soccerFieldService.findAvailableField(Optional.ofNullable(userId), province, inOutWhether, grassWhether, reservationDate, reservationPeriod, pageNumber, pageSize);
         return ResponseEntity.ok(availableFields);
+    }
 
       @PostMapping("/upload")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {

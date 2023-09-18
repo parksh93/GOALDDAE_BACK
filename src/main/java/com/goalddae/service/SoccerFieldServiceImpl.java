@@ -288,8 +288,8 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
         infoDTO.setReservedTimes(reservedTimes);
 
         return infoDTO;
-
-      @Transactional
+    }
+    @Transactional
     @Override
     public String uploadImage(MultipartFile multipartFile) {
 
