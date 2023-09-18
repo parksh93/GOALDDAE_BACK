@@ -181,5 +181,4 @@ public class BoardController {
         List<BoardListDTO> topPosts = boardService.findTop5Board();
         return ResponseEntity.ok(topPosts);
     }
-
 }

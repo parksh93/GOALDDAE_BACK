@@ -23,6 +23,7 @@ public interface SoccerFieldService {
     SoccerField findSoccerFieldByName(String fieldName);
     void delete(long id);
     public SoccerFieldInfoDTO findById(long id);
+    String uploadImage (MultipartFile multipartFile);
 
   // 필터를 이용한 예약구장리스트 조회
     Page<SoccerFieldDTO> findAvailableField(Optional<Long> userId,
@@ -33,8 +34,6 @@ public interface SoccerFieldService {
                                             String reservationPeriod,
                                             int pageNumber,
                                             int pageSize);
-
-    String uploadImage (MultipartFile multipartFile);
 
     // 특정 날짜에 대해 해당 구장에서 이미 예약된 시간과 아직 예약 가능한 시간을 조회
     FieldReservationInfoDTO getReservationInfo(Long fieldId, LocalDate date, LocalTime startTime, LocalTime endTime);
