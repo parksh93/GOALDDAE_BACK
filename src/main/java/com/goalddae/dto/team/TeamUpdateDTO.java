@@ -3,6 +3,8 @@ package com.goalddae.dto.team;
 import com.goalddae.entity.Team;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Builder
@@ -20,6 +22,7 @@ public class TeamUpdateDTO {
     private int entryFee;  // 입단비
     private String entryGender; // 입단 가능 성별
     private String teamProfileImgUrl;  // 팀프로필 이미지
+    private LocalDateTime teamProfileUpdate;    // 팀프로필 업데이트일
     private String preferredDay;    // 선호 요일
     private String preferredTime;   // 선호 시간
 
@@ -34,6 +37,7 @@ public class TeamUpdateDTO {
                 .entryFee(team.getEntryFee())
                 .entryGender(team.getEntryGender())
                 .teamProfileImgUrl(team.getTeamProfileImgUrl())
+                .teamProfileUpdate(team.getTeamProfileUpdate())
                 .preferredDay(team.getPreferredDay())
                 .preferredTime(team.getPreferredTime())
                 .build();
@@ -49,6 +53,7 @@ public class TeamUpdateDTO {
         this.entryFee = team.getEntryFee();
         this.entryGender = team.getEntryGender();
         this.teamProfileImgUrl = getTeamProfileImgUrl();
+        this.teamProfileUpdate = getTeamProfileUpdate();
         this.preferredDay = team.getPreferredDay();
         this.preferredTime = team.getPreferredTime();
     }
