@@ -1,13 +1,17 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.team.*;
+import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.dto.match.TeamMatchDTO;
 import com.goalddae.dto.team.TeamListDTO;
 import com.goalddae.dto.team.TeamUpdateDTO;
+
 import com.goalddae.entity.Team;
 import com.goalddae.entity.TeamMatchRequest;
 import com.goalddae.service.TeamMatchService;
 import com.goalddae.service.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import retrofit2.http.POST;
 
 @RestController
 @RequestMapping("/team")
@@ -74,13 +79,14 @@ public class TeamController {
         }
     }
 
-    @PostMapping(value = "/teamSave")
+    /* @PostMapping(value = "/teamSave")
     public ResponseEntity<String> teamSave(@RequestBody Team team){
 
         teamService.save(team);
         return ResponseEntity
                 .ok("팀 생성이 완료되었습니다.");
     }
+    */
 
       // 팀 등록
     @PostMapping(value = "/save")
@@ -92,13 +98,27 @@ public class TeamController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-  
-    @RequestMapping(value="/teamUpdate", method= {RequestMethod.PUT, RequestMethod.PATCH})
-    public ResponseEntity<String> teamUpdate(@RequestBody TeamUpdateDTO teamUpdateDTO){
 
-        teamService.update(teamUpdateDTO);
-        return ResponseEntity
-                .ok("팀 수정이 완료되었습니다.");
+    @GetMapping("/getAutoIncrementTeamId")
+    public ResponseEntity<Long> getAutoIncrementTeamId(){
+        Long autoIncrementValue = teamService.getAutoIncrementValue();
+
+        if (autoIncrementValue != null ){
+            return ResponseEntity.ok(autoIncrementValue);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+  
+    @RequestMapping(value="/update", method= {RequestMethod.PUT, RequestMethod.PATCH})
+    public ResponseEntity<String> teamUpdate(@RequestBody TeamUpdateDTO teamUpdateDTO){
+        try{
+            teamService.update(teamUpdateDTO);
+            return ResponseEntity
+                    .ok("팀 수정이 완료되었습니다.");
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("팀 수정 중 오류 발생");
+        }
     }
 
 
@@ -135,6 +155,53 @@ public class TeamController {
     public List<TeamListDTO> filterAreaAndRecruiting(@RequestParam(required = false) String area,
                                               @RequestParam(required = false) boolean recruiting){
         return teamService.findByAreaAndRecruiting(area, true);
+    }
+
+    @PostMapping(value = "/addApply")
+    public ResponseEntity<?> addTeamApply(@RequestBody TeamApplyDTO teamApplyDTO){
+        try{
+            teamService.addTeamApply(teamApplyDTO);
+
+            return ResponseEntity.ok("팀 가입신청 완료");
+        } catch(Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping(value="/checkApply")
+    public ResponseEntity<?> findStatus0ByTeamId(@RequestParam long teamId){
+        try{
+            List<TeamMemberCheckDTO> applys = teamService.findStatus0ByTeamId(teamId);
+            return ResponseEntity.ok(applys);
+
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/acceptApply")
+    public ResponseEntity<?> acceptApply(@RequestBody TeamAcceptApplyDTO teamAcceptApplyDTO) {
+        System.out.println(teamAcceptApplyDTO);
+
+        try{
+            teamService.acceptApply(teamAcceptApplyDTO);
+            return ResponseEntity.ok("가입 수락");
+
+        } catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("가입 수락 중 오류 발생");
+        }
+
+    }
+
+    @RequestMapping(value = "/rejectApply", method = RequestMethod.PATCH)
+    public ResponseEntity<?> rejectApply(@RequestBody TeamApplyDTO teamApplyDTO){
+
+        try{
+            teamService.rejectApply(teamApplyDTO);
+            return ResponseEntity.ok("가입 거절");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("가입 거절 중 오류 발생");
+        }
     }
 
     @GetMapping(value = "/match/list")
