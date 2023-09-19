@@ -1,8 +1,11 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.match.IndividualMatchDTO;
+import com.goalddae.dto.match.IndividualMatchRequestDTO;
 import com.goalddae.entity.IndividualMatch;
+import com.goalddae.entity.IndividualMatchRequest;
 import com.goalddae.repository.IndividualMatchJPARepository;
+import com.goalddae.repository.IndividualMatchRequestJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +20,15 @@ import java.util.stream.Collectors;
 public class IndividualMatchServiceImpl implements IndividualMatchService {
 
     private final IndividualMatchJPARepository individualMatchJPARepository;
+    private final IndividualMatchRequestJPARepository individualMatchRequestJPARepository;
     private final MatchStatusNotifier matchStatusNotifier;
 
     @Autowired
     public IndividualMatchServiceImpl(IndividualMatchJPARepository individualMatchJPARepository,
+                                      IndividualMatchRequestJPARepository individualMatchRequestJPARepository,
                                       MatchStatusNotifier matchStatusNotifier) {
         this.individualMatchJPARepository = individualMatchJPARepository;
+        this.individualMatchRequestJPARepository = individualMatchRequestJPARepository;
         this.matchStatusNotifier = matchStatusNotifier;
     }
 
@@ -36,10 +42,6 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
 
             if ("남녀모두".equals(gender) || gender == null || "".equals(gender)) {
                 gender = null;
-            }
-
-            if ("레벨".equals(level) || level == null || "".equals(level)) {
-                level = null;
             }
 
             List<IndividualMatch> matchesInProvince = individualMatchJPARepository
@@ -65,6 +67,12 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
         }
     }
 
+    @Override
+    public List<IndividualMatchRequest> findAllByUserId(long userId) {
+        List<IndividualMatchRequest> individualMatchRequestList
+                = individualMatchRequestJPARepository.findAllByUserId(userId);
+        return individualMatchRequestList;
+    }
 
     // 신청 가능 상태
     private String determineStatus(IndividualMatch match) {
@@ -74,15 +82,13 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
 
         String status;
 
-        if (now.isAfter(match.getStartTime())) {
+        if (currentRequestsCount == maxPlayerNumber) {
             status = "마감";
-            // 마감임박 기준은 경기 시작이 2시간 미만으로 남았을 경우
-        } else if (now.plusHours(2).isAfter(match.getStartTime())) {
-            status = "마감임박";
-        } else if (currentRequestsCount == maxPlayerNumber) {
-            status = "마감";
-            // 마감임박 기준은 신청 인원이 최대 인원의 80% 이상일 때
         } else if (currentRequestsCount >= maxPlayerNumber * 0.8 ) {
+            status = "마감임박";
+        } else if (now.isAfter(match.getStartTime())) {
+            status = "마감";
+        } else if (now.plusHours(2).isAfter(match.getStartTime())) {
             status = "마감임박";
         } else {
             status = "신청가능";

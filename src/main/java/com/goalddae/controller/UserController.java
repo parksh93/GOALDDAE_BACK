@@ -1,30 +1,16 @@
 package com.goalddae.controller;
 
-import com.goalddae.dto.post.UserPostsResponse;
-import com.goalddae.dto.user.*;
-import com.goalddae.entity.CommunicationBoard;
-import com.goalddae.entity.UsedTransactionBoard;
-import com.goalddae.entity.User;
-import com.goalddae.exception.NotFoundMatchException;
-import com.goalddae.exception.NotFoundPostException;
 import com.goalddae.dto.user.*;
 import com.goalddae.entity.User;
-import com.goalddae.exception.NotFoundTokenException;
 import com.goalddae.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import retrofit2.http.Path;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 @RestController
 @RequestMapping("/user")
@@ -108,19 +94,6 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/posts/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<?> viewUserPosts(@PathVariable long userId) {
-
-        List<CommunicationBoard> communicationBoardsList = userService.getUserCommunicationBoardPosts(userId);
-        List<UsedTransactionBoard> usedTransactionBoardList = userService.getUserUsedTransactionBoardPosts(userId);
-
-        List<Object> combinedList = new ArrayList<>();
-        combinedList.addAll(communicationBoardsList);
-        combinedList.addAll(usedTransactionBoardList);
-
-        return ResponseEntity.ok(combinedList);
-    }
-
     @RequestMapping(value = "/findLoginId", method = RequestMethod.POST)
     public ResponseEntity<ResponseFindLoginIdDTO> findLoginId(@RequestBody RequestFindLoginIdDTO requestFindLoginIdDTO){
         ResponseFindLoginIdDTO findLoginIdDTO = userService.getLoginIdByEmailAndName(requestFindLoginIdDTO);
@@ -148,4 +121,11 @@ public class UserController {
 
         return List.of(changeCheck);
     }
+
+    @RequestMapping(value = "/deleteAccount/{id}", method = RequestMethod.POST)
+    public ResponseEntity<String> deleteAccount(@PathVariable long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok("탈퇴 되었습니다.");
+    }
+
 }

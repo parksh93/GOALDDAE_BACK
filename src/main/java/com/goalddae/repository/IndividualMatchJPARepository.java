@@ -19,6 +19,4 @@ public interface IndividualMatchJPARepository extends JpaRepository<IndividualMa
             @Param("level") String level,
             @Param("gender") String gender);
 
-    // 특정 유저의 신청한 매치들을 조회할때 사용
-    List<IndividualMatch> findByUserId(long userId);
 }

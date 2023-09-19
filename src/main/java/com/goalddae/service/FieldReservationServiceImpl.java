@@ -58,7 +58,7 @@ public class FieldReservationServiceImpl implements FieldReservationService {
                 .orElseThrow(() -> new EntityNotFoundException("SoccerField not found with id: " + soccerFieldId));
 
         User user = userJPARepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("userld not found with id: " + userId));
+                .orElseThrow(() -> new EntityNotFoundException("userId not found with id: " + userId));
 
         // 구장 예약 정보 생성 및 저장
         ReservationField reservationField = ReservationField.builder()
@@ -96,9 +96,9 @@ public class FieldReservationServiceImpl implements FieldReservationService {
                     .build();
             individualMatchJPARepository.save(individualMatch);
         }
-
     }
 
+    @Transactional
     public List<Integer> getReservationTimesByFieldIdAndDate(long fieldId, String date) {
         // 문자열 형식의 date를 LocalDateTime으로 변환
         LocalDateTime localDateTime = LocalDateTime.of(
@@ -108,7 +108,6 @@ public class FieldReservationServiceImpl implements FieldReservationService {
                 0, 0
         );
 
-        // ReservationField 엔티티 조회
         List<ReservationField> reservationFields = reservationFieldJPARepository
                 .findBySoccerFieldIdAndReservedDate(fieldId, localDateTime);
 
@@ -116,5 +115,4 @@ public class FieldReservationServiceImpl implements FieldReservationService {
                 .map(reservationField -> reservationField.getStartDate().toLocalTime().getHour())
                 .collect(Collectors.toList());
     }
-
 }

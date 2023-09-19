@@ -26,9 +26,11 @@ public class SoccerFieldInfoDTO {
     private String inOutWhether;
     private String grassWhether;
     private String region;
+    private String province;
     private String content;
     private LocalTime operatingHours;
     private LocalTime closingTime;
+    private String address;
 
     public SoccerFieldInfoDTO(SoccerField soccerField){
         this.id = soccerField.getId();
@@ -47,6 +49,8 @@ public class SoccerFieldInfoDTO {
         this.content = soccerField.getContent();
         this.operatingHours = soccerField.getOperatingHours();
         this.closingTime = soccerField.getClosingTime();
+        this.address = soccerField.getAddress();
+        this.province = soccerField.getProvince();
     }
 
     public SoccerField toEntity(){
@@ -67,6 +71,8 @@ public class SoccerFieldInfoDTO {
                 .content(content)
                 .operatingHours(operatingHours)
                 .closingTime(closingTime)
+                .address(address)
+                .province(province)
                 .build();
     }
 

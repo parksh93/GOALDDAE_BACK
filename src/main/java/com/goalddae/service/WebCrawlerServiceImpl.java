@@ -27,7 +27,7 @@ public class WebCrawlerServiceImpl implements WebCrawlerService {
         this.articleWorldJpaRepository = articleWorldJpaRepository;
     }
 
-//    @PostConstruct  // 서버가 시작될 때 즉시 크롤링 시작
+//        @PostConstruct  // 서버가 시작될 때 즉시 크롤링 시작
     @Scheduled(cron = "0 0 6,12,18,0 * * ?", zone = "Asia/Seoul")
     public void crawlArticles() {
         String URL = "https://sports.news.naver.com/wfootball/index.nhn";
