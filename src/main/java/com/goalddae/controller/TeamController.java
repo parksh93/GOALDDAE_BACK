@@ -155,8 +155,8 @@ public class TeamController {
     }
 
     // 팀 매치 신청
-    @PostMapping(value = "/match/detail")
-    public void requestTeamMatch(@RequestBody TeamMatchRequestDTO request) {
-        teamMatchRequestService.requestTeamMatch(request.getUserId(), request);
+    @PostMapping(value = "/match/detail/{teamMatchId}")
+    public void requestTeamMatch(@PathVariable Long teamMatchId, @RequestBody TeamMatchRequestDTO request) {
+        teamMatchRequestService.requestTeamMatch(request.getUserId(), teamMatchId, request);
     }
 }

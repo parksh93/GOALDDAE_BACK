@@ -33,7 +33,7 @@ public class TeamMatchRequestServiceImpl implements TeamMatchRequestService {
     }
 
     @Override
-    public void requestTeamMatch(Long userId, TeamMatchRequestDTO request) {
+    public void requestTeamMatch(Long userId, Long teamMatchId, TeamMatchRequestDTO request) {
         // 해당 유저가 자신의 팀에 속해 있는지 확인
         int isUserInHisTeam = teamMemberRepository.isTeamMember(request.getAwayTeamId(), userId);
 
@@ -42,7 +42,7 @@ public class TeamMatchRequestServiceImpl implements TeamMatchRequestService {
         }
 
         // 해당 유저가 이 매치를 신청할 수 있는지 확인 (예: away team의 팀장 혹은 home team의 팀장 등 필요한 조건 체크)
-        Optional<TeamMatch> optionalTeamMatch = teamMatchJPARepository.findValidMatchById(request.getAwayTeamId());
+        Optional<TeamMatch> optionalTeamMatch = teamMatchJPARepository.findValidMatchById(teamMatchId);
 
         if(!optionalTeamMatch.isPresent()){
             throw new IllegalArgumentException("The match has not been fully set up by the leaders yet.");
@@ -52,8 +52,7 @@ public class TeamMatchRequestServiceImpl implements TeamMatchRequestService {
         User user = userJPARepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("No user found with ID " + userId));
 
-        TeamMatch teamMatch = teamMatchJPARepository.findById(request.getMatchId())
-                .orElseThrow(() -> new IllegalArgumentException("No team match found with ID " + request.getMatchId()));
+        TeamMatch teamMatch = optionalTeamMatch.get();
 
         // DTO to Entity 변환
         TeamMatchRequest teamMatchRequest = TeamMatchRequest.builder()
