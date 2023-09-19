@@ -61,7 +61,6 @@ public class IndividualMatch {
     // 외래키 형성 - 매치요청
     @OneToMany(mappedBy = "individualMatch")
     private List<IndividualMatchRequest> requests;
-
 }
 
 

@@ -44,10 +44,6 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
                 gender = null;
             }
 
-            if ("레벨".equals(level) || level == null || "".equals(level)) {
-                level = null;
-            }
-
             List<IndividualMatch> matchesInProvince = individualMatchJPARepository
                     .findMatches(
                             startTime, endTime, province, level, gender);
@@ -86,15 +82,13 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
 
         String status;
 
-        if (now.isAfter(match.getStartTime())) {
+        if (currentRequestsCount == maxPlayerNumber) {
             status = "마감";
-            // 마감임박 기준은 경기 시작이 2시간 미만으로 남았을 경우
-        } else if (now.plusHours(2).isAfter(match.getStartTime())) {
-            status = "마감임박";
-        } else if (currentRequestsCount == maxPlayerNumber) {
-            status = "마감";
-            // 마감임박 기준은 신청 인원이 최대 인원의 80% 이상일 때
         } else if (currentRequestsCount >= maxPlayerNumber * 0.8 ) {
+            status = "마감임박";
+        } else if (now.isAfter(match.getStartTime())) {
+            status = "마감";
+        } else if (now.plusHours(2).isAfter(match.getStartTime())) {
             status = "마감임박";
         } else {
             status = "신청가능";
