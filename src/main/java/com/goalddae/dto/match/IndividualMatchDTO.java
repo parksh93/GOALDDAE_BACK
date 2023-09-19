@@ -19,4 +19,5 @@ public class IndividualMatchDTO {
     private String status;
     private long playerNumber;
     private String gender;
+    private long userId;
 }
