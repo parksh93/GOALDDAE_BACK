@@ -8,5 +8,4 @@ import java.util.Optional;
 
 public interface TeamMatchRequestJPARepository extends JpaRepository<TeamMatchRequest, Long> {
         Optional<TeamMatchRequest> findByTeamMatch(TeamMatch match);
-
 }

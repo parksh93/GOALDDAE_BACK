@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public interface TeamMatchJPARepository extends JpaRepository<TeamMatch, Long> {
     // 타임라인 - 일자, 지역, 남녀구분
@@ -18,4 +19,7 @@ public interface TeamMatchJPARepository extends JpaRepository<TeamMatch, Long> {
             @Param("province") String province,
             @Param("gender") String gender,
             Pageable pageable);
+    // 매치를 생성하거나 요청한 유저를 확인
+    @Query("SELECT tm FROM TeamMatch tm WHERE tm.id = :matchId AND tm.homeUser IS NOT NULL AND tm.awayUser IS NOT NULL")
+    Optional<TeamMatch> findValidMatchById(@Param("matchId") Long matchId);
 }

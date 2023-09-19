@@ -1,10 +1,12 @@
 package com.goalddae.controller;
 
 import com.goalddae.dto.match.TeamMatchDTO;
+import com.goalddae.dto.match.TeamMatchRequestDTO;
 import com.goalddae.dto.team.TeamListDTO;
 import com.goalddae.dto.team.TeamUpdateDTO;
 import com.goalddae.entity.Team;
 import com.goalddae.entity.TeamMatchRequest;
+import com.goalddae.service.TeamMatchRequestService;
 import com.goalddae.service.TeamMatchService;
 import com.goalddae.service.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +33,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamController {
 
     private final TeamService teamService;
-
     private final TeamMatchService teamMatchService;
+    private final TeamMatchRequestService teamMatchRequestService;
 
     @Autowired
     public TeamController(TeamService teamService,
-                          TeamMatchService teamMatchService) {
+                          TeamMatchService teamMatchService,
+                          TeamMatchRequestService teamMatchRequestService) {
         this.teamService = teamService;
         this.teamMatchService = teamMatchService;
+        this.teamMatchRequestService = teamMatchRequestService;
     }
 
     @GetMapping(value = "/list")
@@ -82,7 +86,7 @@ public class TeamController {
                 .ok("팀 생성이 완료되었습니다.");
     }
 
-      // 팀 등록
+    // 팀 등록
     @PostMapping(value = "/save")
     public ResponseEntity<String> saveTeam(@RequestBody TeamSaveDTO teamSaveDTO) {
         try {
@@ -92,7 +96,7 @@ public class TeamController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-  
+
     @RequestMapping(value="/teamUpdate", method= {RequestMethod.PUT, RequestMethod.PATCH})
     public ResponseEntity<String> teamUpdate(@RequestBody TeamUpdateDTO teamUpdateDTO){
 
@@ -133,7 +137,7 @@ public class TeamController {
 
     @GetMapping(value = "/list/areaAndRecruiting")
     public List<TeamListDTO> filterAreaAndRecruiting(@RequestParam(required = false) String area,
-                                              @RequestParam(required = false) boolean recruiting){
+                                                     @RequestParam(required = false) boolean recruiting){
         return teamService.findByAreaAndRecruiting(area, true);
     }
 
@@ -148,5 +152,11 @@ public class TeamController {
 
         Page<TeamMatchDTO> matches = teamMatchService.getTeamMatches(Optional.ofNullable(userId), startTime.toLocalDate(), province, gender, page, size);
         return new ResponseEntity<>(matches, HttpStatus.OK);
+    }
+
+    // 팀 매치 신청
+    @PostMapping(value = "/match/detail")
+    public void requestTeamMatch(@RequestBody TeamMatchRequestDTO request) {
+        teamMatchRequestService.requestTeamMatch(request.getUserId(), request);
     }
 }
