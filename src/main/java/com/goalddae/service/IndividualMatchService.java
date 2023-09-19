@@ -1,10 +1,10 @@
 package com.goalddae.service;
 
-import com.goalddae.dto.match.IndividualMatchDTO;
-import com.goalddae.dto.match.IndividualMatchRequestDTO;
+import com.goalddae.dto.match.*;
 import com.goalddae.entity.IndividualMatch;
 import com.goalddae.entity.IndividualMatchRequest;
 import com.goalddae.entity.ReservationField;
+import com.goalddae.entity.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,6 +15,9 @@ public interface IndividualMatchService {
                                                                           String province,
                                                                           String level,
                                                                           String gender);
-
     List<IndividualMatchRequest> findAllByUserId(long userId);
+    IndividualMatchDetailDTO findById(long matchId);
+    void saveMatchRequest(SaveIndividualMatchDTO saveIndividualMatchDTO);
+    List<GetPlayerInfoDTO> getMatchPlayerInfo(long matchId);
+    void cancelMatchRequest(CancelMatchRequestDTO cancelMatchRequestDTO);
 }
