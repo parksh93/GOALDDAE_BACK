@@ -29,5 +29,4 @@ public class TeamMatchRequest {
     @ManyToOne
     @JoinColumn(name="team_match_id")
     private TeamMatch teamMatch;
-
 }

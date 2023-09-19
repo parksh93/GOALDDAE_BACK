@@ -289,6 +289,7 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
 
         return infoDTO;
     }
+
     @Transactional
     @Override
     public String uploadImage(MultipartFile multipartFile) {
