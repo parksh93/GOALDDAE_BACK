@@ -29,10 +29,6 @@ public interface UserService {
     public void updateSocialSignup(GetUserInfoDTO getUserInfoDTO);
     public void updateTeamId(GetUserInfoDTO getUserInfoDTO);
 
-
-    public List<CommunicationBoard> getUserCommunicationBoardPosts(long userId);
-    public List<UsedTransactionBoard> getUserUsedTransactionBoardPosts(long userId);
-
     public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO);
     public boolean checkLoginIdAndEmail(RequestFindPasswordDTO requestFindPasswordDTO, HttpServletResponse response);
     public boolean changePassword(ChangePasswordDTO changePasswordDTO);
