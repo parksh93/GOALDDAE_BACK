@@ -149,6 +149,7 @@ public class User implements UserDetails {
         this.accountSuspersion = false;
         this.noShowCnt = 0;
         this.teamId = null;
+
     }
 
     @Override

@@ -98,19 +98,6 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/posts/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<?> viewUserPosts(@PathVariable long userId) {
-
-        List<CommunicationBoard> communicationBoardsList = userService.getUserCommunicationBoardPosts(userId);
-        List<UsedTransactionBoard> usedTransactionBoardList = userService.getUserUsedTransactionBoardPosts(userId);
-
-        List<Object> combinedList = new ArrayList<>();
-        combinedList.addAll(communicationBoardsList);
-        combinedList.addAll(usedTransactionBoardList);
-
-        return ResponseEntity.ok(combinedList);
-    }
-
     @RequestMapping(value = "/findLoginId", method = RequestMethod.POST)
     public ResponseEntity<ResponseFindLoginIdDTO> findLoginId(@RequestBody RequestFindLoginIdDTO requestFindLoginIdDTO){
         ResponseFindLoginIdDTO findLoginIdDTO = userService.getLoginIdByEmailAndName(requestFindLoginIdDTO);

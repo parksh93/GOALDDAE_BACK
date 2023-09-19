@@ -27,6 +27,7 @@ public interface UserService {
     public void update(GetUserInfoDTO getUserInfoDTO);
     public void updateProfileImg(GetUserInfoDTO getUserInfoDTO, MultipartFile multipartFile);
     public void updateSocialSignup(GetUserInfoDTO getUserInfoDTO);
+
     public void updateTeamId(GetUserInfoDTO getUserInfoDTO);
 
     public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO);
