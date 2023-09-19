@@ -36,7 +36,6 @@ public class ChangeUserInfoDTO {
     private String authority;
     private Long teamId;
 
-
     public ChangeUserInfoDTO(User user){
         this.id = user.getId();
         this.loginId = user.getLoginId();

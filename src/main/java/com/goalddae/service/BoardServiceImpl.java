@@ -1,24 +1,23 @@
 package com.goalddae.service;
 
-import com.goalddae.dto.board.BoardListDTO;
-import com.goalddae.dto.board.BoardUpdateDTO;
-import com.goalddae.dto.board.HeartInfoDTO;
+import com.goalddae.dto.board.*;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
 import com.goalddae.entity.ReportedBoard;
-import com.goalddae.repository.BoardJPARepository;
-import com.goalddae.repository.HeartJPARepository;
-import com.goalddae.repository.ReplyJPARepository;
-import com.goalddae.repository.ReportedBoardJPARepository;
+import com.goalddae.repository.*;
+import com.goalddae.util.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,12 +30,27 @@ public class BoardServiceImpl implements BoardService{
     HeartJPARepository heartJPARepository;
     ReportedBoardJPARepository reportedBoardJPARepository;
 
+    S3Uploader s3Uploader;
+
+    private final JdbcTemplate jdbcTemplate;
+
+    @Value("${spring.datasource.url}")
+    private String jdbcUrl;
+
+    @Value("${spring.datasource.username}")
+    private String jdbcUsername;
+
+    @Value("${spring.datasource.password}")
+    private String jdbcPassword;
+
     @Autowired
-    public BoardServiceImpl(BoardJPARepository boardJPARepository, ReplyJPARepository replyJPARepository, HeartJPARepository heartJPARepository, ReportedBoardJPARepository reportedBoardJPARepository){
+    public BoardServiceImpl(BoardJPARepository boardJPARepository, ReplyJPARepository replyJPARepository, HeartJPARepository heartJPARepository, ReportedBoardJPARepository reportedBoardJPARepository, JdbcTemplate jdbcTemplate, S3Uploader s3Uploader){
         this.boardJPARepository = boardJPARepository;
         this.replyJPARepository = replyJPARepository;
         this.heartJPARepository = heartJPARepository;
         this.reportedBoardJPARepository = reportedBoardJPARepository;
+        this.jdbcTemplate = jdbcTemplate;
+        this.s3Uploader = s3Uploader;
     }
 
     @Override
@@ -176,9 +190,7 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public void heartDelete(long boardId, long userId) {
         Optional<CommunicationHeart> communicationHeart = heartJPARepository.findByBoardIdAndUserId(boardId, userId);
-        if(communicationHeart.isPresent()){
-            heartJPARepository.delete(communicationHeart.get());
-        }
+        communicationHeart.ifPresent(heart -> heartJPARepository.delete(heart));
     }
 
     @Override
@@ -189,7 +201,13 @@ public class BoardServiceImpl implements BoardService{
     @Transactional
     @Override
     public void saveReportedBoard(ReportedBoard reportedBoard) {
-        reportedBoardJPARepository.save(reportedBoard);
+
+        Optional<ReportedBoard> reportedBoardOptional =
+                reportedBoardJPARepository.findByBoardIdAndReporterUserId(reportedBoard.getBoardId(), reportedBoard.getReporterUserId());
+
+        if(reportedBoardOptional.isEmpty()){
+            reportedBoardJPARepository.save(reportedBoard);
+        }
     }
 
     @Transactional
@@ -205,6 +223,21 @@ public class BoardServiceImpl implements BoardService{
 
         boardJPARepository.deleteById(reportedBoard.getBoardId());
         reportedBoardJPARepository.delete(reportedBoard);
+    }
+
+    @Transactional
+    @Override
+    public String uploadImage(MultipartFile multipartFile) {
+
+        String uploadImageUrl = null;
+
+        try {
+            uploadImageUrl = s3Uploader.uploadFiles(multipartFile, "board");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return uploadImageUrl;
     }
 
     // 금일 조회수 탑5 게시글 조회
@@ -234,5 +267,30 @@ public class BoardServiceImpl implements BoardService{
             return 0;
         }
         return pno - 1;
+    }
+
+
+    @Override
+    public List<MyBoardListDTO> getUserCommunicationBoardPosts(long userId) {
+        String sql = "SELECT c.id, c.writer, c.title, c.content, " +
+                "COUNT(DISTINCT h.id) AS heart_count, COUNT(DISTINCT r.id) AS reply_count, c.count, c.write_date " +
+                "FROM communication_board c " +
+                "LEFT JOIN communication_heart h ON c.id = h.board_id " +
+                "LEFT JOIN communication_reply r ON c.id = r.board_id " +
+                "WHERE c.user_id = ? " +
+                "GROUP BY c.id, c.writer, c.title, c.content, c.count, c.write_date";
+
+        return jdbcTemplate.query(sql, new Object[]{userId}, (resultSet, rowNum) -> {
+            MyBoardListDTO dto = new MyBoardListDTO();
+            dto.setId(resultSet.getLong("id"));
+            dto.setWriter(resultSet.getString("writer"));
+            dto.setTitle(resultSet.getString("title"));
+            dto.setContent(resultSet.getString("content"));
+            dto.setHeartCount(resultSet.getInt("heart_count"));
+            dto.setReplyCount(resultSet.getInt("reply_count"));
+            dto.setCount(resultSet.getLong("count"));
+            dto.setWriteDate(resultSet.getTimestamp("write_date").toLocalDateTime());
+            return dto;
+        });
     }
 }

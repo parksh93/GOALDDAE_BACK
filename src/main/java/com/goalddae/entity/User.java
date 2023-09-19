@@ -1,5 +1,9 @@
 package com.goalddae.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 import lombok.Builder;
@@ -9,6 +13,8 @@ import lombok.Setter;
 
 import lombok.*;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.*;
+
 
 @Entity
 @Getter
@@ -53,7 +60,7 @@ public class User implements UserDetails {
     @Column(nullable = true)
     private String gender;  // 성별
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String profileImgUrl;   // 프로필사진 주소
 
     @Column(nullable = true)
@@ -65,10 +72,10 @@ public class User implements UserDetails {
     @Column
     private Long teamId; // 가입 팀 id
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int matchesCnt;  // 매치 경기수
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String level;   // 레벨
 
     @Column(nullable = false)
@@ -78,22 +85,23 @@ public class User implements UserDetails {
     private LocalDateTime profileUpdateDate;    // 프로필 수정일자
 
     // 외래키 형성 - 사용자가 생성한 개인 매치 목록
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<IndividualMatch> individualMatches;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private boolean accountSuspersion;  // 계정 정지 유무
                                         // 정지 : true
                                         // 정상 : false
 
-    @Column(nullable = false)
+    @Column
     private int noShowCnt;  // 노쇼 수
 
     @Column
-    private String preferredCity;   // 선호 도시
+    private String preferredCity;   // 선호 도시 - 서울, 경기, 인천 .....
 
     @Column
-    private String preferredArea;   // 선호 지역
+    private String preferredArea;   // 선호 지역 - 강남구, 강동구 .......
 
     @Column
     private int activityClass;   // 활동 반경
@@ -136,14 +144,12 @@ public class User implements UserDetails {
 
     @PrePersist
     public void setInformation() {
-        this.profileImgUrl = "./img/userProfileImg/goalddae_default_profile.Webp";
-        this.matchesCnt = 0;
-        this.level = "유망주";
         this.signupDate = LocalDateTime.now();
         this.profileUpdateDate = LocalDateTime.now();
         this.accountSuspersion = false;
         this.noShowCnt = 0;
         this.teamId = null;
+
     }
 
     @Override

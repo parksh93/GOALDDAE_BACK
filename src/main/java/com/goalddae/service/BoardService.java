@@ -1,12 +1,11 @@
 package com.goalddae.service;
 
-import com.goalddae.dto.board.BoardListDTO;
-import com.goalddae.dto.board.BoardUpdateDTO;
-import com.goalddae.dto.board.HeartInfoDTO;
+import com.goalddae.dto.board.*;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
 import com.goalddae.entity.ReportedBoard;
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -38,6 +37,10 @@ public interface BoardService {
 
     void approveReportedBoard(long reportId);
 
+    List<MyBoardListDTO> getUserCommunicationBoardPosts(long userId);
+
     // 조회수 탑5 게시글 조회
     List<BoardListDTO> findTop5Board();
+
+    String uploadImage (MultipartFile multipartFile);
 }
