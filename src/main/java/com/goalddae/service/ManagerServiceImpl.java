@@ -1,13 +1,8 @@
 package com.goalddae.service;
 
-import com.goalddae.dto.manager.ManagerIndividualMatchDTO;
-import com.goalddae.dto.manager.ManagerUserInfoDTO;
-import com.goalddae.entity.IndividualMatch;
-import com.goalddae.entity.IndividualMatchRequest;
-import com.goalddae.entity.ReservationField;
-import com.goalddae.entity.User;
-import com.goalddae.repository.IndividualMatchJPARepository;
-import com.goalddae.repository.UserJPARepository;
+import com.goalddae.dto.manager.*;
+import com.goalddae.entity.*;
+import com.goalddae.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,10 +19,20 @@ public class ManagerServiceImpl implements ManagerService{
 
     private final UserJPARepository userJPARepository;
 
+    private final TeamMatchJPARepository teamMatchJPARepository;
+
+    private final TeamJPARepository teamJPARepository;
+
+    private final TeamMatchResultRepository teamMatchResultRepository;
+
     @Autowired
-    public ManagerServiceImpl(IndividualMatchJPARepository individualMatchJPARepository, UserJPARepository userJPARepository){
+    public ManagerServiceImpl(IndividualMatchJPARepository individualMatchJPARepository, UserJPARepository userJPARepository,
+                              TeamMatchJPARepository teamMatchJPARepository, TeamJPARepository teamJPARepository, TeamMatchResultRepository teamMatchResultRepository){
         this.individualMatchJPARepository = individualMatchJPARepository;
         this.userJPARepository = userJPARepository;
+        this.teamMatchJPARepository = teamMatchJPARepository;
+        this.teamJPARepository = teamJPARepository;
+        this.teamMatchResultRepository = teamMatchResultRepository;
     }
 
     @Override
@@ -93,6 +98,69 @@ public class ManagerServiceImpl implements ManagerService{
             user.noShowCntUp();
         }
     }
+
+    @Override
+    public List<ManagerTeamMatchDTO> getFinishedTeamMatches(Long managerId) {
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        // TeamMatch 엔티티를 가져옴
+        List<TeamMatch> matches = teamMatchJPARepository.findByManagerIdAndStartTimeBeforeOrderByStartTimeDesc(managerId, currentTime);
+
+        // ManagerTeamMatchDTO 리스트를 생성하여 필요한 정보 매핑
+        List<ManagerTeamMatchDTO> matchDTOs = new ArrayList<>();
+        for (TeamMatch match : matches) {
+            ManagerTeamMatchDTO dto = ManagerTeamMatchDTO.builder()
+                    .id(match.getId())
+                    .startTime(match.getStartTime())
+                    .endTime(match.getEndTime())
+                    .playerNumber(match.getPlayerNumber())
+                    .gender(match.getGender())
+                    .level(match.getLevel())
+                    .userId(match.getHomeUser().getId()) // User 엔티티에서 id를 가져옴
+                    .build();
+
+            // ReservationField에서 필요한 정보 가져오기
+            ReservationField reservationField = match.getReservationField();
+            if (reservationField != null) {
+                dto.setFieldId(reservationField.getSoccerField().getId());
+                dto.setFieldName(reservationField.getSoccerField().getFieldName());
+            }
+
+            matchDTOs.add(dto);
+        }
+
+        return matchDTOs;
+    }
+
+    @Override
+    public ManagerTeamInfoDTO getMatchTeamInfo(Long matchId) {
+
+        TeamMatch teamMatch = teamMatchJPARepository.findById(matchId).orElse(null);
+
+        Team homeTeam = teamJPARepository.findById(teamMatch.getHomeTeamId()).orElse(null);
+
+        Team awayTeam = teamJPARepository.findById(teamMatch.getAwayTeamId()).orElse(null);
+
+        ManagerTeamInfoDTO dto = ManagerTeamInfoDTO.builder()
+                .homeTeamId(homeTeam.getId())
+                .homeTeamName(homeTeam.getTeamName())
+                .awayTeamId(awayTeam.getId())
+                .awayTeamName(awayTeam.getTeamName())
+                .build();
+
+        return dto;
+    }
+
+    @Transactional
+    @Override
+    public void addTeamMatchResult(ManagerTeamMatchResultDTO managerTeamMatchResultDTO) {
+
+        teamMatchResultRepository.insertHomeTeamMatchResult(managerTeamMatchResultDTO);
+
+        teamMatchResultRepository.insertAwayTeamMatchResult(managerTeamMatchResultDTO);
+
+    }
+
 
     private ManagerUserInfoDTO getUserDTO(User user) {
         ManagerUserInfoDTO dto = ManagerUserInfoDTO.builder()

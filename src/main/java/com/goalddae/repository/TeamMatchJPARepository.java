@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface TeamMatchJPARepository extends JpaRepository<TeamMatch, Long> {
     // 타임라인 - 일자, 지역, 남녀구분
@@ -18,4 +19,6 @@ public interface TeamMatchJPARepository extends JpaRepository<TeamMatch, Long> {
             @Param("province") String province,
             @Param("gender") String gender,
             Pageable pageable);
+
+    List<TeamMatch> findByManagerIdAndStartTimeBeforeOrderByStartTimeDesc(Long managerId, LocalDateTime currentTime);
 }
