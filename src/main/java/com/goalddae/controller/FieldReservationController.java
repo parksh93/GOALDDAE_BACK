@@ -1,11 +1,15 @@
 package com.goalddae.controller;
 
 import com.goalddae.dto.fieldReservation.FieldReservationDTO;
+import com.goalddae.dto.soccerField.SoccerFieldDTO;
+import com.goalddae.entity.SoccerField;
 import com.goalddae.service.FieldReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -29,5 +33,4 @@ public class FieldReservationController {
     public List<Integer> getReservationTimes(@RequestParam long fieldId, @RequestParam String date) {
         return fieldReservationService.getReservationTimesByFieldIdAndDate(fieldId, date);
     }
-
 }

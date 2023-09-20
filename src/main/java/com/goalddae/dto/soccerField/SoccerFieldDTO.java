@@ -1,5 +1,6 @@
 package com.goalddae.dto.soccerField;
 
+import com.goalddae.dto.fieldReservation.FieldReservationInfoDTO;
 import lombok.*;
 
 import java.time.LocalTime;
@@ -15,7 +16,7 @@ public class SoccerFieldDTO {
     private String  fieldName;
     private LocalTime operatingHours;
     private LocalTime closingTime;
-    private int playerCapacity;
+    private String province;
     private String region;
     private int reservationFee;
     private String fieldSize;
@@ -27,5 +28,7 @@ public class SoccerFieldDTO {
     private String fieldImg1;
     private String fieldImg2;
     private String fieldImg3;
-    private String province;
+    private FieldReservationInfoDTO reservationInfo;
+    private String address;
+    private String content;
 }

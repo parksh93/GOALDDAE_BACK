@@ -1,6 +1,7 @@
 package com.goalddae.repository.board;
 
 import com.goalddae.dto.board.BoardListDTO;
+import com.goalddae.dto.admin.GetReportBoardDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
 import com.goalddae.entity.ReportedBoard;
@@ -360,4 +361,17 @@ public class BoardJPARepositoryTest {
             assertEquals(LocalDate.now(), top5Boards.get(i).getWriteDate().toLocalDate());
         }
     }
+<<<<<<< HEAD
+=======
+
+    @Test
+    @Transactional
+    @DisplayName("신고 당한 게시글 조회")
+    public void findReportBoard() {
+        List<GetReportBoardDTO> reportBoardList = boardJPARepository.findReportBoard();
+
+        assertEquals(1, reportBoardList.size());
+        assertEquals("그냥", reportBoardList.get(0).getReason());
+    }
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 }

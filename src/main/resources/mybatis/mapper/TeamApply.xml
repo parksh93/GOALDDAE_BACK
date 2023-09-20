@@ -5,8 +5,53 @@
                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                        team_apply_date DATETIME NOT NULL,
                                        team_accept_status BIGINT NOT NULL,
+<<<<<<< HEAD
                                        users_id BIGINT NOT NULL,
                                        team_id BIGINT NOT NULL
         );
     </update>
+=======
+                                       users_id BIGINT NOT NULL UNIQUE,
+                                       team_id BIGINT NOT NULL
+        );
+    </update>
+    <select id="findStatus0ByTeamId" parameterType="long" resultType="com.goalddae.dto.team.TeamMemberCheckDTO">
+        SELECT ta.id as id,
+               ta.team_accept_status as teamAcceptStatus,
+               ta.users_id as userId,
+               ta.team_id as teamId,
+               u.name as name,
+               u.profile_img_url as profileImgUrl,
+               u.preferred_city as preferredCity,
+               u.preferred_area as preferredArea
+        FROM team_apply_#{teamId} ta
+        JOIN users u ON ta.users_id = u.id
+        WHERE team_accept_status = 0
+    </select>
+    <select id="findApplyById" parameterType="long" resultType="com.goalddae.dto.team.TeamApplyDTO">
+        SELECT id as id,
+               team_apply_date as teamApplyDate,
+               team_accept_status as teamAcceptStatus,
+               users_id as userId,
+               team_id as teamId
+        FROM team_apply_#{teamId}
+        WHERE id = #{id}
+    </select>
+    <select id="findApplyByUserId" parameterType="long" resultType="com.goalddae.dto.team.TeamApplyDTO">
+        SELECT * FROM team_apply_#{teamId}
+        WHERE users_id = #{userId}
+    </select>
+    <insert id="addTeamApply" parameterType="com.goalddae.dto.team.TeamApplyDTO">
+        INSERT INTO team_apply_#{teamId} (team_apply_date, team_accept_status, team_id, users_id)
+        VALUES (now(), #{teamAcceptStatus}, #{teamId}, #{userId})
+    </insert>
+    <update id="updateAcceptStatus" parameterType="com.goalddae.dto.team.TeamApplyDTO">
+        UPDATE
+            team_apply_#{teamId}
+        SET
+            team_accept_status = #{teamAcceptStatus}
+        WHERE
+            users_id = #{userId}
+    </update>
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 </mapper>

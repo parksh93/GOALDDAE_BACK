@@ -1,5 +1,7 @@
 package com.goalddae.service;
 
+import com.goalddae.dto.admin.DeleteAdminDTO;
+import com.goalddae.dto.admin.GetAdminListDTO;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
 
@@ -27,6 +29,7 @@ public class UserServiceTest {
 
     @Autowired
     UserJPARepository userJPARepository;
+<<<<<<< HEAD
 
 
     @Test
@@ -40,6 +43,8 @@ public class UserServiceTest {
         assertEquals(1, user.getId());
         assertEquals("박상현", user.getNickname());
     }
+=======
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 
     @Test
     @Transactional
@@ -52,9 +57,13 @@ public class UserServiceTest {
 
 //        String token = userService.generateTokenFromLogin(loginDTO);
 <<<<<<< HEAD
+<<<<<<< HEAD
 //
 =======
 >>>>>>> develop
+=======
+//
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 //        assertNotEquals("", token) ;
     }
 
@@ -154,9 +163,13 @@ public class UserServiceTest {
 
 //        String loginIdToken = userService.checkLoginIdAndEmail(findPasswordDTO);
 <<<<<<< HEAD
+<<<<<<< HEAD
 //
 =======
 >>>>>>> develop
+=======
+//
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 //        assertNotNull(loginIdToken);
     }
 

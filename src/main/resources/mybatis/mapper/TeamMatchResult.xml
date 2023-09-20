@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+=======
+   <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 <mapper namespace="com.goalddae.repository.TeamMatchResultRepository">
     <update id="createTeamMatchResultTable" parameterType="java.lang.Long">
         CREATE TABLE team_match_result_#{teamId} (

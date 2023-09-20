@@ -1,6 +1,9 @@
 package com.goalddae.service;
 
 import com.goalddae.config.jwt.TokenProvider;
+import com.goalddae.dto.admin.DeleteAdminDTO;
+import com.goalddae.dto.admin.GetAdminListDTO;
+import com.goalddae.exception.UnValidUserException;
 import com.goalddae.util.S3Uploader;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
@@ -24,9 +27,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -72,19 +80,27 @@ public class UserServiceImpl implements UserService{
                 .preferredCity(user.getPreferredCity())
                 .preferredArea(user.getPreferredArea())
                 .activityClass(user.getActivityClass())
-                .authority(user.getAuthority())
+                .authority("user")
                 .userCode(createUserCode())
+                .profileImgUrl("https://kr.object.ncloudstorage.com/goalddae-bucket/profile/goalddae_default_profile.Webp")
+                .matchesCnt(0)
+                .level("유망주")
+                .noShowCnt(0)
                 .build();
 
-        userJPARepository.save(newUser);
+        try{
+            userJPARepository.save(newUser);
 
-        // 로그인 아이디를 가져와 테이블 생성에 사용
-        Long id = newUser.getId();
+            // 로그인 아이디를 가져와 테이블 생성에 사용
+            Long id = newUser.getId();
 
-        // 동적 테이블 생성
-        friendService.createFriendAcceptTable(id);
-        friendService.createFriendAddTable(id);
-        friendService.createFriendListTable(id);
+            // 동적 테이블 생성
+            friendService.createFriendAcceptTable(id);
+            friendService.createFriendAddTable(id);
+            friendService.createFriendListTable(id);
+        }catch (Exception e){
+            throw new UnValidUserException("유효하지 않은 사용자 정보");
+        }
     }
 
     public static String createUserCode() {
@@ -109,14 +125,11 @@ public class UserServiceImpl implements UserService{
 
         return code.toString();
     }
-    @Override
-    public User getByCredentials(String loginId){
-        return userJPARepository.findByLoginId(loginId);
-    }
 
     @Override
     public boolean generateTokenFromLogin(LoginDTO loginDTO, HttpServletResponse response){
-        User userInfo = getByCredentials(loginDTO.getLoginId());
+        System.out.println(bCryptPasswordEncoder.encode(loginDTO.getPassword()));
+        User userInfo = userJPARepository.findByLoginId(loginDTO.getLoginId());
 
         if (userInfo != null && !userInfo.isAccountSuspersion()) {
             if (bCryptPasswordEncoder.matches(loginDTO.getPassword(), userInfo.getPassword())) {
@@ -126,8 +139,8 @@ public class UserServiceImpl implements UserService{
                 String token = tokenProvider.generateToken(userInfo,ACCESS_TOKEN_DURATION);
 
                 if(!token.equals("")){
-                   CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE_NAME, token);
-                   CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken);
+                    CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE_NAME, token);
+                    CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken);
                     return true;
                 }
                 throw new NotFoundTokenException("fail generateToken");
@@ -145,7 +158,6 @@ public class UserServiceImpl implements UserService{
         }else{
             refreshToken = new RefreshToken(userId, newRefreshToken);
         }
-
         refreshTokenRepository.save(refreshToken);
     }
 
@@ -178,7 +190,6 @@ public class UserServiceImpl implements UserService{
             return false;
         }
     }
-
 
     @Override
     public boolean checkNickname(CheckNicknameDTO checkNicknameDTO){
@@ -273,6 +284,11 @@ public class UserServiceImpl implements UserService{
             changeUserInfoDTO.setPreferredCity(getUserInfoDTO.getPreferredCity());
             changeUserInfoDTO.setPreferredArea(getUserInfoDTO.getPreferredArea());
             changeUserInfoDTO.setActivityClass(getUserInfoDTO.getActivityClass());
+            changeUserInfoDTO.setAuthority("user");
+            changeUserInfoDTO.setProfileImgUrl("https://kr.object.ncloudstorage.com/goalddae-bucket/profile/goalddae_default_profile.Webp");
+            changeUserInfoDTO.setMatchesCnt(0);
+            changeUserInfoDTO.setLevel("유망주");
+            changeUserInfoDTO.setNoShowCnt(0);
 
             user = changeUserInfoDTO.toEntity();
 
@@ -284,7 +300,20 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+
     @Override
+    public void updateTeamId(GetUserInfoDTO getUserInfoDTO) {
+        User user = userJPARepository.findById(getUserInfoDTO.getId()).get();
+
+        if (user != null){
+            ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
+            changeUserInfoDTO.setTeamId(getUserInfoDTO.getTeamId());
+            user = changeUserInfoDTO.toEntity();
+
+            userJPARepository.save(user);
+        }
+    }
+
     public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
         try {
             String loginId = tokenProvider.getLoginId(changePasswordDTO.getLoginIdToken());

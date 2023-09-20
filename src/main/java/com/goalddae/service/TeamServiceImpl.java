@@ -1,22 +1,22 @@
 package com.goalddae.service;
 
-import com.goalddae.dto.team.TeamListDTO;
-import com.goalddae.dto.team.TeamUpdateDTO;
+import com.goalddae.dto.team.*;
+import com.goalddae.dto.user.ChangeUserInfoDTO;
+import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.entity.Team;
-import com.goalddae.repository.TeamJPARepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.goalddae.entity.User;
+import com.goalddae.repository.*;
+import com.goalddae.util.S3Uploader;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.goalddae.dto.team.TeamSaveDTO;
-import com.goalddae.repository.TeamApplyRepository;
-import com.goalddae.repository.TeamMatchResultRepository;
-import com.goalddae.repository.TeamMemberRepository;
 import com.goalddae.util.MyBatisUtil;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,15 +27,24 @@ public class TeamServiceImpl implements TeamService {
     private final TeamMemberRepository teamMemberRepository;
     private final TeamApplyRepository teamApplyRepository;
     private final TeamMatchResultRepository teamMatchResultRepository;
+    private final UserJPARepository userJPARepository;
+    private final S3Uploader s3Uploader;
+
+
 
     public TeamServiceImpl(TeamJPARepository teamJPARepository,
                            TeamMemberRepository teamMemberRepository,
                            TeamApplyRepository teamApplyRepository,
-                           TeamMatchResultRepository teamMatchResultRepository) {
+                           TeamMatchResultRepository teamMatchResultRepository,
+                           UserJPARepository userJPARepository,
+                           S3Uploader s3Uploader) {
         this.teamJPARepository = teamJPARepository;
         this.teamMemberRepository = teamMemberRepository;
         this.teamApplyRepository = teamApplyRepository;
         this.teamMatchResultRepository = teamMatchResultRepository;
+        this.userJPARepository = userJPARepository;
+        this.s3Uploader = s3Uploader;
+
     }
 
     @Override
@@ -48,10 +57,10 @@ public class TeamServiceImpl implements TeamService {
         return teamJPARepository.findTeamById(id);
     }
 
-    @Override
+    /* @Override
     public void save(Team team) {
         teamJPARepository.save(team);
-    }
+    } */
 
     @Override
     public void update(TeamUpdateDTO teamUpdateDTO) {
@@ -63,6 +72,7 @@ public class TeamServiceImpl implements TeamService {
                 .area(teamUpdateDTO.getArea())
                 .averageAge(teamUpdateDTO.getAverageAge())
                 .teamIntroduce(teamUpdateDTO.getTeamIntroduce())
+                .recruiting(teamUpdateDTO.isRecruiting())
                 .entryFee(teamUpdateDTO.getEntryFee())
                 .entryGender(teamUpdateDTO.getEntryGender())
                 .teamProfileImgUrl(teamUpdateDTO.getTeamProfileImgUrl())
@@ -73,6 +83,25 @@ public class TeamServiceImpl implements TeamService {
                 .build();
 
         teamJPARepository.save(newTeam);
+    }
+
+    @Override
+    public void updateTeamProfileImg(TeamUpdateDTO teamUpdateDTO, MultipartFile multipartFile) {
+        Team updateTeam = teamJPARepository.findTeamById(teamUpdateDTO.getId());
+
+        String uploadImgeUrl = null;
+        try {
+            uploadImgeUrl = s3Uploader.uploadFiles(multipartFile, "profile");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        updateTeam = Team.builder()
+                .teamProfileImgUrl(uploadImgeUrl)
+                .build();
+
+        teamJPARepository.save(updateTeam);
+
     }
 
     @Override
@@ -156,13 +185,15 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public void save (TeamSaveDTO teamSaveDTO){
+    public void save(TeamSaveDTO teamSaveDTO){
         Team newTeam = Team.builder()
                 .teamName(teamSaveDTO.getTeamName())
                 .area(teamSaveDTO.getArea())
                 .entryFee(teamSaveDTO.getEntryFee())
+                .recruiting(true)
                 .preferredDay(teamSaveDTO.getPreferredDay())
                 .preferredTime(teamSaveDTO.getPreferredTime())
+                .averageAge(teamSaveDTO.getAverageAge())
                 .entryGender(teamSaveDTO.getEntryGender())
                 .teamCreate(LocalDateTime.now())
                 .teamProfileImgUrl("default_profile_img_url")
@@ -177,5 +208,101 @@ public class TeamServiceImpl implements TeamService {
         this.createTeamApplyTable(id);
         this.createTeamMemberTable(id);
         this.createTeamMatchResult(id);
+    }
+
+    @Override
+    public Long getAutoIncrementValue() {
+        Team lastInsertedTeam = teamJPARepository.findFirstByOrderByIdDesc();
+
+        if(lastInsertedTeam != null ){
+            return lastInsertedTeam.getId();
+        } else {
+            return null;
+        }
+    }
+
+
+    @Override
+    public List<TeamMemberCheckDTO> findStatus0ByTeamId(long teamId) {
+        return teamApplyRepository.findStatus0ByTeamId(teamId);
+    }
+
+    @Override
+    public TeamApplyDTO findApplyById(long id, long teamId) {
+        return teamApplyRepository.findApplyById(id, teamId);
+    }
+
+    @Override
+    public void addTeamApply(TeamApplyDTO teamApplyDTO) {
+        long teamId = teamApplyDTO.getTeamId();
+        long userId = teamApplyDTO.getUserId();
+
+        TeamApplyDTO newApply = new TeamApplyDTO();
+        newApply.setTeamId(teamId);
+        newApply.setUserId(userId);
+        newApply.setTeamAcceptStatus(0);
+        newApply.setTeamApplyDate(LocalDateTime.now());
+
+        teamApplyRepository.addTeamApply(newApply);
+    }
+
+    @Transactional
+    @Override
+    public void acceptApply(TeamAcceptApplyDTO teamAcceptApplyDTO) {
+
+        try {
+            // acceptStatus 수락(1) 업데이트
+            long userId = teamAcceptApplyDTO.getTeamApplyDTO().getUserId();
+            long teamId = teamAcceptApplyDTO.getTeamApplyDTO().getTeamId();
+
+            TeamApplyDTO acceptApply = TeamApplyDTO.builder()
+                    .userId(userId)
+                    .teamId(teamId)
+                    .teamAcceptStatus(1)
+                    .build();
+
+            teamApplyRepository.updateAcceptStatus(acceptApply);
+
+            // 팀멤버 추가
+            long memberTeamId = teamAcceptApplyDTO.getTeamMemberDTO().getTeamId();
+            long memberUserId = teamAcceptApplyDTO.getTeamMemberDTO().getUserId();
+
+            TeamMemberDTO newMember = TeamMemberDTO.builder()
+                    .teamId(memberTeamId)
+                    .userId(memberUserId)
+                    .teamManager(1)
+                    .userJoinDate(LocalDateTime.now())
+                    .build();
+
+            teamMemberRepository.addTeamMember(newMember);
+
+            // 유저 teamId 변경
+            User user = userJPARepository.findById(teamAcceptApplyDTO.getGetUserInfoDTO().getId()).get();
+
+            if (user != null) {
+                ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
+                changeUserInfoDTO.setTeamId(teamAcceptApplyDTO.getGetUserInfoDTO().getTeamId());
+                user = changeUserInfoDTO.toEntity();
+
+                userJPARepository.save(user);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("트랜잭션 처리 실패", e);
+        }
+    }
+
+    @Override
+    public void rejectApply(TeamApplyDTO teamApplyDTO) {
+        // acceptStatus 거절(2) 업데이트
+        long userId = teamApplyDTO.getUserId();
+        long teamId = teamApplyDTO.getTeamId();
+
+        TeamApplyDTO rejectApply = TeamApplyDTO.builder()
+                .userId(userId)
+                .teamId(teamId)
+                .teamAcceptStatus(2)
+                .build();
+
+        teamApplyRepository.updateAcceptStatus(rejectApply);
     }
 }
