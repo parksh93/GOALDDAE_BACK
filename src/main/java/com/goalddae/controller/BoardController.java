@@ -6,8 +6,6 @@ import com.goalddae.dto.board.HeartInfoDTO;
 import com.goalddae.dto.board.MyBoardListDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
-import com.goalddae.entity.ReportedBoard;
-import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.service.BoardService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -107,33 +105,6 @@ public class BoardController {
     public ResponseEntity<String> updateBoard(@RequestBody BoardUpdateDTO boardUpdateDTO) {
         boardService.update(boardUpdateDTO);
         return ResponseEntity.ok("게시글이 수정되었습니다.");
-    }
-
-
-    // 게시글 신고
-    @GetMapping("/report")
-    public ResponseEntity<List<ReportedBoard>> getReportedBoardByBoardId() {
-        List<ReportedBoard> reportedBoardList = boardService.findAllReportedBoard();
-        return ResponseEntity.ok(reportedBoardList);
-    }
-
-
-    @PostMapping("/report")
-    public ResponseEntity<String> addReport(@RequestBody ReportedBoard reportedBoard) {
-        boardService.saveReportedBoard(reportedBoard);
-        return ResponseEntity.ok("신고가 접수되었습니다.");
-    }
-
-    @DeleteMapping("/report/reject/{reportId}")
-    public ResponseEntity<String> rejectReport(@PathVariable long reportId) {
-        boardService.rejectReportedBoard(reportId);
-        return ResponseEntity.ok("신고가 거절되었습니다.");
-    }
-
-    @DeleteMapping("/report/approve/{reportId}")
-    public ResponseEntity<String> approveReport(@PathVariable long reportId) {
-        boardService.approveReportedBoard(reportId);
-        return ResponseEntity.ok("신고가 승인되었습니다.");
     }
 
     @PostMapping("/heart")

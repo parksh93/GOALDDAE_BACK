@@ -2,8 +2,6 @@ package com.goalddae.service;
 
 import com.goalddae.dto.board.*;
 import com.goalddae.entity.CommunicationBoard;
-import com.goalddae.entity.CommunicationHeart;
-import com.goalddae.entity.ReportedBoard;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,14 +26,6 @@ public interface BoardService {
     void heartSave(long boardId, long userId);
 
     void heartDelete(long boardId, long userId);
-
-    List<ReportedBoard> findAllReportedBoard();
-
-    void saveReportedBoard(ReportedBoard reportedBoard);
-
-    void rejectReportedBoard(long reportId);
-
-    void approveReportedBoard(long reportId);
 
     List<MyBoardListDTO> getUserCommunicationBoardPosts(long userId);
 

@@ -187,4 +187,8 @@ public class User implements UserDetails {
         return true;
     }
 
+    public void noShowCntUp() {
+        this.noShowCnt++;
+    }
+
 }
