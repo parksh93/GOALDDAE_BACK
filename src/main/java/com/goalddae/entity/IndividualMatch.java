@@ -62,6 +62,14 @@ public class IndividualMatch {
     @OneToMany(mappedBy = "individualMatch")
     private List<IndividualMatchRequest> requests;
 
+    // 매니저 id
+    @Column
+    private long managerId;
+
+    public void setManagerId(long managerId){
+        this.managerId = managerId;
+    }
+
 }
 
 

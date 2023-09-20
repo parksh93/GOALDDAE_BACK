@@ -96,7 +96,6 @@ public class SoccerFieldController {
     }
 
     // 예약할 구장 리스트 조회
-    // 예약할 구장 리스트 조회
     @GetMapping("/reservation/list")
     public ResponseEntity<Page<SoccerFieldDTO>> findReservationField(
             @RequestParam(required = false) Long userId,
