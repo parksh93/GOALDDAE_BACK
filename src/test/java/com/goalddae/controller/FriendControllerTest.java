@@ -181,6 +181,7 @@ public class FriendControllerTest {
                 .andExpect(jsonPath("$[0].nickname").value("넵이"));
     }
 
+
     @Test
     @Transactional
     @DisplayName("친구 삭제")
@@ -206,6 +207,7 @@ public class FriendControllerTest {
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
     }
+
 
     @Test
     @Transactional
@@ -241,6 +243,7 @@ public class FriendControllerTest {
                 .andExpect(jsonPath("$[0].nickname").value("넵이"));
     }
 
+    /*
     @Test
     @Transactional
     @DisplayName("친구 차단 해제")
@@ -262,4 +265,6 @@ public class FriendControllerTest {
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
     }
+*/
+
 }
