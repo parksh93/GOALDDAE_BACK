@@ -59,5 +59,4 @@ public class IndividualMatchController {
                 .soccerField(matchRequest.getIndividualMatch().getReservationField().getSoccerField())
                 .build();
     }
-
 }
