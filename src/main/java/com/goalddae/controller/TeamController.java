@@ -1,13 +1,21 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.match.TeamMatchDTO;
 import com.goalddae.dto.team.TeamListDTO;
 import com.goalddae.dto.team.TeamUpdateDTO;
 import com.goalddae.entity.Team;
+import com.goalddae.service.TeamMatchRequestService;
+import com.goalddae.service.TeamMatchService;
 import com.goalddae.service.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
 import com.goalddae.dto.team.TeamSaveDTO;
 import com.goalddae.service.TeamService;
 import org.springframework.http.HttpStatus;
@@ -22,11 +30,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamController {
 
     private final TeamService teamService;
+    private final TeamMatchService teamMatchService;
+    private final TeamMatchRequestService teamMatchRequestService;
 
-    public TeamController(TeamService teamService) {
+    @Autowired
+    public TeamController(TeamService teamService,
+                          TeamMatchService teamMatchService,
+                          TeamMatchRequestService teamMatchRequestService) {
         this.teamService = teamService;
+        this.teamMatchService = teamMatchService;
+        this.teamMatchRequestService = teamMatchRequestService;
     }
-
     @GetMapping(value = "/list")
     public List<TeamListDTO> teamList(){
         List<TeamListDTO> team = teamService.findAll();
@@ -123,6 +137,19 @@ public class TeamController {
     public List<TeamListDTO> filterAreaAndRecruiting(@RequestParam(required = false) String area,
                                               @RequestParam(required = false) boolean recruiting){
         return teamService.findByAreaAndRecruiting(area, true);
+    }
+
+    @GetMapping(value = "/match/list")
+    public ResponseEntity<Page<TeamMatchDTO>> findTeamMatches(
+            @RequestParam(required = false) Long userId,
+            @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
+            @RequestParam("province") String province,
+            @RequestParam(value = "gender", required = false) String gender,
+            @RequestParam int page,
+            @RequestParam int size) {
+
+        Page<TeamMatchDTO> matches = teamMatchService.getTeamMatches(Optional.ofNullable(userId), startTime.toLocalDate(), province, gender, page, size);
+        return new ResponseEntity<>(matches, HttpStatus.OK);
     }
 
 }
