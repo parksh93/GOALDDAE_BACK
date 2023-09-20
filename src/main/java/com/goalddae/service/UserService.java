@@ -27,4 +27,5 @@ public interface UserService {
     public void changePasswordInMypage(ChangePasswordInMypageDTO changePasswordInMypageDTO);
     public User findByEmail(String email);
     public void deleteUser(long id);
+    public void updateLevel(GetUserInfoDTO getUserInfoDTO);
 }

@@ -11,6 +11,7 @@ import com.goalddae.repository.UserJPARepository;
 import com.goalddae.repository.*;
 import com.goalddae.entity.User;
 import com.goalddae.util.CookieUtil;
+import jakarta.persistence.PostUpdate;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -333,8 +334,6 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-
-
     @Override
     public User findByEmail(String email) {
         return userJPARepository.findByEmail(email);
@@ -345,8 +344,35 @@ public class UserServiceImpl implements UserService{
         try {
             userJPARepository.updateUserAccountSuspersionById(id);
         } catch (Exception e) {
-            System.out.println("예외가 발생했다.");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    @PostUpdate
+    public void updateLevel(GetUserInfoDTO getUserInfoDTO) {
+        User user = userJPARepository.findByLoginId(getUserInfoDTO.getLoginId());
+
+        ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
+        changeUserInfoDTO.setMatchesCnt(getUserInfoDTO.getMatchesCnt());
+
+        // 레벨 설정
+        int matchesCnt = changeUserInfoDTO.getMatchesCnt();
+        String level = "";
+
+        if (matchesCnt >= 0 && matchesCnt <= 19) {
+            level = "유망주";
+        } else if (matchesCnt >= 20 && matchesCnt <= 49) {
+            level = "세미프로";
+        } else if (matchesCnt >= 50 && matchesCnt <= 99) {
+            level = "프로";
+        } else if (matchesCnt >= 100 && matchesCnt <= 199) {
+            level = "월드클래스";
+        }
+
+        changeUserInfoDTO.setLevel(level);
+
+        User levelUpdatedUser = changeUserInfoDTO.toEntity();
+        userJPARepository.save(levelUpdatedUser);
     }
 }

@@ -35,7 +35,6 @@ public class UserController {
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.POST)
     public ResponseEntity<?> getUserInfo(@CookieValue(required = false) String token){
         GetUserInfoDTO userInfoDTO = userService.getUserInfo(token);
-
         return ResponseEntity.ok(userInfoDTO);
     }
 
@@ -128,6 +127,12 @@ public class UserController {
     public ResponseEntity<String> deleteAccount(@PathVariable long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok("탈퇴 되었습니다.");
+    }
+
+    @RequestMapping(value = "/updateLevel", method = RequestMethod.POST)
+    public ResponseEntity<?> updateLevel(@RequestBody GetUserInfoDTO getUserInfoDTO) {
+        userService.updateLevel(getUserInfoDTO);
+        return ResponseEntity.ok().body(getUserInfoDTO);
     }
 
 }
