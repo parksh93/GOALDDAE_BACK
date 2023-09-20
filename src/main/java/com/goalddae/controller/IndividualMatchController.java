@@ -34,6 +34,9 @@ public class IndividualMatchController {
             @RequestParam(value = "level", required = false) String level,
             @RequestParam(value = "gender", required = false) String gender
     ) {
+        System.out.println("startTime :" + startTime);
+        System.out.println("province : " + province);
+        System.out.println("level : " + level);
         return individualMatchService.getMatchesByDateAndProvinceAndLevelAndGender(
                 startTime.toLocalDate(), province, level, gender);
     }
