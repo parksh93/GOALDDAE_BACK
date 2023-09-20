@@ -119,6 +119,8 @@ public class TeamControllerTest {
         String area = "인천";
         int averageAge = 10;
         int entryFee = 10000;
+        boolean recruiting = true;
+        String teamIntroduce = "안녕하세요";
         String entryGender = "남자";
         String teamProfileImgUrl = "./img/userProfileImg/goalddae_default_profile.Webp";
         String preferredDay = "월";
@@ -127,7 +129,7 @@ public class TeamControllerTest {
         String url = "/team/teamSave";
         String url2 = "/team/list";
 
-        Team team = new Team(id, teamName, area, averageAge, entryFee, entryGender, teamProfileImgUrl, preferredDay, preferredTime);
+        Team team = new Team(id, teamName, area, averageAge, recruiting, teamIntroduce, entryFee, entryGender, teamProfileImgUrl, preferredDay, preferredTime);
 
         // 데이터 직렬화(java-> json)
         final String requestBody = objectMapper.writeValueAsString(team);
@@ -150,18 +152,19 @@ public class TeamControllerTest {
     @Transactional
     @DisplayName("teamName,area 수정")
     public void teamUpdateTest() throws Exception {
-        Long id = 17L;
+        Long id = 1L;
         String teamName = "수정된 팀이름";
         String area = "수정된 지역";
         int averageAge = 20;
         int entryFee = 20000;
         String teamIntroduce = null;
+        boolean recruiting = false;
         String entryGender = "여자";
         String teamProfileImgUrl = "./img/userProfileImg/goalddae_default_profile.Webp";
         String preferredTime = "오후1시";
         String preferredDay = "토요일";
 
-        String url = "/team/teamUpdate";
+        String url = "/team/update";
         String url2 = "/team/detail/" + id;
 
         TeamUpdateDTO teamUpdateDTO = TeamUpdateDTO.builder()
@@ -169,6 +172,7 @@ public class TeamControllerTest {
                 .teamName(teamName)
                 .area(area)
                 .averageAge(averageAge)
+                .recruiting(recruiting)
                 .entryFee(entryFee)
                 .entryGender(entryGender)
                 .teamIntroduce(teamIntroduce)
@@ -181,7 +185,7 @@ public class TeamControllerTest {
         final String requestBody = objectMapper.writeValueAsString(teamUpdateDTO);
 
         // when
-        mockMvc.perform(patch(url)  // url에 patch로
+        mockMvc.perform(put(url)  // url에 put으로
                 .contentType(MediaType.APPLICATION_JSON)    // 보내는 데이터 JSON
                 .content(requestBody)); // 직렬화된 requestBody 전송
 

@@ -7,6 +7,7 @@ import com.goalddae.entity.Team;
 import com.goalddae.entity.User;
 import com.goalddae.repository.*;
 import com.goalddae.util.S3Uploader;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.goalddae.util.MyBatisUtil;
@@ -63,23 +64,25 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public void update(TeamUpdateDTO teamUpdateDTO) {
-        Team updateTeam = teamJPARepository.findTeamById(teamUpdateDTO.getId());
+        Team newTeam = teamJPARepository.findTeamById(teamUpdateDTO.getId());
 
-        updateTeam = Team.builder()
-                .id(updateTeam.getId())
+        newTeam = Team.builder()
+                .id(newTeam.getId())
                 .teamName(teamUpdateDTO.getTeamName())
                 .area(teamUpdateDTO.getArea())
                 .averageAge(teamUpdateDTO.getAverageAge())
                 .teamIntroduce(teamUpdateDTO.getTeamIntroduce())
+                .recruiting(teamUpdateDTO.isRecruiting())
                 .entryFee(teamUpdateDTO.getEntryFee())
                 .entryGender(teamUpdateDTO.getEntryGender())
+                .teamProfileImgUrl(teamUpdateDTO.getTeamProfileImgUrl())
                 .preferredDay(teamUpdateDTO.getPreferredDay())
                 .preferredTime(teamUpdateDTO.getPreferredTime())
-                .teamCreate(updateTeam.getTeamCreate())
+                .teamCreate(newTeam.getTeamCreate())
                 .teamProfileUpdate(LocalDateTime.now())
                 .build();
 
-        teamJPARepository.save(updateTeam);
+        teamJPARepository.save(newTeam);
     }
 
     @Override

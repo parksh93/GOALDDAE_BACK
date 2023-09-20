@@ -43,6 +43,24 @@ public class TeamUpdateDTO {
                 .build();
     }
 
+    public Team toEntity() {
+        return Team.builder()
+                .id(id)
+                .teamName(teamName)
+                .area(area)
+                .averageAge(averageAge)
+                .recruiting(recruiting)
+                .teamIntroduce(teamIntroduce)
+                .entryFee(entryFee)
+                .entryGender(entryGender)
+                .teamProfileImgUrl(teamProfileImgUrl)
+                .teamProfileUpdate(teamProfileUpdate)
+                .preferredDay(preferredDay)
+                .preferredTime(preferredTime)
+                .build();
+    }
+
+
       public TeamUpdateDTO(Team team){
         this.id = team.getId();
         this.teamName = team.getTeamName();

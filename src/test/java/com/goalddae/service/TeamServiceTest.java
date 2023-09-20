@@ -89,12 +89,13 @@ public class TeamServiceTest {
 
     @Test
     @Transactional
-    @DisplayName("id=17의 teamName을 골때->고올때 로, area를 서울->강원 으로 ")
+    @DisplayName("id=1의 teamName을 골때->곰담 으로, area를 경기->강원 으로 ")
     public void updateTest(){
         //given
-        Long id = 17L;
-        String teamName = "고올때";
+        Long id = 1L;
+        String teamName = "곰담";
         String area = "강원";
+        boolean recruiting = false;
 
         Team team = teamService.findTeamById(id);
 
@@ -102,6 +103,7 @@ public class TeamServiceTest {
                 .id(id)
                 .teamName(teamName)
                 .area(area)
+                .recruiting(recruiting)
                 .entryGender(team.getEntryGender())
                 .preferredDay(team.getPreferredDay())
                 .preferredTime(team.getPreferredTime())
@@ -115,7 +117,8 @@ public class TeamServiceTest {
 
         //then
         assertEquals(result.getArea(),area);
-        assertEquals(result.getTeamName(),teamName);
+        assertEquals(teamName, result.getTeamName());
+        assertEquals(recruiting, result.isRecruiting());
     }
 
     @Test
