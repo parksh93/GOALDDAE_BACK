@@ -3,7 +3,6 @@ package com.goalddae.service;
 import com.goalddae.dto.board.*;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
-import com.goalddae.entity.ReportedBoard;
 import com.goalddae.repository.*;
 import com.goalddae.util.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,38 +190,6 @@ public class BoardServiceImpl implements BoardService{
     public void heartDelete(long boardId, long userId) {
         Optional<CommunicationHeart> communicationHeart = heartJPARepository.findByBoardIdAndUserId(boardId, userId);
         communicationHeart.ifPresent(heart -> heartJPARepository.delete(heart));
-    }
-
-    @Override
-    public List<ReportedBoard> findAllReportedBoard() {
-        return reportedBoardJPARepository.findAll();
-    }
-
-    @Transactional
-    @Override
-    public void saveReportedBoard(ReportedBoard reportedBoard) {
-
-        Optional<ReportedBoard> reportedBoardOptional =
-                reportedBoardJPARepository.findByBoardIdAndReporterUserId(reportedBoard.getBoardId(), reportedBoard.getReporterUserId());
-
-        if(reportedBoardOptional.isEmpty()){
-            reportedBoardJPARepository.save(reportedBoard);
-        }
-    }
-
-    @Transactional
-    @Override
-    public void rejectReportedBoard(long reportId) {
-        reportedBoardJPARepository.deleteById(reportId);
-    }
-
-    @Transactional
-    @Override
-    public void approveReportedBoard(long reportId) {
-        ReportedBoard reportedBoard = reportedBoardJPARepository.findById(reportId).get();
-
-        boardJPARepository.deleteById(reportedBoard.getBoardId());
-        reportedBoardJPARepository.delete(reportedBoard);
     }
 
     @Transactional
