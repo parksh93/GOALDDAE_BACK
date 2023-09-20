@@ -58,7 +58,7 @@ public class FieldReservationServiceImpl implements FieldReservationService {
                 .orElseThrow(() -> new EntityNotFoundException("SoccerField not found with id: " + soccerFieldId));
 
         User user = userJPARepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("userld not found with id: " + userId));
+                .orElseThrow(() -> new EntityNotFoundException("userId not found with id: " + userId));
 
         // 구장 예약 정보 생성 및 저장
         ReservationField reservationField = ReservationField.builder()

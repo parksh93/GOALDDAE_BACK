@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeamSaveDTO {
+        private long id;
         private String teamName;
         private String area;
         private int entryFee;

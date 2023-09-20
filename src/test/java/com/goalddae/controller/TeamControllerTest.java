@@ -2,6 +2,7 @@ package com.goalddae.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.goalddae.dto.team.TeamApplyDTO;
 import com.goalddae.dto.team.TeamUpdateDTO;
 import com.goalddae.entity.Team;
 import com.goalddae.repository.TeamJPARepository;
@@ -282,6 +283,32 @@ public class TeamControllerTest {
         result
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1));
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("")
+    public void rejectApplyTest() throws Exception{
+        //given
+        long userId = 2;
+        long teamId = 5;
+        int teamAcceptStatus = 2;
+        String url = "/team/rejectApply";
+
+        TeamApplyDTO apply = TeamApplyDTO.builder()
+                .userId(userId)
+                .teamId(teamId)
+                .teamAcceptStatus(2)
+                .build();
+
+        final String requestBody = objectMapper.writeValueAsString(apply);
+
+        //when
+        mockMvc.perform(patch(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody));
+
+        //then
     }
 
 }

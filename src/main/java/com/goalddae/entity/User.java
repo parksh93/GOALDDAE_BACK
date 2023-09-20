@@ -147,6 +147,9 @@ public class User implements UserDetails {
         this.signupDate = LocalDateTime.now();
         this.profileUpdateDate = LocalDateTime.now();
         this.accountSuspersion = false;
+        this.noShowCnt = 0;
+        this.teamId = null;
+
     }
 
     @Override
@@ -182,6 +185,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void noShowCntUp() {
+        this.noShowCnt++;
     }
 
 }
