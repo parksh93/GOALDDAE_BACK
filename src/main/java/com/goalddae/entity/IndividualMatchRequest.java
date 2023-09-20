@@ -18,7 +18,6 @@ public class IndividualMatchRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
-
     private long id;
 
     // 외래키 형성 - 매치 신청한 유저
