@@ -53,6 +53,10 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
                 gender = null;
             }
 
+            if ("레벨".equals(level) || level == null || "".equals(level)) {
+                level = null;
+            }
+
             List<IndividualMatch> matchesInProvince = individualMatchJPARepository
                     .findMatches(
                             startTime, endTime, province, level, gender);
@@ -65,10 +69,9 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
                             match.getReservationField().getSoccerField().getFieldName(),
                             determineStatus(match),
                             match.getPlayerNumber(),
-                            match.getGender(),
-                            match.getUser().getId()
+                            match.getGender()
                     ))
-//                    .limit(10)
+                    .limit(10)
                     .collect(Collectors.toList());
         } catch (Exception e) {
             System.err.println("error: " + e.getMessage());
@@ -77,32 +80,21 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
         }
     }
 
-    @Override
-    public List<IndividualMatchRequest> findAllByUserId(long userId) {
-        List<IndividualMatchRequest> individualMatchRequestList
-                = individualMatchRequestJPARepository.findAllByUserId(userId);
-        return individualMatchRequestList;
-    }
-
     // 신청 가능 상태
     private String determineStatus(IndividualMatch match) {
         long currentRequestsCount = match.getRequests().size();
-        System.out.println("currentRequestsCount : " + currentRequestsCount);
-        // 매치 등록자는 request에 포함되지 않기 때문에 -1 해준다.
-        long maxPlayerNumber = match.getPlayerNumber() - 1;
-        System.out.println("maxPlayer : " + maxPlayerNumber);
+        long maxPlayerNumber = match.getPlayerNumber()-1;
         LocalDateTime now = LocalDateTime.now();
 
         String status;
 
         if (now.isAfter(match.getStartTime())) {
             status = "종료";
-        }else if(currentRequestsCount == maxPlayerNumber){
-            status = "마감";
-
             // 마감임박 기준은 경기 시작이 2시간 미만으로 남았을 경우
-        }else if (now.plusHours(2).isAfter(match.getStartTime())) {
+        } else if (now.plusHours(2).isAfter(match.getStartTime())) {
             status = "마감임박";
+        } else if (currentRequestsCount == maxPlayerNumber) {
+            status = "마감";
             // 마감임박 기준은 신청 인원이 최대 인원의 80% 이상일 때
         } else if (currentRequestsCount >= maxPlayerNumber * 0.8 ) {
             status = "마감임박";
@@ -111,10 +103,16 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
         }
 
         // 웹소켓을 통해 클라이언트에게 매치 상태 변경 알림 전송
-//        this.matchStatusNotifier.notifyMatchStatusChange(match.getId(), status);
+        this.matchStatusNotifier.notifyMatchStatusChange(match.getId(), status);
 
-        System.out.println("status : " + status);
         return status;
+    }
+
+    @Override
+    public List<IndividualMatchRequest> findAllByUserId(long userId) {
+        List<IndividualMatchRequest> individualMatchRequestList
+                = individualMatchRequestJPARepository.findAllByUserId(userId);
+        return individualMatchRequestList;
     }
 
     @Override
