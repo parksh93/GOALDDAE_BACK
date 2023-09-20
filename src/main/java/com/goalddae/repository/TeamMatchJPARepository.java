@@ -22,4 +22,7 @@ public interface TeamMatchJPARepository extends JpaRepository<TeamMatch, Long> {
     // 매치를 생성하거나 요청한 유저를 확인
     @Query("SELECT tm FROM TeamMatch tm WHERE tm.id = :matchId AND tm.homeUser IS NOT NULL AND tm.awayUser IS NOT NULL")
     Optional<TeamMatch> findValidMatchById(@Param("matchId") Long matchId);
+    // 팀 매치 상세페이지에서 정보 조회
+    @Query("SELECT tm FROM TeamMatch tm JOIN FETCH tm.reservationField rf JOIN FETCH rf.soccerField sf WHERE tm.id = :matchId")
+    Optional<TeamMatch> findWithSoccerFieldById(@Param("matchId") Long matchId);
 }

@@ -75,4 +75,10 @@ public class TeamMatch {
     // 외래키 형성 - 매치요청
     @OneToMany(mappedBy = "teamMatch")
     private List<TeamMatchRequest> requests;
+
+    // 팀 매치 신청 - 어웨이 팀장
+    public void applyAway(User awayUser, long awayTeamId) {
+        this.awayUser = awayUser;
+        this.awayTeamId = awayTeamId;
+    }
 }

@@ -32,6 +32,7 @@ public class TeamMatchRequestServiceImpl implements TeamMatchRequestService {
         this.userJPARepository = userJPARepository;
     }
 
+    // 팀 매치 신청
     @Override
     public void requestTeamMatch(Long userId, Long teamMatchId, TeamMatchRequestDTO request) {
         // 해당 유저가 자신의 팀에 속해 있는지 확인
@@ -52,15 +53,13 @@ public class TeamMatchRequestServiceImpl implements TeamMatchRequestService {
         User user = userJPARepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("No user found with ID " + userId));
 
-        TeamMatch teamMatch = optionalTeamMatch.get();
+        TeamMatch teamMatch = teamMatchJPARepository.findById(teamMatchId)
+                .orElseThrow(() -> new IllegalArgumentException("No match found with ID " + teamMatchId));
 
-        // DTO to Entity 변환
-        TeamMatchRequest teamMatchRequest = TeamMatchRequest.builder()
-                .user(user)
-                .teamMatch(teamMatch)
-                .build();
+        // 어웨이 팀 정보 설정
+        teamMatch.applyAway(user, request.getAwayTeamId());
 
-        // DB에 저장
-        teamMatchRequestJPARepository.save(teamMatchRequest);
+        // DB에서 변경된 매치 정보 저장
+        teamMatchJPARepository.save(teamMatch);
     }
 }

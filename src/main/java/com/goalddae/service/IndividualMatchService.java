@@ -1,7 +1,6 @@
 package com.goalddae.service;
 
-import com.goalddae.dto.match.IndividualMatchDTO;
-import com.goalddae.dto.match.IndividualMatchRequestDTO;
+import com.goalddae.dto.match.*;
 import com.goalddae.entity.IndividualMatch;
 import com.goalddae.entity.IndividualMatchRequest;
 import com.goalddae.entity.ReservationField;

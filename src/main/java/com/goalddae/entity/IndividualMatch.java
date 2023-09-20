@@ -19,7 +19,7 @@ public class IndividualMatch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
     private long id;
-햣 ㅁㅇ
+
     // 매치 시작 일자와 시간
     @Column(nullable = false)
     private LocalDateTime startTime;

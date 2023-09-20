@@ -18,5 +18,4 @@ public interface IndividualMatchJPARepository extends JpaRepository<IndividualMa
             @Param("province") String province,
             @Param("level") String level,
             @Param("gender") String gender);
-
 }

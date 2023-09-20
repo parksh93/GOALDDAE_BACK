@@ -1,10 +1,12 @@
 package com.goalddae.controller;
 
 import com.goalddae.dto.match.TeamMatchDTO;
+import com.goalddae.dto.match.TeamMatchInfoDTO;
 import com.goalddae.dto.match.TeamMatchRequestDTO;
 import com.goalddae.dto.team.TeamListDTO;
 import com.goalddae.dto.team.TeamUpdateDTO;
 import com.goalddae.entity.Team;
+import com.goalddae.entity.TeamMatch;
 import com.goalddae.entity.TeamMatchRequest;
 import com.goalddae.service.TeamMatchRequestService;
 import com.goalddae.service.TeamMatchService;
@@ -152,6 +154,12 @@ public class TeamController {
 
         Page<TeamMatchDTO> matches = teamMatchService.getTeamMatches(Optional.ofNullable(userId), startTime.toLocalDate(), province, gender, page, size);
         return new ResponseEntity<>(matches, HttpStatus.OK);
+    }
+
+    // 팀 매치 상세 정보 조회
+    @GetMapping("/match/detail/{teamMatchId}")
+    public ResponseEntity<TeamMatchInfoDTO> getTeamMatchDetail(@PathVariable Long teamMatchId) {
+        return new ResponseEntity<>(teamMatchService.getTeamMatchDetail(teamMatchId), HttpStatus.OK);
     }
 
     // 팀 매치 신청
