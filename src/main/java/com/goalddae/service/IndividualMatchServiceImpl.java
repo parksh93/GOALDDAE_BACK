@@ -4,6 +4,8 @@ import com.goalddae.dto.match.*;
 import com.goalddae.entity.IndividualMatch;
 import com.goalddae.entity.IndividualMatchRequest;
 import com.goalddae.entity.User;
+import com.goalddae.exception.ErrorCode;
+import com.goalddae.exception.NotMatchConditionsException;
 import com.goalddae.exception.OverPlayerNumMatchException;
 import com.goalddae.repository.IndividualMatchJPARepository;
 import com.goalddae.repository.IndividualMatchRequestJPARepository;
@@ -154,21 +156,34 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
     }
 
     @Override
+    @Transactional
     public void saveMatchRequest(SaveIndividualMatchDTO saveIndividualMatchDTO) {
         IndividualMatch individualMatch = individualMatchJPARepository.findById(saveIndividualMatchDTO.getMatchId()).get();
         int playerCnt = individualMatchRequestJPARepository.countByIndividualMatchId(saveIndividualMatchDTO.getMatchId());
 
-        if(playerCnt <= (individualMatch.getPlayerNumber() - 1)){
-            IndividualMatchRequest individualMatchRequest = IndividualMatchRequest
-                    .builder().
-                    individualMatch(individualMatch)
-                    .user(userJPARepository.findById(saveIndividualMatchDTO.getUserId()).get())
-                    .build();
-
-            individualMatchRequestJPARepository.save(individualMatchRequest);
+        if(playerCnt < (individualMatch.getPlayerNumber() - 1)){
+            User user = userJPARepository.findById(saveIndividualMatchDTO.getUserId()).get();
+            if(individualMatch.getGender().equals("남녀모두")){
+                saveIndividualMatchRequest(individualMatch, user);
+            }else {
+                if(user.getGender().equals(individualMatch.getGender()) && user.getLevel().equals(individualMatch.getLevel())){
+                    saveIndividualMatchRequest(individualMatch, user);
+                }else {
+                    throw new NotMatchConditionsException(ErrorCode.NOT_MATCH_CONDITIONS);
+                }
+            }
         }else {
-            throw  new OverPlayerNumMatchException("플레이어 정원 초과");
+            throw  new OverPlayerNumMatchException(ErrorCode.OVER_PLAYER_NUM_MATCH);
         }
+    }
+
+    private void saveIndividualMatchRequest(IndividualMatch individualMatch, User user){
+        IndividualMatchRequest individualMatchRequest = IndividualMatchRequest
+                .builder().
+                individualMatch(individualMatch)
+                .user(user)
+                .build();
+        individualMatchRequestJPARepository.save(individualMatchRequest);
     }
 
     @Override

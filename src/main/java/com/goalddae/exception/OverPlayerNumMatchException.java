@@ -1,7 +1,10 @@
 package com.goalddae.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public class OverPlayerNumMatchException extends RuntimeException{
-    public OverPlayerNumMatchException(String message){
-        super(message);
-    }
+    private final ErrorCode errorCode;
 }
