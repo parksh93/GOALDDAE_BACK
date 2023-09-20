@@ -110,8 +110,10 @@ public class TeamController {
         }
     }
   
-    @RequestMapping(value="/update", method= {RequestMethod.PUT, RequestMethod.PATCH})
-    public ResponseEntity<String> teamUpdate(@RequestBody TeamUpdateDTO teamUpdateDTO){
+    @RequestMapping(value="/update", method= RequestMethod.PUT)
+    public ResponseEntity<?> teamUpdate(@RequestBody TeamUpdateDTO teamUpdateDTO){
+        System.out.println(teamUpdateDTO);
+
         try{
             teamService.update(teamUpdateDTO);
             return ResponseEntity

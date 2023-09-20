@@ -6,6 +6,7 @@ import com.goalddae.entity.Team;
 
 import com.goalddae.entity.Team;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public interface TeamService {
     Team findTeamById(Long id);
     //void save(Team team);
     void update(TeamUpdateDTO teamUpdateDTO);
+    void updateTeamProfileImg(TeamUpdateDTO teamUpdateDTO, MultipartFile multipartFile);
     void deleteTeamById(Long id);
     List<Team> findByTeamName(String searchTerm);
     List<TeamListDTO> findByArea(String area);

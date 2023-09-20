@@ -6,12 +6,16 @@ import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.entity.Team;
 import com.goalddae.entity.User;
 import com.goalddae.repository.*;
+import com.goalddae.util.S3Uploader;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.goalddae.util.MyBatisUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,18 +28,23 @@ public class TeamServiceImpl implements TeamService {
     private final TeamApplyRepository teamApplyRepository;
     private final TeamMatchResultRepository teamMatchResultRepository;
     private final UserJPARepository userJPARepository;
+    private final S3Uploader s3Uploader;
+
 
 
     public TeamServiceImpl(TeamJPARepository teamJPARepository,
                            TeamMemberRepository teamMemberRepository,
                            TeamApplyRepository teamApplyRepository,
                            TeamMatchResultRepository teamMatchResultRepository,
-                           UserJPARepository userJPARepository) {
+                           UserJPARepository userJPARepository,
+                           S3Uploader s3Uploader) {
         this.teamJPARepository = teamJPARepository;
         this.teamMemberRepository = teamMemberRepository;
         this.teamApplyRepository = teamApplyRepository;
         this.teamMatchResultRepository = teamMatchResultRepository;
         this.userJPARepository = userJPARepository;
+        this.s3Uploader = s3Uploader;
+
     }
 
     @Override
@@ -63,6 +72,7 @@ public class TeamServiceImpl implements TeamService {
                 .area(teamUpdateDTO.getArea())
                 .averageAge(teamUpdateDTO.getAverageAge())
                 .teamIntroduce(teamUpdateDTO.getTeamIntroduce())
+                .recruiting(teamUpdateDTO.isRecruiting())
                 .entryFee(teamUpdateDTO.getEntryFee())
                 .entryGender(teamUpdateDTO.getEntryGender())
                 .teamProfileImgUrl(teamUpdateDTO.getTeamProfileImgUrl())
@@ -73,6 +83,25 @@ public class TeamServiceImpl implements TeamService {
                 .build();
 
         teamJPARepository.save(newTeam);
+    }
+
+    @Override
+    public void updateTeamProfileImg(TeamUpdateDTO teamUpdateDTO, MultipartFile multipartFile) {
+        Team updateTeam = teamJPARepository.findTeamById(teamUpdateDTO.getId());
+
+        String uploadImgeUrl = null;
+        try {
+            uploadImgeUrl = s3Uploader.uploadFiles(multipartFile, "profile");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        updateTeam = Team.builder()
+                .teamProfileImgUrl(uploadImgeUrl)
+                .build();
+
+        teamJPARepository.save(updateTeam);
+
     }
 
     @Override

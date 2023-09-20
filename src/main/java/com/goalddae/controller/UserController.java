@@ -1,6 +1,8 @@
 package com.goalddae.controller;
 
 import com.goalddae.dto.user.*;
+import com.goalddae.entity.CommunicationBoard;
+import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.entity.User;
 import com.goalddae.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import retrofit2.http.Path;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
