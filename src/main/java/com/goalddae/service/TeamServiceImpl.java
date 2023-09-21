@@ -97,7 +97,19 @@ public class TeamServiceImpl implements TeamService {
         }
 
         updateTeam = Team.builder()
+                .id(updateTeam.getId())
+                .teamName(updateTeam.getTeamName())
+                .area(updateTeam.getArea())
+                .averageAge(updateTeam.getAverageAge())
+                .teamIntroduce(updateTeam.getTeamIntroduce())
+                .recruiting(updateTeam.isRecruiting())
+                .entryFee(updateTeam.getEntryFee())
+                .entryGender(updateTeam.getEntryGender())
                 .teamProfileImgUrl(uploadImgeUrl)
+                .preferredDay(updateTeam.getPreferredDay())
+                .preferredTime(updateTeam.getPreferredTime())
+                .teamCreate(updateTeam.getTeamCreate())
+                .teamProfileUpdate(LocalDateTime.now())
                 .build();
 
         teamJPARepository.save(updateTeam);
