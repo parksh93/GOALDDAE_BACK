@@ -14,11 +14,7 @@ import com.goalddae.repository.UserJPARepository;
 import com.goalddae.repository.*;
 import com.goalddae.entity.User;
 import com.goalddae.util.CookieUtil;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.goalddae.repository.UserJPARepository;
-import com.goalddae.util.CookieUtil;
+import jakarta.persistence.PostUpdate;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,7 +79,7 @@ public class UserServiceImpl implements UserService{
                 .activityClass(user.getActivityClass())
                 .authority("user")
                 .userCode(createUserCode())
-                .profileImgUrl("https://kr.object.ncloudstrage.com/goalddae-bucket/profile/goalddae_default_profile.Webp")
+                .profileImgUrl("https://kr.object.ncloudstorage.com/goalddae-bucket/profile/goalddae_default_profile.Webp")
                 .matchesCnt(0)
                 .level("유망주")
                 .noShowCnt(0)
@@ -139,8 +136,8 @@ public class UserServiceImpl implements UserService{
                 String token = tokenProvider.generateToken(userInfo,ACCESS_TOKEN_DURATION);
 
                 if(!token.equals("")){
-                   CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE_NAME, token);
-                   CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken);
+                    CookieUtil.addCookie(response, ACCESS_TOKEN_COOKIE_NAME, token);
+                    CookieUtil.addCookie(response, REFRESH_TOKEN_COOKIE_NAME, refreshToken);
                     return true;
                 }
                 throw new NotFoundTokenException("fail generateToken");
@@ -158,7 +155,6 @@ public class UserServiceImpl implements UserService{
         }else{
             refreshToken = new RefreshToken(userId, newRefreshToken);
         }
-
         refreshTokenRepository.save(refreshToken);
     }
 
@@ -168,6 +164,13 @@ public class UserServiceImpl implements UserService{
            GetUserInfoDTO userInfoDTO = new GetUserInfoDTO(user);
 
            return userInfoDTO;
+    }
+
+    @Override
+    public GetUserInfoDTO getFriendInfo(long id) {
+        User user = userJPARepository.findById(id).get();
+        GetUserInfoDTO friendInfo = new GetUserInfoDTO(user);
+        return friendInfo;
     }
 
     @Override
@@ -191,7 +194,6 @@ public class UserServiceImpl implements UserService{
             return false;
         }
     }
-
 
     @Override
     public boolean checkNickname(CheckNicknameDTO checkNicknameDTO){
@@ -302,6 +304,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+
     @Override
     public void updateTeamId(GetUserInfoDTO getUserInfoDTO) {
         User user = userJPARepository.findById(getUserInfoDTO.getId()).get();
@@ -333,6 +336,34 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public void changePasswordInMypage(ChangePasswordInMypageDTO changePasswordInMypageDTO) {
+        try {
+            Optional<User> userOptional = userJPARepository.findById(changePasswordInMypageDTO.getId());
+
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+
+                if (bCryptPasswordEncoder.matches(changePasswordInMypageDTO.getOldPassword(), user.getPassword())) {
+                    String newPassword = bCryptPasswordEncoder.encode(changePasswordInMypageDTO.getNewPassword());
+
+                    ChangeUserInfoDTO userInfoDTO = new ChangeUserInfoDTO(user);
+                    userInfoDTO.setPassword(newPassword);
+                    userInfoDTO.setProfileUpdateDate(LocalDateTime.now());
+                    User updateUser = userInfoDTO.toEntity();
+
+                    userJPARepository.save(updateUser);
+                } else {
+                    System.out.println("비밀번호가 일치하지 않습니다.");
+                }
+            } else {
+                System.out.println("사용자를 찾을 수 없습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public User findByEmail(String email) {
         return userJPARepository.findByEmail(email);
     }
@@ -342,8 +373,35 @@ public class UserServiceImpl implements UserService{
         try {
             userJPARepository.updateUserAccountSuspersionById(id);
         } catch (Exception e) {
-            System.out.println("예외가 발생했다.");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    @PostUpdate
+    public void updateLevel(GetUserInfoDTO getUserInfoDTO) {
+        User user = userJPARepository.findByLoginId(getUserInfoDTO.getLoginId());
+
+        ChangeUserInfoDTO changeUserInfoDTO = new ChangeUserInfoDTO(user);
+        changeUserInfoDTO.setMatchesCnt(getUserInfoDTO.getMatchesCnt());
+
+        // 레벨 설정
+        int matchesCnt = changeUserInfoDTO.getMatchesCnt();
+        String level = "";
+
+        if (matchesCnt >= 0 && matchesCnt <= 19) {
+            level = "유망주";
+        } else if (matchesCnt >= 20 && matchesCnt <= 49) {
+            level = "세미프로";
+        } else if (matchesCnt >= 50 && matchesCnt <= 99) {
+            level = "프로";
+        } else if (matchesCnt >= 100 && matchesCnt <= 199) {
+            level = "월드클래스";
+        }
+
+        changeUserInfoDTO.setLevel(level);
+
+        User levelUpdatedUser = changeUserInfoDTO.toEntity();
+        userJPARepository.save(levelUpdatedUser);
     }
 }

@@ -1,5 +1,10 @@
 package com.goalddae.service;
 
+<<<<<<< HEAD
+import com.goalddae.dto.soccerField.SoccerFieldDTO;
+import com.goalddae.entity.SoccerField;
+import com.goalddae.repository.SoccerFieldRepository;
+=======
 import com.goalddae.dto.fieldReservation.FieldReservationInfoDTO;
 import com.goalddae.dto.soccerField.SoccerFieldDTO;
 import com.goalddae.entity.ReservationField;
@@ -8,12 +13,17 @@ import com.goalddae.entity.User;
 import com.goalddae.repository.ReservationFieldJPARepository;
 import com.goalddae.repository.SoccerFieldRepository;
 import com.goalddae.repository.UserJPARepository;
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+<<<<<<< HEAD
+
+import java.time.LocalTime;
+=======
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +32,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +48,14 @@ public class SoccerFieldServiceTest {
     @MockBean
     private SoccerFieldRepository soccerFieldRepository;
 
+<<<<<<< HEAD
+    @MockBean
+    private FieldReservationService fieldReservationService;
+
+    @Autowired
+    private SoccerFieldService soccerFieldService;
+
+=======
     @Autowired
     private SoccerFieldService soccerFieldService;
 
@@ -46,6 +65,7 @@ public class SoccerFieldServiceTest {
     @MockBean
     private ReservationFieldJPARepository reservationFieldJPARepository;
 
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
     private SoccerField soccerField;
 
     @Test
@@ -109,6 +129,10 @@ public class SoccerFieldServiceTest {
                 .fieldName("테스트구장 수정 전")
                 .operatingHours(LocalTime.parse("09:00"))
                 .closingTime(LocalTime.parse("20:00"))
+<<<<<<< HEAD
+                .playerCapacity(12)
+=======
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
                 .province("경기도")
                 .region("성남")
                 .reservationFee(8000)
@@ -124,6 +148,10 @@ public class SoccerFieldServiceTest {
                 .fieldName("테스트구장 변경 후")
                 .operatingHours(LocalTime.parse("10:00"))
                 .closingTime(LocalTime.parse("21:00"))
+<<<<<<< HEAD
+                .playerCapacity(10)
+=======
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
                 .province("경기도")
                 .region("분당")
                 .reservationFee(10000)
@@ -134,6 +162,15 @@ public class SoccerFieldServiceTest {
                 .parkingStatus(true)
                 .build();
 
+<<<<<<< HEAD
+                        when(soccerFieldRepository.findById(anyLong())).thenReturn(Optional.of(existing));
+        when(soccerFieldRepository.save(any(SoccerField.class))).thenReturn(existing);
+
+        // When: 서비스 메소드 호출
+        SoccerField result = soccerFieldService.update(updateDto);
+
+        // Then: 결과 확인
+=======
         when(soccerFieldRepository.findById(anyLong())).thenReturn(Optional.of(existing));
         when(soccerFieldRepository.save(any(SoccerField.class))).thenReturn(existing);
 
@@ -141,6 +178,7 @@ public class SoccerFieldServiceTest {
         SoccerField result = soccerFieldService.update(updateDto);
 
         // Then
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
         assertThat(result.getFieldName()).isEqualTo(updateDto.getFieldName());
         assertThat(result.isToiletStatus()).isEqualTo(updateDto.isToiletStatus());
     }
@@ -158,6 +196,8 @@ public class SoccerFieldServiceTest {
         // Then
         verify(soccerFieldRepository, times(1)).deleteById(id);
     }
+<<<<<<< HEAD
+=======
 
     @Test
     @Transactional
@@ -276,4 +316,5 @@ public class SoccerFieldServiceTest {
                 LocalTime.of (21 ,00 )
         ), resultInfoDTO.getAvailableTimes());
     }
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 }

@@ -38,14 +38,14 @@ public class User implements UserDetails {
 
     @Column(unique = true)
     private String loginId; // 로그인 아이디
-                            // 소셜 로그인을 대비해 null 허용
-    
+    // 소셜 로그인을 대비해 null 허용
+
     @Column(nullable = false)
     private String email;   // 이메일
 
     @Column
     private String password;    // 비밀번호
-                                // 소셜 로그인을 대비해 null 허용
+    // 소셜 로그인을 대비해 null 허용
 
     @Column(nullable = true, unique = true)
     private String userCode;    // 유저코드
@@ -91,8 +91,8 @@ public class User implements UserDetails {
 
     @Column(nullable = true)
     private boolean accountSuspersion;  // 계정 정지 유무
-                                        // 정지 : true
-                                        // 정상 : false
+    // 정지 : true
+    // 정상 : false
 
     @Column
     private int noShowCnt;  // 노쇼 수
@@ -108,7 +108,7 @@ public class User implements UserDetails {
 
     @Column(nullable = true)
     private String authority;  // 권한 등급
-                            // 일반 유저 : user / 매니저 : manager / 관리자 : admin
+    // 일반 유저 : user / 매니저 : manager / 관리자 : admin
 
     @Builder
     public User(long id, String loginId, String email, String password, String userCode, String name, String nickname, String gender, String profileImgUrl,

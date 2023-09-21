@@ -88,7 +88,7 @@ public class TeamController {
     }
     */
 
-      // 팀 등록
+    // 팀 등록
     @PostMapping(value = "/save")
     public ResponseEntity<String> saveTeam(@RequestBody TeamSaveDTO teamSaveDTO) {
         try {
@@ -109,7 +109,7 @@ public class TeamController {
             return ResponseEntity.notFound().build();
         }
     }
-  
+
     @RequestMapping(value="/update", method= RequestMethod.PUT)
     public ResponseEntity<?> teamUpdate(@RequestBody TeamUpdateDTO teamUpdateDTO){
         System.out.println(teamUpdateDTO);
@@ -155,7 +155,7 @@ public class TeamController {
 
     @GetMapping(value = "/list/areaAndRecruiting")
     public List<TeamListDTO> filterAreaAndRecruiting(@RequestParam(required = false) String area,
-                                              @RequestParam(required = false) boolean recruiting){
+                                                     @RequestParam(required = false) boolean recruiting){
         return teamService.findByAreaAndRecruiting(area, true);
     }
 

@@ -8,6 +8,7 @@ import com.goalddae.entity.ReportedBoard;
 import com.goalddae.repository.BoardJPARepository;
 import com.goalddae.repository.HeartJPARepository;
 import com.goalddae.repository.ReportedBoardJPARepository;
+import com.goalddae.service.BoardService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -359,6 +361,8 @@ public class BoardJPARepositoryTest {
             assertEquals(LocalDate.now(), top5Boards.get(i).getWriteDate().toLocalDate());
         }
     }
+<<<<<<< HEAD
+=======
 
     @Test
     @Transactional
@@ -369,4 +373,5 @@ public class BoardJPARepositoryTest {
         assertEquals(1, reportBoardList.size());
         assertEquals("그냥", reportBoardList.get(0).getReason());
     }
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 }

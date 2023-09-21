@@ -47,4 +47,3 @@ public class ReservationField {
     @OneToMany(mappedBy = "reservationField")
     private List<IndividualMatch> individualMatches;
 }
-

@@ -137,5 +137,4 @@ public class SoccerField {
         this.content = content;
     }
 
-    }
-
+}

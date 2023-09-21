@@ -1,5 +1,7 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.match.IndividualMatchDTO;
+import com.goalddae.dto.match.IndividualMatchRequestDTO;
 import com.goalddae.dto.match.*;
 import com.goalddae.entity.IndividualMatch;
 import com.goalddae.entity.IndividualMatchRequest;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,15 +41,28 @@ public class IndividualMatchController {
                 startTime.toLocalDate(), province, level, gender);
     }
 
+
     @GetMapping("/my-individual/{userId}")
     public List<IndividualMatchRequestDTO> getIndividualMatchesRequest(@PathVariable long userId) {
-        return individualMatchService.findAllByUserId(userId)
-                .stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+        List<Object> combinedList = individualMatchService.findAllByUserId(userId);
+        List<IndividualMatchRequestDTO> result = new ArrayList<>();
+
+        for (Object item : combinedList) {
+            if (item instanceof IndividualMatchRequest) {
+                // IndividualMatchRequest를 IndividualMatchRequestDTO로 변환
+                IndividualMatchRequestDTO requestDTO = convertToDto((IndividualMatchRequest) item);
+                result.add(requestDTO);
+            } else if (item instanceof IndividualMatch) {
+                // IndividualMatch를 IndividualMatchRequestDTO로 변환
+                IndividualMatchRequestDTO matchDTO = convertToDto((IndividualMatch) item);
+                result.add(matchDTO);
+            }
+        }
+
+        return result;
     }
 
-    public IndividualMatchRequestDTO convertToDto(IndividualMatchRequest  matchRequest) {
+    public IndividualMatchRequestDTO convertToDto(IndividualMatchRequest matchRequest) {
         return IndividualMatchRequestDTO.builder()
                 .id(matchRequest.getIndividualMatch().getId())
                 .playerNumber(matchRequest.getIndividualMatch().getPlayerNumber())
@@ -57,6 +73,19 @@ public class IndividualMatchController {
                 .soccerField(matchRequest.getIndividualMatch().getReservationField().getSoccerField())
                 .build();
     }
+
+    public IndividualMatchRequestDTO convertToDto(IndividualMatch individualMatch) {
+        return IndividualMatchRequestDTO.builder()
+                .id(individualMatch.getId())
+                .playerNumber(individualMatch.getPlayerNumber())
+                .level(individualMatch.getLevel())
+                .gender(individualMatch.getGender())
+                .startTime(individualMatch.getStartTime())
+                .endTime(individualMatch.getEndTime())
+                .soccerField(individualMatch.getReservationField().getSoccerField())
+                .build();
+    }
+
 
     @GetMapping("/individual/detail/{matchId}")
     public IndividualMatchDetailDTO getIndividualDetail(@PathVariable long matchId){
@@ -77,5 +106,4 @@ public class IndividualMatchController {
     public void cancelMatchRequest(@RequestBody CancelMatchRequestDTO cancelMatchRequestDTO){
         individualMatchService.cancelMatchRequest(cancelMatchRequestDTO);
     }
-
 }

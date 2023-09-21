@@ -2,30 +2,30 @@
 <mapper namespace="com.goalddae.repository.TeamMemberRepository">
     <update id="createTeamMemberTable" parameterType="java.lang.Long">
         CREATE TABLE team_member_#{teamId} (
-                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                        user_join_date DATETIME NOT NULL,
-                                        team_manager BIGINT NOT NULL,
-                                        users_id BIGINT NOT NULL UNIQUE,
-                                        team_id BIGINT NOT NULL
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        user_join_date DATETIME NOT NULL,
+        team_manager BIGINT NOT NULL,
+        users_id BIGINT NOT NULL UNIQUE,
+        team_id BIGINT NOT NULL
         );
     </update>
     <select id="findAllTeamMembersByTeamId" parameterType="long" resultType="com.goalddae.dto.team.TeamMemberCheckDTO">
         SELECT tm.id as id,
-               tm.team_manager as teamManager,
-               tm.users_id as userId,
-               tm.team_id as teamId,
-               u.name as name,
-               u.profile_img_url as profileImgUrl,
-               u.preferred_city as preferredCity,
-               u.preferred_area as preferredArea
+        tm.team_manager as teamManager,
+        tm.users_id as userId,
+        tm.team_id as teamId,
+        u.name as name,
+        u.profile_img_url as profileImgUrl,
+        u.preferred_city as preferredCity,
+        u.preferred_area as preferredArea
         FROM team_member_#{teamId} tm
         JOIN users u ON tm.users_id = u.id
         WHERE tm.team_id = #{teamId}
     </select>
     <select id="findByUserId" parameterType="com.goalddae.dto.team.TeamMemberCheckDTO">
         SELECT id as id,
-               users_id as userId,
-               team_id as teamId
+        users_id as userId,
+        team_id as teamId
         FROM team_member_#{teamId}
         WHERE users_id = #{userId}
     </select>

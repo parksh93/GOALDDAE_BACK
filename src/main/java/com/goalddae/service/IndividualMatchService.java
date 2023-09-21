@@ -9,13 +9,14 @@ import com.goalddae.entity.User;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public interface IndividualMatchService {
     List<IndividualMatchDTO> getMatchesByDateAndProvinceAndLevelAndGender(LocalDate date,
                                                                           String province,
                                                                           String level,
                                                                           String gender);
-    List<IndividualMatchRequest> findAllByUserId(long userId);
+    List<Object> findAllByUserId(long userId);
     IndividualMatchDetailDTO findById(long matchId);
     void saveMatchRequest(SaveIndividualMatchDTO saveIndividualMatchDTO);
     List<GetPlayerInfoDTO> getMatchPlayerInfo(long matchId);

@@ -1,5 +1,14 @@
 package com.goalddae.service;
 
+
+import com.goalddae.dto.match.IndividualMatchDTO;
+import com.goalddae.dto.match.IndividualMatchRequestDTO;
+import com.goalddae.entity.IndividualMatch;
+import com.goalddae.entity.IndividualMatchRequest;
+import com.goalddae.repository.IndividualMatchJPARepository;
+import com.goalddae.repository.IndividualMatchRequestJPARepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import com.goalddae.dto.match.*;
 import com.goalddae.entity.IndividualMatch;
 import com.goalddae.entity.IndividualMatchRequest;
@@ -13,12 +22,11 @@ import com.goalddae.repository.UserJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +42,8 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
     @Autowired
     public IndividualMatchServiceImpl(IndividualMatchJPARepository individualMatchJPARepository,
                                       IndividualMatchRequestJPARepository individualMatchRequestJPARepository,
-                                      MatchStatusNotifier matchStatusNotifier, UserJPARepository userJPARepository) {
+                                      MatchStatusNotifier matchStatusNotifier,
+                                      UserJPARepository userJPARepository) {
         this.individualMatchJPARepository = individualMatchJPARepository;
         this.individualMatchRequestJPARepository = individualMatchRequestJPARepository;
         this.matchStatusNotifier = matchStatusNotifier;
@@ -79,41 +88,59 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
             return Collections.emptyList();
         }
     }
+        // 신청 가능 상태
+        private String determineStatus(IndividualMatch match) {
+            long currentRequestsCount = match.getRequests().size();
+            long maxPlayerNumber = match.getPlayerNumber()-1;
+            LocalDateTime now = LocalDateTime.now();
 
-    // 신청 가능 상태
-    private String determineStatus(IndividualMatch match) {
-        long currentRequestsCount = match.getRequests().size();
-        long maxPlayerNumber = match.getPlayerNumber()-1;
-        LocalDateTime now = LocalDateTime.now();
+            String status;
 
-        String status;
+            if (now.isAfter(match.getStartTime())) {
+                status = "종료";
+                // 마감임박 기준은 경기 시작이 2시간 미만으로 남았을 경우
+            } else if (now.plusHours(2).isAfter(match.getStartTime())) {
+                status = "마감임박";
+            } else if (currentRequestsCount == maxPlayerNumber) {
+                status = "마감";
+                // 마감임박 기준은 신청 인원이 최대 인원의 80% 이상일 때
+            } else if (currentRequestsCount >= maxPlayerNumber * 0.8 ) {
+                status = "마감임박";
+            } else {
+                status = "신청가능";
+            }
 
-        if (now.isAfter(match.getStartTime())) {
-            status = "종료";
-            // 마감임박 기준은 경기 시작이 2시간 미만으로 남았을 경우
-        } else if (now.plusHours(2).isAfter(match.getStartTime())) {
-            status = "마감임박";
-        } else if (currentRequestsCount == maxPlayerNumber) {
-            status = "마감";
-            // 마감임박 기준은 신청 인원이 최대 인원의 80% 이상일 때
-        } else if (currentRequestsCount >= maxPlayerNumber * 0.8 ) {
-            status = "마감임박";
-        } else {
-            status = "신청가능";
+            // 웹소켓을 통해 클라이언트에게 매치 상태 변경 알림 전송
+            this.matchStatusNotifier.notifyMatchStatusChange(match.getId(), status);
+
+            return status;
         }
 
-        // 웹소켓을 통해 클라이언트에게 매치 상태 변경 알림 전송
-        this.matchStatusNotifier.notifyMatchStatusChange(match.getId(), status);
-
-        return status;
-    }
 
     @Override
-    public List<IndividualMatchRequest> findAllByUserId(long userId) {
+    public List<Object> findAllByUserId(long userId) {
         List<IndividualMatchRequest> individualMatchRequestList
                 = individualMatchRequestJPARepository.findAllByUserId(userId);
-        return individualMatchRequestList;
+
+        List<IndividualMatch> individualMatchList
+                = individualMatchJPARepository.findAllByUserId(userId);
+
+        List<Object> combinedList = new ArrayList<>();
+
+        // 사용자가 신청한 매치를 먼저 추가
+        combinedList.addAll(individualMatchRequestList);
+
+        // 사용자가 생성한 매치 중에서 userId와 일치하는 것이 있으면 추가
+        for (IndividualMatch individualMatch : individualMatchList) {
+            if (individualMatch.getUser().getId() == userId) {
+                // IndividualMatch 객체를 추가
+                combinedList.add(individualMatch);
+            }
+        }
+
+        return combinedList;
     }
+
 
     @Override
     public IndividualMatchDetailDTO findById(long matchId) {
