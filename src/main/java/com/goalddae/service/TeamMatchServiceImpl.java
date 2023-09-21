@@ -152,6 +152,9 @@ public class TeamMatchServiceImpl implements TeamMatchService {
         dto.setProvince(teamMatch.getReservationField().getSoccerField().getProvince());
         dto.setRegion(teamMatch.getReservationField().getSoccerField().getRegion());
         dto.setAddress(teamMatch.getReservationField().getSoccerField().getAddress());
+        dto.setFieldImg1(teamMatch.getReservationField().getSoccerField().getFieldImg1());
+        dto.setFieldImg2(teamMatch.getReservationField().getSoccerField().getFieldImg2());
+        dto.setFieldImg3(teamMatch.getReservationField().getSoccerField().getFieldImg3());
 
         return dto;
     }

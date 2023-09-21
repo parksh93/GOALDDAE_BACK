@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Random;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserJPARepository userJPARepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -49,14 +49,17 @@ public class UserServiceImpl implements UserService{
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
     private final FriendService friendService;
     private final S3Uploader s3Uploader;
-
+    private final TeamMemberRepository teamMemberRepository;
+    private final TeamJPARepository teamJPARepository;
 
     @Autowired
     public UserServiceImpl(UserJPARepository userRepository,
                            RefreshTokenRepository refreshTokenRepository,
                            TokenProvider tokenProvider,
                            FriendService friendService,
-                           S3Uploader s3Uploader){
+                           S3Uploader s3Uploader,
+                           TeamMemberRepository teamMemberRepository,
+                           TeamJPARepository teamJPARepository){
 
         this.userJPARepository = userRepository;
         this.refreshTokenRepository = refreshTokenRepository;
@@ -64,6 +67,8 @@ public class UserServiceImpl implements UserService{
         this.tokenProvider = tokenProvider;
         this.friendService = friendService;
         this.s3Uploader = s3Uploader;
+        this.teamMemberRepository = teamMemberRepository;
+        this.teamJPARepository = teamJPARepository;
     }
 
     @Override
@@ -333,5 +338,17 @@ public class UserServiceImpl implements UserService{
             System.out.println("예외가 발생했다.");
             e.printStackTrace();
         }
+    }
+
+    // 현재 로그인된 사용자가 어떤 팀의 리더인지 검사
+    @Override
+    public boolean checkIfTeamLeader(Long userId) {
+        User user = userJPARepository.findById(userId).orElse(null);
+        if (user == null || user.getTeamId() == null) {
+            return false;
+        }
+
+        Long teamId = user.getTeamId();
+        return teamMemberRepository.isTeamLeader(teamId, userId) > 0;
     }
 }

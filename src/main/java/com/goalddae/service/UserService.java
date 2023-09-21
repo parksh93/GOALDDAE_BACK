@@ -32,4 +32,6 @@ public interface UserService {
     public boolean changePassword(ChangePasswordDTO changePasswordDTO);
     public User findByEmail(String email);
     public void deleteUser(long id);
+    // 팀장인지 확인 유무
+    boolean checkIfTeamLeader(Long userId);
 }

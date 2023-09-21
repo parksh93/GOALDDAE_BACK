@@ -28,4 +28,7 @@ public class TeamMatchInfoDTO {
     private String province;
     private String region;
     private String address;
+    private String fieldImg1;
+    private String fieldImg2;
+    private String fieldImg3;
 }

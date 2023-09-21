@@ -1,21 +1,24 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.match.TeamMatchRequestDTO;
+import com.goalddae.dto.user.TeamMatchUserInfoDTO;
 import com.goalddae.entity.TeamMatch;
 import com.goalddae.entity.TeamMatchRequest;
 import com.goalddae.entity.User;
-import com.goalddae.repository.TeamMatchJPARepository;
-import com.goalddae.repository.TeamMemberRepository;
-import com.goalddae.repository.TeamMatchRequestJPARepository;
-import com.goalddae.repository.UserJPARepository;
+import com.goalddae.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.NoSuchElementException;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TeamMatchRequestServiceImpl implements TeamMatchRequestService {
 
+    private final TeamJPARepository teamJPARepository;
     private final TeamMemberRepository teamMemberRepository;
     private final TeamMatchRequestJPARepository teamMatchRequestJPARepository;
     private final TeamMatchJPARepository teamMatchJPARepository;
@@ -25,11 +28,13 @@ public class TeamMatchRequestServiceImpl implements TeamMatchRequestService {
     public TeamMatchRequestServiceImpl(TeamMemberRepository teamMemberRepository,
                                        TeamMatchRequestJPARepository teamMatchRequestJPARepository,
                                        TeamMatchJPARepository teamMatchJPARepository,
-                                       UserJPARepository userJPARepository) {
+                                       UserJPARepository userJPARepository,
+                                       TeamJPARepository teamJPARepository) {
         this.teamMemberRepository = teamMemberRepository;
         this.teamMatchRequestJPARepository = teamMatchRequestJPARepository;
         this.teamMatchJPARepository = teamMatchJPARepository;
         this.userJPARepository = userJPARepository;
+        this.teamJPARepository = teamJPARepository;
     }
 
     // 팀 매치 신청
@@ -61,5 +66,35 @@ public class TeamMatchRequestServiceImpl implements TeamMatchRequestService {
 
         // DB에서 변경된 매치 정보 저장
         teamMatchJPARepository.save(teamMatch);
+    }
+
+    @Override
+    public List<TeamMatchUserInfoDTO> getHomeRequest(Long matchId) {
+        List<User> homeApplications = getApplications(matchId, true);
+        return homeApplications.stream()
+                .map(user -> new TeamMatchUserInfoDTO(user.getId(), user.getTeamId(), user.getNickname(), user.getProfileImgUrl()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TeamMatchUserInfoDTO> getAwayRequest(Long matchId) {
+        List<User> awayApplications = getApplications(matchId, false);
+        return awayApplications.stream()
+                .map(user -> new TeamMatchUserInfoDTO(user.getId(), user.getTeamId(), user.getNickname(), user.getProfileImgUrl()))
+                .collect(Collectors.toList());
+    }
+
+    // 주어진 매치 ID와 팀 타입(홈/어웨이)으로 해당 팀의 모든 신청자 목록을 조회
+    private List<User> getApplications(Long matchId, boolean isHome) {
+        TeamMatch match = teamMatchJPARepository.findById(matchId).orElseThrow(NoSuchElementException::new);
+        Long teamId = isHome ? match.getHomeUser().getId() : match.getAwayUser().getId();
+        User teamLeader = isHome ? match.getHomeUser() : match.getAwayUser();
+
+        List<TeamMatchRequest> request = teamMatchRequestJPARepository.findByTeamIdAndTeamMatchId(teamId, matchId);
+
+        return Stream.concat(
+                        Stream.of(teamLeader),
+                        request.stream().map(TeamMatchRequest::getUser))
+                .collect(Collectors.toList());
     }
 }
