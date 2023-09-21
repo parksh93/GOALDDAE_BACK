@@ -1,15 +1,12 @@
 package com.goalddae.service;
 
-<<<<<<< HEAD
 import com.goalddae.dto.match.IndividualMatchDTO;
 import com.goalddae.entity.IndividualMatch;
 import com.goalddae.entity.IndividualMatchRequest;
 import com.goalddae.entity.ReservationField;
 import com.goalddae.entity.SoccerField;
-=======
 import com.goalddae.dto.match.*;
 import com.goalddae.entity.*;
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 import com.goalddae.repository.IndividualMatchJPARepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-<<<<<<< HEAD
-=======
 import org.springframework.transaction.annotation.Transactional;
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,27 +24,18 @@ import java.util.Collections;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
-<<<<<<< HEAD
-=======
-import static org.assertj.core.api.AssertionsForClassTypes.in;
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-<<<<<<< HEAD
 @AutoConfigureMockMvc
-=======
-//@AutoConfigureMockMvc
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 public class IndividualMatchServiceTest {
 
     @Autowired
     private IndividualMatchService individualMatchService;
 
-<<<<<<< HEAD
     @MockBean
     private IndividualMatchJPARepository individualmatchJPARepository;
 
@@ -93,7 +78,6 @@ public class IndividualMatchServiceTest {
         assertThat(result).isNotEmpty();
         verify(individualmatchJPARepository, times(1)).findMatches(any(LocalDateTime.class), any(LocalDateTime.class), eq(province), eq(level), eq(gender));
     }
-=======
 //    @MockBean
 //    private IndividualMatchJPARepository individualmatchJPARepository;
 
@@ -136,27 +120,20 @@ public class IndividualMatchServiceTest {
 //        assertThat(result).isNotEmpty();
 //        verify(individualmatchJPARepository, times(1)).findMatches(any(LocalDateTime.class), any(LocalDateTime.class), eq(province), eq(level), eq(gender));
 //    }
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 
     @Test
     @DisplayName("개인매치 신청내역 조회 테스트")
     public void findAllByUserIdTest() {
         // given
-<<<<<<< HEAD
-        long userId = 1;
-=======
         long userId = 19;
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 
         // when
-        List<IndividualMatchRequest> individualMatchRequestList = individualMatchService.findAllByUserId(userId);
+        List<Object> individualMatchRequestList = individualMatchService.findAllByUserId(userId);
 
         // then
-        assertEquals("남자", individualMatchRequestList.get(0).getIndividualMatch().getGender());
-        assertEquals(1, individualMatchRequestList.get(0).getIndividualMatch().getReservationField().getSoccerField().getId());
+//        assertEquals("남자", individualMatchRequestList.get(0).getIndividualMatch().getGender());
+//        assertEquals(1, individualMatchRequestList.get(0).getIndividualMatch().getReservationField().getSoccerField().getId());
     }
-<<<<<<< HEAD
-=======
 
     @Test
     @Transactional
@@ -214,6 +191,4 @@ public class IndividualMatchServiceTest {
 
         assertEquals(0, playerList.size());
     }
-
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 }

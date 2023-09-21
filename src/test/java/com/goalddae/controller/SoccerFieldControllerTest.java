@@ -1,30 +1,18 @@
 package com.goalddae.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-<<<<<<< HEAD
-=======
 import com.goalddae.dto.soccerField.SoccerFieldDTO;
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 import com.goalddae.entity.SoccerField;
 import com.goalddae.repository.SoccerFieldRepository;
 import com.goalddae.service.SoccerFieldService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-<<<<<<< HEAD
-=======
 import org.mockito.Mockito;
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-<<<<<<< HEAD
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Arrays;
-=======
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
@@ -33,7 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -142,53 +129,15 @@ public class SoccerFieldControllerTest {
     @Test
     @DisplayName("구장 객체 삭제 테스트")
     public void deleteSoccerFieldTest() throws Exception {
-<<<<<<< HEAD
-        // Given
-        Long soccerFieldId = 1L;
-        SoccerField soccerField = SoccerField.builder()
-                .id(soccerFieldId)
-                .fieldName("테스트 풋살장")
-                .toiletStatus(true)
-                .showerStatus(true)
-                .parkingStatus(true)
-                .fieldSize("14x16")
-                .fieldImg1("테스트이미지1")
-                .inOutWhether("실외")
-                .grassWhether("인조")
-                .province("서울")
-                .region("서울")
-                .reservationFee(8000)
-                .build();
-
-        // When
-        mockMvc.perform(post("/field/delete")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(soccerField)))
-=======
 
         // When
         mockMvc.perform(post("/field/delete/1"))
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
                 .andExpect(status().isOk());
 
         // Then
         verify(soccerFieldService, times(1)).delete(anyLong());
     }
 
-<<<<<<< HEAD
-        @Test
-        @Transactional
-        @DisplayName("구장 정보 가져오기")
-        public void getFieldInfo() throws Exception{
-            String url = "/field/getFieldInfo/1";
-
-            ResultActions result = mockMvc.perform(get(url).accept(MediaType.APPLICATION_JSON));
-
-            result.andExpect(status().isOk())
-                    .andExpect(jsonPath("$.fieldName").value("테스트 구장"));
-        }
-    }
-=======
     @Test
     @Transactional
     @DisplayName("구장 정보 가져오기")
@@ -240,4 +189,3 @@ public class SoccerFieldControllerTest {
                 .andExpect(status().isOk());
     }
 }
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc

@@ -94,8 +94,6 @@ public class UserJPARepositoryTest {
 
         assertEquals(user.getLoginId(), "asdas");
     }
-<<<<<<< HEAD
-=======
 
     @Test
     @Transactional
@@ -107,5 +105,4 @@ public class UserJPARepositoryTest {
 
         assertEquals("박상현", userList.get(0).getName());
     }
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 }
