@@ -1,7 +1,6 @@
 package com.goalddae.controller;
 
-import com.goalddae.dto.manager.ManagerIndividualMatchDTO;
-import com.goalddae.dto.manager.ManagerUserInfoDTO;
+import com.goalddae.dto.manager.*;
 import com.goalddae.entity.IndividualMatch;
 import com.goalddae.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +33,28 @@ public class ManagerController {
 
     @PostMapping("/increaseNoShowCount")
     public ResponseEntity<String> increaseNoShowCount(@RequestBody List<Long> userIds) {
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         try {
             managerService.increaseNoShowCount(userIds);
             return ResponseEntity.ok("No-show count increased successfully.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GetMapping("/finished-team-matches")
+    public List<ManagerTeamMatchDTO> getFinishedTeamMatches(@RequestParam Long managerId) {
+        return managerService.getFinishedTeamMatches(managerId);
+    }
+
+    @GetMapping("/matchTeamInfo")
+    public ManagerTeamInfoDTO getMatchTeamInfo(@RequestParam Long matchId){
+        return managerService.getMatchTeamInfo(matchId);
+    }
+
+    @PostMapping("/addTeamMatchResult")
+    public ResponseEntity<String> addTeamMatchResult(@RequestBody ManagerTeamMatchResultDTO managerTeamMatchResultDTO) {
+        managerService.addTeamMatchResult(managerTeamMatchResultDTO);
+        return ResponseEntity.ok("Team match result added successfully.");
     }
 
 }

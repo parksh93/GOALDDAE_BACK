@@ -1,7 +1,6 @@
 package com.goalddae.service;
 
-import com.goalddae.dto.manager.ManagerIndividualMatchDTO;
-import com.goalddae.dto.manager.ManagerUserInfoDTO;
+import com.goalddae.dto.manager.*;
 import com.goalddae.entity.IndividualMatch;
 
 import java.util.List;
@@ -14,4 +13,9 @@ public interface ManagerService {
 
     void increaseNoShowCount(List<Long> userIds);
 
+    List<ManagerTeamMatchDTO> getFinishedTeamMatches(Long managerId);
+
+    ManagerTeamInfoDTO getMatchTeamInfo(Long matchId);
+
+    void addTeamMatchResult(ManagerTeamMatchResultDTO managerTeamMatchResultDTO);
 }
