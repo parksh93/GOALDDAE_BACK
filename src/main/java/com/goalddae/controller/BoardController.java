@@ -6,6 +6,7 @@ import com.goalddae.dto.board.HeartInfoDTO;
 import com.goalddae.dto.board.MyBoardListDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
+import com.goalddae.entity.ReportedBoard;
 import com.goalddae.service.BoardService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -151,5 +152,11 @@ public class BoardController {
     public ResponseEntity<List<BoardListDTO>> getTopPosts() {
         List<BoardListDTO> topPosts = boardService.findTop5Board();
         return ResponseEntity.ok(topPosts);
+    }
+
+    @PostMapping("/report")
+    public ResponseEntity<String> addReport(@RequestBody ReportedBoard reportedBoard) {
+        boardService.saveReportedBoard(reportedBoard);
+        return ResponseEntity.ok("신고가 접수되었습니다.");
     }
 }

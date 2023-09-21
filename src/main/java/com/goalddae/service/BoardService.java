@@ -2,6 +2,7 @@ package com.goalddae.service;
 
 import com.goalddae.dto.board.*;
 import com.goalddae.entity.CommunicationBoard;
+import com.goalddae.entity.ReportedBoard;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,4 +34,6 @@ public interface BoardService {
     List<BoardListDTO> findTop5Board();
 
     String uploadImage (MultipartFile multipartFile);
+
+    void saveReportedBoard(ReportedBoard reportedBoard);
 }

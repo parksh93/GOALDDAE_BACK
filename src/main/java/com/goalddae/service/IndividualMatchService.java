@@ -15,7 +15,9 @@ public interface IndividualMatchService {
     List<IndividualMatchDTO> getMatchesByDateAndProvinceAndLevelAndGender(LocalDate date,
                                                                           String province,
                                                                           String level,
-                                                                          String gender);
+                                                                          String gender,
+                                                                          Long  lastMatchId);
+
     List<Object> findAllByUserId(long userId);
     IndividualMatchDetailDTO findById(long matchId);
     void saveMatchRequest(SaveIndividualMatchDTO saveIndividualMatchDTO);

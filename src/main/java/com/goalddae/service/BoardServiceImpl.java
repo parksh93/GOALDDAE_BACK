@@ -3,6 +3,7 @@ package com.goalddae.service;
 import com.goalddae.dto.board.*;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
+import com.goalddae.entity.ReportedBoard;
 import com.goalddae.repository.*;
 import com.goalddae.util.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -259,5 +260,17 @@ public class BoardServiceImpl implements BoardService{
             dto.setWriteDate(resultSet.getTimestamp("write_date").toLocalDateTime());
             return dto;
         });
+    }
+
+    @Transactional
+    @Override
+    public void saveReportedBoard(ReportedBoard reportedBoard) {
+
+        Optional<ReportedBoard> reportedBoardOptional =
+                reportedBoardJPARepository.findByBoardIdAndReporterUserId(reportedBoard.getBoardId(), reportedBoard.getReporterUserId());
+
+        if(reportedBoardOptional.isEmpty()){
+            reportedBoardJPARepository.save(reportedBoard);
+        }
     }
 }

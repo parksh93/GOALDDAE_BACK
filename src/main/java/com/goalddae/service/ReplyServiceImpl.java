@@ -3,6 +3,7 @@ package com.goalddae.service;
 import com.goalddae.dto.board.ReplyListDTO;
 import com.goalddae.dto.board.ReplyUpdateDTO;
 import com.goalddae.entity.CommunicationReply;
+import com.goalddae.entity.ReportedReply;
 import com.goalddae.repository.ReplyJPARepository;
 import com.goalddae.repository.ReportedReplyJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,6 +127,19 @@ public class ReplyServiceImpl implements ReplyService{
                 .build();
 
         replyJPARepository.save(updatedReply);
+    }
+
+    @Transactional
+    @Override
+    public void saveReportedReply(ReportedReply reportedReply) {
+
+        Optional<ReportedReply> reportedReplyOptional =
+                reportedReplyJPARepository.findByReplyIdAndReporterUserId(reportedReply.getReplyId(), reportedReply.getReporterUserId());
+
+        if(reportedReplyOptional.isEmpty()){
+            reportedReplyJPARepository.save(reportedReply);
+        }
+
     }
 
 }

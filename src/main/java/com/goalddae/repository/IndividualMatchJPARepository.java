@@ -4,6 +4,7 @@ import com.goalddae.entity.IndividualMatch;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.security.core.parameters.P;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,13 +12,15 @@ import java.util.List;
 public interface IndividualMatchJPARepository extends JpaRepository<IndividualMatch, Long> {
 
     // 타임라인 - 일자, 지역, 레벨, 남녀구분
-    @Query("SELECT im FROM IndividualMatch im WHERE im.startTime BETWEEN :startTime AND :endTime AND im.reservationField.soccerField.province = :province AND (im.level = :level OR :level IS NULL) AND (im.gender = :gender OR :gender IS NULL)")
+    @Query("SELECT im FROM IndividualMatch im WHERE im.startTime BETWEEN :startTime AND :endTime AND im.reservationField.soccerField.province = :province AND (im.level = :level OR :level IS NULL) AND (im.gender = :gender OR :gender IS NULL) AND im.id > :lastMatchId ORDER BY im.id LIMIT 10")
     List<IndividualMatch> findMatches(
             @Param("startTime") LocalDateTime startTime,
             @Param("endTime") LocalDateTime endTime,
             @Param("province") String province,
             @Param("level") String level,
-            @Param("gender") String gender);
+            @Param("gender") String gender,
+            @Param("lastMatchId") Long lastMatchId
+    );
 
     List<IndividualMatch> findByManagerIdAndStartTimeBeforeOrderByStartTimeDesc(Long managerId, LocalDateTime currentTime);
 

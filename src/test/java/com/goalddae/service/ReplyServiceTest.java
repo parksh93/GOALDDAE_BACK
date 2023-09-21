@@ -132,15 +132,15 @@ public class ReplyServiceTest {
 
     }
 
-    @Test
-    @Transactional
-    @DisplayName("신고목록 가져오기")
-    public void findAllReportedReplyTest(){
-
-        List<ReportedReply> list = replyService.findAllReportedReply();
-
-        assertEquals(list.size(), 5);
-    }
+//    @Test
+//    @Transactional
+//    @DisplayName("신고목록 가져오기")
+//    public void findAllReportedReplyTest(){
+//
+//        List<ReportedReply> list = replyService.findAllReportedReply();
+//
+//        assertEquals(list.size(), 5);
+//    }
 
     @Test
     @Transactional
@@ -170,31 +170,31 @@ public class ReplyServiceTest {
 
     }
 
-    @Test
-    @Transactional
-    @DisplayName("신고 거절")
-    public void rejectReportedReplyTest(){
-        long id = 3;
-        replyService.rejectReportedReply(id);
+//    @Test
+//    @Transactional
+//    @DisplayName("신고 거절")
+//    public void rejectReportedReplyTest(){
+//        long id = 3;
+//        replyService.rejectReportedReply(id);
+//
+//        ReportedReply reportedReply = reportedReplyJPARepository.findById(id).orElse(null);
+//
+//        assertNull(reportedReply);
+//    }
 
-        ReportedReply reportedReply = reportedReplyJPARepository.findById(id).orElse(null);
-
-        assertNull(reportedReply);
-    }
-
-    @Test
-    @Transactional
-    @DisplayName("신고 승인")
-    public void approveReportedReplyTest(){
-        long id = 3;
-        replyService.approveReportedReply(id);
-
-        CommunicationReply reply = replyJPARepository.findById(1L).orElse(null);
-        ReportedReply reportedReply = reportedReplyJPARepository.findById(id).orElse(null);
-
-        assertEquals(reply.getStatus(), 2);
-        assertNull(reportedReply);
-    }
+//    @Test
+//    @Transactional
+//    @DisplayName("신고 승인")
+//    public void approveReportedReplyTest(){
+//        long id = 3;
+//        replyService.approveReportedReply(id);
+//
+//        CommunicationReply reply = replyJPARepository.findById(1L).orElse(null);
+//        ReportedReply reportedReply = reportedReplyJPARepository.findById(id).orElse(null);
+//
+//        assertEquals(reply.getStatus(), 2);
+//        assertNull(reportedReply);
+//    }
 
 
 

@@ -35,10 +35,11 @@ public class IndividualMatchController {
             @RequestParam("startTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime,
             @RequestParam("province") String province,
             @RequestParam(value = "level", required = false) String level,
-            @RequestParam(value = "gender", required = false) String gender
+            @RequestParam(value = "gender", required = false) String gender,
+            @RequestParam("lastMatchId") long lastMatchId
     ) {
         return individualMatchService.getMatchesByDateAndProvinceAndLevelAndGender(
-                startTime.toLocalDate(), province, level, gender);
+                startTime.toLocalDate(), province, level, gender, lastMatchId);
     }
 
 

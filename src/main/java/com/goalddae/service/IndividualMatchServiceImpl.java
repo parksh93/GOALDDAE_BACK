@@ -53,7 +53,8 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
     // 타임라인 - 일자, 지역, 레벨, 남녀구분
     @Override
     public List<IndividualMatchDTO> getMatchesByDateAndProvinceAndLevelAndGender(
-            LocalDate date, String province, String level, String gender) {
+            LocalDate date, String province, String level, String gender, Long lastMatchId) {
+        System.out.println("마지막 id : " + lastMatchId);
         try {
             LocalDateTime startTime = date.atStartOfDay();
             LocalDateTime endTime = startTime.plusDays(1);
@@ -68,7 +69,7 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
 
             List<IndividualMatch> matchesInProvince = individualMatchJPARepository
                     .findMatches(
-                            startTime, endTime, province, level, gender);
+                            startTime, endTime, province, level, gender, lastMatchId);
 
             return matchesInProvince.stream()
                     .map(match -> new IndividualMatchDTO(
@@ -80,7 +81,6 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
                             match.getPlayerNumber(),
                             match.getGender()
                     ))
-                    .limit(10)
                     .collect(Collectors.toList());
         } catch (Exception e) {
             System.err.println("error: " + e.getMessage());
@@ -145,6 +145,7 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
     @Override
     public IndividualMatchDetailDTO findById(long matchId) {
         IndividualMatch individualMatch = individualMatchJPARepository.findById(matchId).get();
+        User manager = userJPARepository.findById(individualMatch.getManagerId()).get();
 
         IndividualMatchDetailDTO individualMatchDetailDTO = IndividualMatchDetailDTO.builder()
                 .id(matchId)
@@ -174,6 +175,8 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
                 .profileImgUrl(individualMatch.getUser().getProfileImgUrl())
                 .level(individualMatch.getUser().getLevel())
                 .playDate(individualMatch.getStartTime().toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .managerId(individualMatch.getManagerId())
+                .managerName(manager.getName())
                 .build();
 
         return individualMatchDetailDTO;
