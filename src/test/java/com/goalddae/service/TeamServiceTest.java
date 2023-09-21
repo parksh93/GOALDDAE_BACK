@@ -121,6 +121,8 @@ public class TeamServiceTest {
         assertEquals(recruiting, result.isRecruiting());
     }
 
+
+
     @Test
     @Transactional
     @DisplayName("id=17을 삭제하면 사이즈=7")

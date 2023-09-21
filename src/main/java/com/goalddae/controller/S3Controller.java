@@ -41,8 +41,6 @@ public class S3Controller {
     }
 
     @PostMapping("/team/teamProfileImg")
-
-
     public ResponseEntity<String> updateTeamProfileImg(@RequestParam("file") MultipartFile multipartFile,
                                                        TeamUpdateDTO teamUpdateDTO) {
         try{
@@ -52,7 +50,5 @@ public class S3Controller {
         }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-
-
 
 }
