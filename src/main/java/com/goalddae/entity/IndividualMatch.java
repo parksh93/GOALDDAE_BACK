@@ -71,6 +71,3 @@ public class IndividualMatch {
     }
 
 }
-
-
-

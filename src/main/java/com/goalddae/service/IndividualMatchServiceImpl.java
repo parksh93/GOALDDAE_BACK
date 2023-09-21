@@ -88,33 +88,33 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
             return Collections.emptyList();
         }
     }
-        // 신청 가능 상태
-        private String determineStatus(IndividualMatch match) {
-            long currentRequestsCount = match.getRequests().size();
-            long maxPlayerNumber = match.getPlayerNumber()-1;
-            LocalDateTime now = LocalDateTime.now();
+    // 신청 가능 상태
+    private String determineStatus(IndividualMatch match) {
+        long currentRequestsCount = match.getRequests().size();
+        long maxPlayerNumber = match.getPlayerNumber()-1;
+        LocalDateTime now = LocalDateTime.now();
 
-            String status;
+        String status;
 
-            if (now.isAfter(match.getStartTime())) {
-                status = "종료";
-                // 마감임박 기준은 경기 시작이 2시간 미만으로 남았을 경우
-            } else if (now.plusHours(2).isAfter(match.getStartTime())) {
-                status = "마감임박";
-            } else if (currentRequestsCount == maxPlayerNumber) {
-                status = "마감";
-                // 마감임박 기준은 신청 인원이 최대 인원의 80% 이상일 때
-            } else if (currentRequestsCount >= maxPlayerNumber * 0.8 ) {
-                status = "마감임박";
-            } else {
-                status = "신청가능";
-            }
-
-            // 웹소켓을 통해 클라이언트에게 매치 상태 변경 알림 전송
-            this.matchStatusNotifier.notifyMatchStatusChange(match.getId(), status);
-
-            return status;
+        if (now.isAfter(match.getStartTime())) {
+            status = "종료";
+            // 마감임박 기준은 경기 시작이 2시간 미만으로 남았을 경우
+        } else if (now.plusHours(2).isAfter(match.getStartTime())) {
+            status = "마감임박";
+        } else if (currentRequestsCount == maxPlayerNumber) {
+            status = "마감";
+            // 마감임박 기준은 신청 인원이 최대 인원의 80% 이상일 때
+        } else if (currentRequestsCount >= maxPlayerNumber * 0.8 ) {
+            status = "마감임박";
+        } else {
+            status = "신청가능";
         }
+
+        // 웹소켓을 통해 클라이언트에게 매치 상태 변경 알림 전송
+        this.matchStatusNotifier.notifyMatchStatusChange(match.getId(), status);
+
+        return status;
+    }
 
 
     @Override
@@ -176,7 +176,7 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
                 .playDate(individualMatch.getStartTime().toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .build();
 
-            return individualMatchDetailDTO;
+        return individualMatchDetailDTO;
     }
 
     @Override
@@ -220,4 +220,3 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
         individualMatchRequestJPARepository.deleteByUserIdAndIndividualMatchId(cancelMatchRequestDTO.getUserId(), cancelMatchRequestDTO.getMatchId());
     }
 }
-

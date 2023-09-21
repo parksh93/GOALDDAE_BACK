@@ -1,14 +1,11 @@
 package com.goalddae.controller;
 
-<<<<<<< HEAD
 import com.goalddae.dto.match.IndividualMatchDTO;
 import com.goalddae.dto.match.IndividualMatchRequestDTO;
-=======
 import com.goalddae.dto.match.CancelMatchRequestDTO;
 import com.goalddae.dto.match.IndividualMatchDTO;
 import com.goalddae.dto.match.IndividualMatchRequestDTO;
 import com.goalddae.dto.match.SaveIndividualMatchDTO;
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 import com.goalddae.entity.IndividualMatch;
 import com.goalddae.entity.IndividualMatchRequest;
 import com.goalddae.entity.ReservationField;
@@ -21,13 +18,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-<<<<<<< HEAD
-=======
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,18 +35,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class IndividualMatchControllerTest {
 
-<<<<<<< HEAD
     @MockBean
     private IndividualMatchService individualMatchService;
-=======
+
 //    @MockBean
 //    private IndividualMatchService individualMatchService;
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 
     @Autowired
     private MockMvc mockMvc;
 
-<<<<<<< HEAD
+    @Autowired
+    private WebApplicationContext context;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Test
     @DisplayName("개인매치 조회 컨트롤러 테스트")
     public void findIndividualMatchControllerTest() throws Exception {
@@ -84,7 +81,7 @@ public class IndividualMatchControllerTest {
                 .build();
         // IndividualMatchRequest 리스트 생성 후 리턴
         List<IndividualMatchRequest> matchRequests = Collections.singletonList(matchRequest);
-        when(service.findAllByUserId(userId)).thenReturn(matchRequests);
+//        when(individualMatchService.findAllByUserId(userId)).thenReturn(matchRequests);
 
         // IndividualMatchRequestDTO 생성
         IndividualMatchRequestDTO expectedDto = IndividualMatchRequestDTO.builder()
@@ -106,12 +103,7 @@ public class IndividualMatchControllerTest {
                 .andExpect(jsonPath("$[0].playerNumber").value(expectedDto.getPlayerNumber()))
                 .andExpect(jsonPath("$[0].level").value(expectedDto.getLevel()));
 //                .andExpect(jsonPath("$[0].reservationField").value(expectedDto.getReservationField()));
-=======
-    @Autowired
-    private WebApplicationContext context;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    }
 
 //    @Test
 //    @DisplayName("개인매치 조회 컨트롤러 테스트")
@@ -242,7 +234,5 @@ public class IndividualMatchControllerTest {
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
 
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
     }
-
 }

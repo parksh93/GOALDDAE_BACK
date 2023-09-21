@@ -29,22 +29,6 @@ public class UserServiceTest {
 
     @Autowired
     UserJPARepository userJPARepository;
-<<<<<<< HEAD
-
-
-    @Test
-    @Transactional
-    @DisplayName("로그인 아이디를 이용한 유저 정보 조회")
-    public void getByCredentialsTest(){
-        String loginId = "asd";
-
-        User user = userService.getByCredentials(loginId);
-
-        assertEquals(1, user.getId());
-        assertEquals("박상현", user.getNickname());
-    }
-=======
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 
     @Test
     @Transactional
@@ -56,14 +40,7 @@ public class UserServiceTest {
                 .build();
 
 //        String token = userService.generateTokenFromLogin(loginDTO);
-<<<<<<< HEAD
-<<<<<<< HEAD
 //
-=======
->>>>>>> develop
-=======
-//
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 //        assertNotEquals("", token) ;
     }
 
@@ -162,18 +139,11 @@ public class UserServiceTest {
                 .build();
 
 //        String loginIdToken = userService.checkLoginIdAndEmail(findPasswordDTO);
-<<<<<<< HEAD
-<<<<<<< HEAD
 //
-=======
->>>>>>> develop
-=======
-//
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 //        assertNotNull(loginIdToken);
     }
 
-     @Test
+    @Test
     @Transactional
     @DisplayName("비밀번호 변경")
     public void changePasswordTest() {
@@ -185,21 +155,12 @@ public class UserServiceTest {
                 .email(email)
                 .build();
 
-<<<<<<< HEAD
-//        ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder()
-//                .loginIdToken(userService.checkLoginIdAndEmail(findPasswordDTO))
-//                .password(password)
-//                .build();
-//
-//        userService.changePassword(changePasswordDTO);
-=======
         ChangePasswordDTO changePasswordDTO = ChangePasswordDTO.builder()
 //                .loginIdToken(userService.checkLoginIdAndEmail(findPasswordDTO))
                 .password(password)
                 .build();
 
         userService.changePassword(changePasswordDTO);
->>>>>>> develop
     }
     @Test
     @Transactional

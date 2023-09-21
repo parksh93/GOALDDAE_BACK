@@ -30,5 +30,7 @@ public interface UserService {
     public User findByEmail(String email);
     public void deleteUser(long id);
     public void updateLevel(GetUserInfoDTO getUserInfoDTO);
+    // 팀장인지 확인 유무
+    boolean checkIfTeamLeader(Long userId);
 }
 

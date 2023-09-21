@@ -21,4 +21,5 @@ public interface IndividualMatchService {
     void saveMatchRequest(SaveIndividualMatchDTO saveIndividualMatchDTO);
     List<GetPlayerInfoDTO> getMatchPlayerInfo(long matchId);
     void cancelMatchRequest(CancelMatchRequestDTO cancelMatchRequestDTO);
+
 }

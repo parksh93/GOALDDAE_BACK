@@ -104,7 +104,7 @@ public class ReplyServiceImpl implements ReplyService{
     @Transactional
     @Override
     public void save(CommunicationReply communicationReply) {
-       replyJPARepository.save(communicationReply);
+        replyJPARepository.save(communicationReply);
     }
 
     @Transactional

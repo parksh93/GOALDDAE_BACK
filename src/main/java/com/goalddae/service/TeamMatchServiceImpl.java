@@ -5,6 +5,8 @@ import com.goalddae.entity.IndividualMatch;
 import com.goalddae.entity.TeamMatch;
 import com.goalddae.entity.TeamMatchRequest;
 import com.goalddae.entity.User;
+import com.goalddae.dto.match.TeamMatchInfoDTO;
+import com.goalddae.entity.*;
 import com.goalddae.repository.TeamMatchJPARepository;
 import com.goalddae.repository.TeamMatchRequestJPARepository;
 import com.goalddae.repository.UserJPARepository;
@@ -133,5 +135,40 @@ public class TeamMatchServiceImpl implements TeamMatchService {
         this.matchStatusNotifier.notifyMatchStatusChange(match.getId(), status);
 
         return status;
+    }
+
+    public TeamMatchInfoDTO convertToDto(TeamMatch teamMatch) {
+        TeamMatchInfoDTO dto = new TeamMatchInfoDTO();
+        dto.setId(teamMatch.getId());
+        dto.setFieldId(teamMatch.getReservationField().getId());
+        dto.setStartTime(teamMatch.getStartTime());
+        dto.setEndTime(teamMatch.getEndTime());
+        dto.setFieldName(teamMatch.getReservationField().getSoccerField().getFieldName());
+        dto.setStatus(determineStatus(teamMatch));
+        dto.setPlayerNumber((int)teamMatch.getPlayerNumber());
+        dto.setGender(teamMatch.getGender());
+        dto.setToiletStatus(teamMatch.getReservationField().getSoccerField().isToiletStatus());
+        dto.setShowerStatus(teamMatch.getReservationField().getSoccerField().isShowerStatus());
+        dto.setParkingStatus(teamMatch.getReservationField().getSoccerField().isParkingStatus());
+        dto.setFieldSize(teamMatch.getReservationField().getSoccerField().getFieldSize());
+        dto.setGrassWhether(teamMatch.getReservationField().getSoccerField().getGrassWhether());
+        dto.setInOutWhether(teamMatch.getReservationField().getSoccerField().getInOutWhether());
+        dto.setProvince(teamMatch.getReservationField().getSoccerField().getProvince());
+        dto.setRegion(teamMatch.getReservationField().getSoccerField().getRegion());
+        dto.setAddress(teamMatch.getReservationField().getSoccerField().getAddress());
+        dto.setFieldImg1(teamMatch.getReservationField().getSoccerField().getFieldImg1());
+        dto.setFieldImg2(teamMatch.getReservationField().getSoccerField().getFieldImg2());
+        dto.setFieldImg3(teamMatch.getReservationField().getSoccerField().getFieldImg3());
+
+        return dto;
+    }
+
+
+    @Override
+    public TeamMatchInfoDTO getTeamMatchDetail(Long teamMatchId) {
+        TeamMatch teamMatch = teamMatchJPARepository.findWithSoccerFieldById(teamMatchId)
+                .orElseThrow(() -> new IllegalArgumentException("No match found with ID " + teamMatchId));
+
+        return convertToDto(teamMatch);
     }
 }

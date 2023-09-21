@@ -12,6 +12,18 @@ import com.goalddae.service.TeamMatchService;
 import com.goalddae.service.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.goalddae.dto.match.TeamMatchDTO;
+import com.goalddae.dto.match.TeamMatchInfoDTO;
+import com.goalddae.dto.match.TeamMatchRequestDTO;
+import com.goalddae.dto.team.TeamListDTO;
+import com.goalddae.dto.team.TeamUpdateDTO;
+import com.goalddae.dto.user.TeamMatchUserInfoDTO;
+import com.goalddae.entity.Team;
+import com.goalddae.entity.TeamMatch;
+import com.goalddae.entity.TeamMatchRequest;
+import com.goalddae.entity.User;
+import com.goalddae.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +32,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.goalddae.dto.team.TeamSaveDTO;
-import com.goalddae.service.TeamService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,14 +48,22 @@ import retrofit2.http.POST;
 public class TeamController {
 
     private final TeamService teamService;
-
     private final TeamMatchService teamMatchService;
+    private final TeamMatchRequestService teamMatchRequestService;
+    private final UserService userService;
+
+
+
 
     @Autowired
     public TeamController(TeamService teamService,
-                          TeamMatchService teamMatchService) {
+                          TeamMatchService teamMatchService,
+                          TeamMatchRequestService teamMatchRequestService,
+                          UserService userService) {
         this.teamService = teamService;
         this.teamMatchService = teamMatchService;
+        this.teamMatchRequestService = teamMatchRequestService;
+        this.userService = userService;
     }
 
     @GetMapping(value = "/list")
@@ -217,5 +237,36 @@ public class TeamController {
 
         Page<TeamMatchDTO> matches = teamMatchService.getTeamMatches(Optional.ofNullable(userId), startTime.toLocalDate(), province, gender, page, size);
         return new ResponseEntity<>(matches, HttpStatus.OK);
+    }
+
+    // 팀 매치 상세 정보 조회
+    @GetMapping("/match/detail/{teamMatchId}")
+    public ResponseEntity<TeamMatchInfoDTO> getTeamMatchDetail(@PathVariable Long teamMatchId) {
+        return new ResponseEntity<>(teamMatchService.getTeamMatchDetail(teamMatchId), HttpStatus.OK);
+    }
+
+    // 팀장 유무 확인
+    @GetMapping("/checkIfTeamLeader/{userId}")
+    public ResponseEntity<Boolean> checkIfTeamLeader(@PathVariable Long userId) {
+        boolean isTeamLeader = userService.checkIfTeamLeader(userId);
+        return new ResponseEntity<>(isTeamLeader, HttpStatus.OK);
+    }
+
+    // 팀 매치 신청
+    @PostMapping(value = "/match/request/{teamMatchId}")
+    public void requestTeamMatch(@PathVariable Long teamMatchId, @RequestBody TeamMatchRequestDTO request) {
+        teamMatchRequestService.requestTeamMatch(request.getUserId(), teamMatchId, request);
+    }
+
+    @GetMapping("/match/detail/{teamMatchId}/home")
+    public ResponseEntity<List<TeamMatchUserInfoDTO>> getHomeTeamApplicationStatus(@PathVariable Long teamMatchId) {
+        List<TeamMatchUserInfoDTO> homeApplicationDTOs = teamMatchRequestService.getHomeRequest(teamMatchId);
+        return ResponseEntity.ok(homeApplicationDTOs);
+    }
+
+    @GetMapping("/match/detail/{teamMatchId}/away")
+    public ResponseEntity<List<TeamMatchUserInfoDTO>> getAwayTeamApplicationStatus(@PathVariable Long teamMatchId) {
+        List<TeamMatchUserInfoDTO> awayApplicationDTOs = teamMatchRequestService.getAwayRequest(teamMatchId);
+        return ResponseEntity.ok(awayApplicationDTOs);
     }
 }

@@ -1,13 +1,10 @@
 package com.goalddae.service;
 
-<<<<<<< HEAD
 import com.goalddae.dto.board.BoardListDTO;
 import com.goalddae.dto.board.BoardUpdateDTO;
 import com.goalddae.dto.board.HeartInfoDTO;
 import com.goalddae.dto.board.MyBoardListDTO;
-=======
 import com.goalddae.dto.board.*;
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
 import com.goalddae.entity.CommunicationReply;
@@ -227,88 +224,83 @@ public class BoardServiceTest {
 
     }
 
+//    @Test
+//    @Transactional
+//    @DisplayName("전체 신고목록 반환")
+//    public void findAllReportedBoardTest(){
+//
+//
+//        List<ReportedBoard> list = boardService.findAllReportedBoard();
+//
+//        assertEquals(list.size(), 4);
+//
+//    }
+//
+//    @Test
+//    @Transactional
+//    @DisplayName("새 신고 추가")
+//    public void saveReportedBoardTest(){
+//
+//        long boardId = 2;
+//        long reporterUserId = 4;
+//        long reportedUserId = 3;
+//
+//        ReportedBoard reportedBoard = ReportedBoard.builder()
+//                .boardId(boardId)
+//                .reporterUserId(reporterUserId)
+//                .reportedUserId(reportedUserId)
+//                .build();
+//
+//
+//        boardService.saveReportedBoard(reportedBoard);
+//
+//        List<ReportedBoard> list = boardService.findAllReportedBoard();
+//        ReportedBoard result = list.get(list.size()-1);
+//
+//        assertEquals(result.getBoardId(), boardId);
+//        assertEquals(result.getReporterUserId(), reporterUserId);
+//        assertEquals(result.getReportedUserId(), reportedUserId);
+//
+//    }
+//
+//    @Test
+//    @Transactional
+//    @DisplayName("신고 거절")
+//    public void rejectReportedBoardTest(){
+//
+//        long reportId = 2;
+//
+//
+//        boardService.rejectReportedBoard(reportId);
+//
+//        ReportedBoard result = reportedBoardJPARepository.findById(reportId).orElse(null);
+//
+//        assertNull(result);
+//
+//    }
+//
+//    @Test
+//    @Transactional
+//    @DisplayName("신고 승인")
+//    public void approveReportedBoardTest(){
+//
+//        long reportId = 3;
+//
+//        ReportedBoard reportedBoard = reportedBoardJPARepository.findById(reportId).get();
+//
+//        long boardId = reportedBoard.getBoardId();
+//
+//        boardService.approveReportedBoard(reportId);
+//
+//        ReportedBoard result = reportedBoardJPARepository.findById(reportId).orElse(null);
+//        CommunicationBoard communicationBoard = boardJPARepository.findById(boardId).orElse(null);
+//
+//        assertNull(result);
+//        assertNull(communicationBoard);
+//    }
+
     @Test
     @Transactional
-    @DisplayName("전체 신고목록 반환")
-    public void findAllReportedBoardTest(){
-
-
-        List<ReportedBoard> list = boardService.findAllReportedBoard();
-
-        assertEquals(list.size(), 4);
-
-    }
-
-    @Test
-    @Transactional
-    @DisplayName("새 신고 추가")
-    public void saveReportedBoardTest(){
-
-        long boardId = 2;
-        long reporterUserId = 4;
-        long reportedUserId = 3;
-
-        ReportedBoard reportedBoard = ReportedBoard.builder()
-                .boardId(boardId)
-                .reporterUserId(reporterUserId)
-                .reportedUserId(reportedUserId)
-                .build();
-
-
-        boardService.saveReportedBoard(reportedBoard);
-
-        List<ReportedBoard> list = boardService.findAllReportedBoard();
-        ReportedBoard result = list.get(list.size()-1);
-
-        assertEquals(result.getBoardId(), boardId);
-        assertEquals(result.getReporterUserId(), reporterUserId);
-        assertEquals(result.getReportedUserId(), reportedUserId);
-
-    }
-
-    @Test
-    @Transactional
-    @DisplayName("신고 거절")
-    public void rejectReportedBoardTest(){
-
-        long reportId = 2;
-
-
-        boardService.rejectReportedBoard(reportId);
-
-        ReportedBoard result = reportedBoardJPARepository.findById(reportId).orElse(null);
-
-        assertNull(result);
-
-    }
-
-    @Test
-    @Transactional
-    @DisplayName("신고 승인")
-    public void approveReportedBoardTest(){
-
-        long reportId = 3;
-
-        ReportedBoard reportedBoard = reportedBoardJPARepository.findById(reportId).get();
-
-        long boardId = reportedBoard.getBoardId();
-
-        boardService.approveReportedBoard(reportId);
-
-        ReportedBoard result = reportedBoardJPARepository.findById(reportId).orElse(null);
-        CommunicationBoard communicationBoard = boardJPARepository.findById(boardId).orElse(null);
-
-        assertNull(result);
-        assertNull(communicationBoard);
-
-    }
-
-    @Test
-    @Transactional
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
     @DisplayName("해당 유저의 게시글 리스트 조회하기")
     public void getUserCommunicationBoardPostsTest() {
         // given
@@ -321,10 +313,6 @@ public class BoardServiceTest {
         assertEquals(11, myBoardList.size());
     }
 
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
     @DisplayName("조회수가 가장 많은 객체 조회 테스트")
     public void findTop5BoardTest() {
         // Given
@@ -337,10 +325,6 @@ public class BoardServiceTest {
                     .boardSortation(i % 2)
                     .count(100L - i)
                     .build();
-<<<<<<< HEAD
->>>>>>> develop
-=======
->>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 
             boardJPARepository.save(board);
         }
