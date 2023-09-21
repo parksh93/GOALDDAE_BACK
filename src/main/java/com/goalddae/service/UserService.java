@@ -1,6 +1,8 @@
 package com.goalddae.service;
 
 
+import com.goalddae.dto.admin.DeleteAdminDTO;
+import com.goalddae.dto.admin.GetAdminListDTO;
 import com.goalddae.dto.email.SendEmailDTO;
 import com.goalddae.dto.user.*;
 import com.goalddae.entity.User;
@@ -10,9 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public interface UserService {
     public void save(User user);
-    public User getByCredentials(String loginId);
     public boolean generateTokenFromLogin(LoginDTO loginDTO, HttpServletResponse response);
-//    public boolean validToken(String token, String refreshTokenCookie, HttpServletResponse response);
+    //    public boolean validToken(String token, String refreshTokenCookie, HttpServletResponse response);
     public GetUserInfoDTO getUserInfo(String token);
     public GetUserInfoDTO getFriendInfo(long id);
     public boolean checkLoginId(CheckLoginIdDTO checkLoginIdDTO);
@@ -21,6 +22,7 @@ public interface UserService {
     public void update(GetUserInfoDTO getUserInfoDTO);
     public void updateProfileImg(GetUserInfoDTO getUserInfoDTO, MultipartFile multipartFile);
     public void updateSocialSignup(GetUserInfoDTO getUserInfoDTO);
+    public void updateTeamId(GetUserInfoDTO getUserInfoDTO);
     public ResponseFindLoginIdDTO getLoginIdByEmailAndName(RequestFindLoginIdDTO requestFindLoginIdDTO);
     public boolean checkLoginIdAndEmail(RequestFindPasswordDTO requestFindPasswordDTO, HttpServletResponse response);
     public boolean changePassword(ChangePasswordDTO changePasswordDTO);
@@ -29,3 +31,4 @@ public interface UserService {
     public void deleteUser(long id);
     public void updateLevel(GetUserInfoDTO getUserInfoDTO);
 }
+

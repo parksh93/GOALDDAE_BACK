@@ -6,16 +6,16 @@ import com.goalddae.dto.board.HeartInfoDTO;
 import com.goalddae.dto.board.MyBoardListDTO;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
-import com.goalddae.entity.ReportedBoard;
-import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.service.BoardService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -107,33 +107,6 @@ public class BoardController {
         return ResponseEntity.ok("게시글이 수정되었습니다.");
     }
 
-
-    // 게시글 신고
-    @GetMapping("/report")
-    public ResponseEntity<List<ReportedBoard>> getReportedBoardByBoardId() {
-        List<ReportedBoard> reportedBoardList = boardService.findAllReportedBoard();
-        return ResponseEntity.ok(reportedBoardList);
-    }
-
-
-    @PostMapping("/report")
-    public ResponseEntity<String> addReport(@RequestBody ReportedBoard reportedBoard) {
-        boardService.saveReportedBoard(reportedBoard);
-        return ResponseEntity.ok("신고가 접수되었습니다.");
-    }
-
-    @DeleteMapping("/report/reject/{reportId}")
-    public ResponseEntity<String> rejectReport(@PathVariable long reportId) {
-        boardService.rejectReportedBoard(reportId);
-        return ResponseEntity.ok("신고가 거절되었습니다.");
-    }
-
-    @DeleteMapping("/report/approve/{reportId}")
-    public ResponseEntity<String> approveReport(@PathVariable long reportId) {
-        boardService.approveReportedBoard(reportId);
-        return ResponseEntity.ok("신고가 승인되었습니다.");
-    }
-
     @PostMapping("/heart")
     public ResponseEntity<HeartInfoDTO> getHeartInfo(@RequestBody CommunicationHeart communicationHeart) {
         return ResponseEntity.ok(boardService.getHeartInfo(communicationHeart.getBoardId(), communicationHeart.getUserId()));
@@ -151,6 +124,20 @@ public class BoardController {
         return ResponseEntity.ok("좋아요를 취소합니다.");
     }
 
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+
+        long maxSize = 5120 * 1024;
+
+        if (file.getSize() > maxSize) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일 크기가 초과되었습니다.");
+        }
+
+        String imageUrl = boardService.uploadImage(file);
+        return ResponseEntity.ok(imageUrl);
+
+    }
+
 
     @RequestMapping(value = "/mylist/{userId}", method = RequestMethod.GET)
     public ResponseEntity<?> viewUserPosts(@PathVariable long userId) {
@@ -165,5 +152,4 @@ public class BoardController {
         List<BoardListDTO> topPosts = boardService.findTop5Board();
         return ResponseEntity.ok(topPosts);
     }
-
 }

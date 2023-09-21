@@ -1,8 +1,16 @@
 package com.goalddae.service;
 
+<<<<<<< HEAD
 import com.goalddae.dto.team.TeamListDTO;
 import com.goalddae.dto.team.TeamUpdateDTO;
 import com.goalddae.entity.Team;
+=======
+import com.goalddae.dto.team.TeamApplyDTO;
+import com.goalddae.dto.team.TeamListDTO;
+import com.goalddae.dto.team.TeamUpdateDTO;
+import com.goalddae.entity.Team;
+import com.goalddae.repository.TeamApplyRepository;
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +27,11 @@ public class TeamServiceTest {
 
     @Autowired
     private TeamService teamService;
+<<<<<<< HEAD
+=======
+    @Autowired
+    private TeamApplyRepository teamApplyRepository;
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 
     @Test
     @Transactional
@@ -48,7 +61,11 @@ public class TeamServiceTest {
         assertEquals("서울", team.getArea());
     }
 
+<<<<<<< HEAD
     @Test
+=======
+    /*@Test
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
     @Transactional
     @DisplayName("teamName=콜라, 지역=인천,~~ 추가 후 팀명 확인 시 콜라")
     public void saveTest(){
@@ -81,6 +98,7 @@ public class TeamServiceTest {
         assertEquals(9, result.size());
         assertEquals("콜라", newTeam.getTeamName());
     }
+<<<<<<< HEAD
 
     @Test
     @Transactional
@@ -90,6 +108,19 @@ public class TeamServiceTest {
         Long id = 17L;
         String teamName = "고올때";
         String area = "강원";
+=======
+     */
+
+    @Test
+    @Transactional
+    @DisplayName("id=1의 teamName을 골때->곰담 으로, area를 경기->강원 으로 ")
+    public void updateTest(){
+        //given
+        Long id = 1L;
+        String teamName = "곰담";
+        String area = "강원";
+        boolean recruiting = false;
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 
         Team team = teamService.findTeamById(id);
 
@@ -97,6 +128,10 @@ public class TeamServiceTest {
                 .id(id)
                 .teamName(teamName)
                 .area(area)
+<<<<<<< HEAD
+=======
+                .recruiting(recruiting)
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
                 .entryGender(team.getEntryGender())
                 .preferredDay(team.getPreferredDay())
                 .preferredTime(team.getPreferredTime())
@@ -110,7 +145,12 @@ public class TeamServiceTest {
 
         //then
         assertEquals(result.getArea(),area);
+<<<<<<< HEAD
         assertEquals(result.getTeamName(),teamName);
+=======
+        assertEquals(teamName, result.getTeamName());
+        assertEquals(recruiting, result.isRecruiting());
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
     }
 
     @Test
@@ -193,5 +233,27 @@ public class TeamServiceTest {
         assertEquals("여자", result1.get(0).getEntryGender());
         assertEquals(0, result2.size());
     }
+<<<<<<< HEAD
+=======
+
+    @Test
+    @Transactional
+    @DisplayName("userId=2, teamId=3인 열에서 teamAcceptStatus=2로 수정하면 조회 시 teamAcceptStatus=2")
+    public void rejectApplyTest(){
+        long userId = 2;
+        long teamId = 5;
+        int teamAcceptStatus = 2;
+
+        TeamApplyDTO apply = TeamApplyDTO.builder()
+                .userId(userId)
+                .teamId(teamId)
+                .teamAcceptStatus(2)
+                .build();
+
+        teamApplyRepository.updateAcceptStatus(apply);
+
+        assertEquals(teamAcceptStatus, apply.getTeamAcceptStatus());
+    }
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 }
 

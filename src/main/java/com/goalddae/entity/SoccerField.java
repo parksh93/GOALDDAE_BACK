@@ -31,9 +31,6 @@ public class SoccerField {
     private LocalTime closingTime; // 운영 종료 시간
 
     @Column(nullable = false)
-    private String region;          // 지역
-
-    @Column(nullable = false)
     private int reservationFee;    // 대관비
 
     @Column(nullable = false)
@@ -55,7 +52,10 @@ public class SoccerField {
     private boolean parkingStatus;  // 주차장 여부
 
     @Column(nullable = false)
-    private String province; // 행정 구역
+    private String province;        // 선호 도시 - 서울, 경기, 인천 .....
+
+    @Column(nullable = false)
+    private String region;        // 선호 지역 - 강남구, 강동구 .......
 
     @Column(nullable = false)
     private String address; // 상세 주소
@@ -125,5 +125,16 @@ public class SoccerField {
         this.closingTime = closingTime;
     }
 
+    public void changeProvince(String province) {
+        this.province = province;
     }
 
+    public void changeAddress(String address) {
+        this.address = address;
+    }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
+
+}

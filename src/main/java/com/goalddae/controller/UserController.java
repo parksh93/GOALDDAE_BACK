@@ -1,15 +1,19 @@
 package com.goalddae.controller;
 
 import com.goalddae.dto.user.*;
+import com.goalddae.entity.CommunicationBoard;
+import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.entity.User;
 import com.goalddae.service.UserServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import retrofit2.http.Path;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -88,6 +92,17 @@ public class UserController {
         return ResponseEntity.ok("수정 되었습니다.");
     }
 
+    @RequestMapping(value = "/update/teamId", method = RequestMethod.PATCH)
+    public ResponseEntity<String> updateUserTeamId(@RequestBody GetUserInfoDTO getUserInfoDTO){
+        System.out.println(getUserInfoDTO);
+        try {
+            userService.updateTeamId(getUserInfoDTO);
+
+            return ResponseEntity.ok("팀 ID가 업데이트되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("팀 ID 업데이트 중 오류 발생: " + e.getMessage());
+        }
+    }
 
     @RequestMapping(value = "/findLoginId", method = RequestMethod.POST)
     public ResponseEntity<ResponseFindLoginIdDTO> findLoginId(@RequestBody RequestFindLoginIdDTO requestFindLoginIdDTO){

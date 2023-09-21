@@ -1,5 +1,7 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.team.TeamUpdateDTO;
+import com.goalddae.service.TeamService;
 import com.goalddae.util.S3Uploader;
 import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.service.UserService;
@@ -16,11 +18,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class S3Controller {
     private final S3Uploader s3Uploader;
     private final UserService userService;
+    private final TeamService teamService;
 
     @Autowired
-    public S3Controller(S3Uploader s3Uploader, UserService userService) {
+    public S3Controller(S3Uploader s3Uploader, UserService userService, TeamService teamService) {
         this.s3Uploader = s3Uploader;
         this.userService = userService;
+        this.teamService = teamService;
     }
 
     @PostMapping("/user/profileImg")
@@ -35,4 +39,18 @@ public class S3Controller {
         }
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
+    @PostMapping("/team/teamProfileImg")
+    public ResponseEntity<String> updateTeamProfileImg(@RequestParam("file") MultipartFile multipartFile,
+                                                       TeamUpdateDTO teamUpdateDTO) {
+        try{
+            teamService.updateTeamProfileImg(teamUpdateDTO, multipartFile);
+        }  catch (Exception e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+
+
 }

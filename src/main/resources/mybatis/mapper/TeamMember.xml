@@ -2,11 +2,44 @@
 <mapper namespace="com.goalddae.repository.TeamMemberRepository">
     <update id="createTeamMemberTable" parameterType="java.lang.Long">
         CREATE TABLE team_member_#{teamId} (
-                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                        user_join_date DATETIME NOT NULL,
-                                        team_manager BIGINT NOT NULL,
-                                        users_id BIGINT NOT NULL,
-                                        team_id BIGINT NOT NULL
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        user_join_date DATETIME NOT NULL,
+        team_manager BIGINT NOT NULL,
+        users_id BIGINT NOT NULL UNIQUE,
+        team_id BIGINT NOT NULL
         );
     </update>
+    <select id="findAllTeamMembersByTeamId" parameterType="long" resultType="com.goalddae.dto.team.TeamMemberCheckDTO">
+        SELECT tm.id as id,
+        tm.team_manager as teamManager,
+        tm.users_id as userId,
+        tm.team_id as teamId,
+        u.name as name,
+        u.profile_img_url as profileImgUrl,
+        u.preferred_city as preferredCity,
+        u.preferred_area as preferredArea
+        FROM team_member_#{teamId} tm
+        JOIN users u ON tm.users_id = u.id
+        WHERE tm.team_id = #{teamId}
+    </select>
+    <select id="findByUserId" parameterType="com.goalddae.dto.team.TeamMemberCheckDTO">
+        SELECT id as id,
+        users_id as userId,
+        team_id as teamId
+        FROM team_member_#{teamId}
+        WHERE users_id = #{userId}
+    </select>
+    <select id="findTeamManagerByUserId" parameterType="long" resultType="int">
+        SELECT team_manager
+        FROM team_member_#{teamId}
+        WHERE users_id = #{userId}
+    </select>
+    <insert id="addTeamMember" parameterType="com.goalddae.dto.team.TeamMemberDTO">
+        INSERT INTO team_member_#{teamId} (user_join_date, team_manager, team_id, users_id)
+        VALUES (now(), #{teamManager}, #{teamId}, #{userId})
+    </insert>
+    <delete id="deleteMemberByUserId" parameterType="com.goalddae.dto.team.TeamMemberDTO">
+        DELETE FROM team_member_#{teamId}
+        WHERE users_id = #{userId}
+    </delete>
 </mapper>

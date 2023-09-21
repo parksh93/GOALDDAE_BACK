@@ -3,7 +3,6 @@ package com.goalddae.service;
 import com.goalddae.dto.board.ReplyListDTO;
 import com.goalddae.dto.board.ReplyUpdateDTO;
 import com.goalddae.entity.CommunicationReply;
-import com.goalddae.entity.ReportedReply;
 import com.goalddae.repository.ReplyJPARepository;
 import com.goalddae.repository.ReportedReplyJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ReplyServiceImpl implements ReplyService{
@@ -131,33 +127,5 @@ public class ReplyServiceImpl implements ReplyService{
 
         replyJPARepository.save(updatedReply);
     }
-
-    @Override
-    public List<ReportedReply> findAllReportedReply() {
-        return reportedReplyJPARepository.findAll();
-    }
-
-    @Transactional
-    @Override
-    public void saveReportedReply(ReportedReply reportedReply) {
-        reportedReplyJPARepository.save(reportedReply);
-    }
-
-    @Transactional
-    @Override
-    public void rejectReportedReply(long reportId) {
-        reportedReplyJPARepository.deleteById(reportId);
-    }
-
-    @Transactional
-    @Override
-    public void approveReportedReply(long reportId) {
-        ReportedReply reportedReply = reportedReplyJPARepository.findById(reportId).get();
-        CommunicationReply communicationReply = replyJPARepository.findById(reportedReply.getReplyId()).get();
-
-        communicationReply.deleteByAdmin();
-        reportedReplyJPARepository.delete(reportedReply);
-    }
-
 
 }

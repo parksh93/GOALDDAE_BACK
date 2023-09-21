@@ -19,4 +19,7 @@ public interface IndividualMatchJPARepository extends JpaRepository<IndividualMa
             @Param("level") String level,
             @Param("gender") String gender);
 
+    List<IndividualMatch> findByManagerIdAndStartTimeBeforeOrderByStartTimeDesc(Long managerId, LocalDateTime currentTime);
+
+    List<IndividualMatch> findAllByUserId(Long userId);
 }

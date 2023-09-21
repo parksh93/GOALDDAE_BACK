@@ -2,13 +2,13 @@
 <mapper namespace="com.goalddae.repository.TeamMatchResultRepository">
     <update id="createTeamMatchResultTable" parameterType="java.lang.Long">
         CREATE TABLE team_match_result_#{teamId} (
-                                            id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                            team_win VARCHAR(255) NOT NULL,
-                                            team_lose VARCHAR(255) NOT NULL,
-                                            win_score BIGINT,
-                                            lose_score BIGINT,
-                                            draw VARCHAR(255) NULL,
-                                            team_id BIGINT NOT NULL
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+        team_win VARCHAR(255) NOT NULL,
+        team_lose VARCHAR(255) NOT NULL,
+        win_score BIGINT,
+        lose_score BIGINT,
+        draw VARCHAR(255) NULL,
+        team_id BIGINT NOT NULL
         );
     </update>
 </mapper>

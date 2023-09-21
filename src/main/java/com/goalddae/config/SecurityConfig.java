@@ -68,11 +68,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authenticationConfig -> {
-                    authenticationConfig.requestMatchers( "/admin", "/admin/**").hasRole("admin")
-                            .requestMatchers("/manager", "manager/**" ).hasAnyRole("manager", "admin")
-                            .requestMatchers("/user/myInfo").hasRole("user")
+                    authenticationConfig.requestMatchers( "/admin", "/admin/**").hasRole("ADMIN")
+                            .requestMatchers("/manager", "manager/**" ).hasAnyRole("MANAGER", "ADMIN")
+//                            .requestMatchers("/user/myInfo").hasRole("user")
                             .requestMatchers("/webSocket/**").permitAll()
-                            .requestMatchers("/user/myPage").hasAnyRole("user", "manager", "admin")
+//                            .requestMatchers("/user/myPage").hasAnyRole("user", "manager", "admin")
                             .anyRequest()
                             .permitAll();
                 })
