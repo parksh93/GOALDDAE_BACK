@@ -9,19 +9,11 @@ import java.util.List;
 public interface TeamJPARepository extends JpaRepository<Team, Long> {
 
     List<Team> findAll();
-
     Team findTeamById(Long id);
-
     void deleteTeamById(Long id);
-
     List<Team> findByTeamName(String searchTerm);
-
     List<Team> findByArea(String area);
-
     List<Team> findByRecruiting(boolean recruiting);
-
     List<Team> findByAreaAndRecruiting(String area ,boolean recruiting);
-
     Team findFirstByOrderByIdDesc();
-
 }

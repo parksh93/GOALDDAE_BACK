@@ -97,7 +97,19 @@ public class TeamServiceImpl implements TeamService {
         }
 
         updateTeam = Team.builder()
+                .id(updateTeam.getId())
+                .teamName(updateTeam.getTeamName())
+                .area(updateTeam.getArea())
+                .averageAge(updateTeam.getAverageAge())
+                .teamIntroduce(updateTeam.getTeamIntroduce())
+                .recruiting(updateTeam.isRecruiting())
+                .entryFee(updateTeam.getEntryFee())
+                .entryGender(updateTeam.getEntryGender())
                 .teamProfileImgUrl(uploadImgeUrl)
+                .preferredDay(updateTeam.getPreferredDay())
+                .preferredTime(updateTeam.getPreferredTime())
+                .teamCreate(updateTeam.getTeamCreate())
+                .teamProfileUpdate(LocalDateTime.now())
                 .build();
 
         teamJPARepository.save(updateTeam);
@@ -151,7 +163,7 @@ public class TeamServiceImpl implements TeamService {
             return true;
         } catch (Exception e) {
             System.out.println("테이블 생성 중 오류가 발생했습니다: " + e.getMessage());
-            e.printStackTrace(); // 예외 객체를 출력
+            e.printStackTrace();
             return false;
         }
     }
@@ -165,7 +177,7 @@ public class TeamServiceImpl implements TeamService {
             return true;
         } catch (Exception e) {
             System.out.println("테이블 생성 중 오류가 발생했습니다: " + e.getMessage());
-            e.printStackTrace(); // 예외 객체를 출력
+            e.printStackTrace();
             return false;
         }
     }
@@ -179,7 +191,7 @@ public class TeamServiceImpl implements TeamService {
             return true;
         } catch (Exception e) {
             System.out.println("테이블 생성 중 오류가 발생했습니다: " + e.getMessage());
-            e.printStackTrace(); // 예외 객체를 출력
+            e.printStackTrace();
             return false;
         }
     }

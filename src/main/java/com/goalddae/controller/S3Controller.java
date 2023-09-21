@@ -51,6 +51,4 @@ public class S3Controller {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-
-
 }

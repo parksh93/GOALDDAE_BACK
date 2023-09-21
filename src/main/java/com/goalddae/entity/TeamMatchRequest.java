@@ -29,4 +29,9 @@ public class TeamMatchRequest {
     @ManyToOne
     @JoinColumn(name="team_match_id")
     private TeamMatch teamMatch;
+
+    // 외래키 형성 - 팀 ID
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="team_id")
+    private Team team;
 }

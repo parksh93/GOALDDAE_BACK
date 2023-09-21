@@ -143,7 +143,7 @@ public class UserServiceTest {
 //        assertNotNull(loginIdToken);
     }
 
-     @Test
+    @Test
     @Transactional
     @DisplayName("비밀번호 변경")
     public void changePasswordTest() {

@@ -23,4 +23,6 @@ public interface IndividualMatchJPARepository extends JpaRepository<IndividualMa
     );
 
     List<IndividualMatch> findByManagerIdAndStartTimeBeforeOrderByStartTimeDesc(Long managerId, LocalDateTime currentTime);
+
+    List<IndividualMatch> findAllByUserId(Long userId);
 }

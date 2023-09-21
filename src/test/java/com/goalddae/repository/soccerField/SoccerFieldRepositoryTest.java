@@ -7,16 +7,22 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+<<<<<<< HEAD
+=======
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 
 import java.time.LocalTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertEquals;
+<<<<<<< HEAD
+=======
 import static org.junit.Assert.assertNotNull;
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
 
 @SpringBootTest
 public class SoccerFieldRepositoryTest {
@@ -37,6 +43,10 @@ public class SoccerFieldRepositoryTest {
                 .fieldName("테스트구장 생성")
                 .operatingHours(LocalTime.parse("10:00"))
                 .closingTime(LocalTime.parse("21:00"))
+<<<<<<< HEAD
+                .playerCapacity(10)
+=======
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
                 .region("분당")
                 .province("경기")
                 .reservationFee(10000)
@@ -70,6 +80,10 @@ public class SoccerFieldRepositoryTest {
                 .fieldName(updateSoccerFieldName)
                 .operatingHours(LocalTime.parse("10:00"))
                 .closingTime(LocalTime.parse("21:00"))
+<<<<<<< HEAD
+                .playerCapacity(10)
+=======
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
                 .region("분당")
                 .province("경기")
                 .reservationFee(10000)
@@ -103,6 +117,10 @@ public class SoccerFieldRepositoryTest {
                 .fieldName("테스트구장 생성")
                 .operatingHours(LocalTime.parse("10:00"))
                 .closingTime(LocalTime.parse("21:00"))
+<<<<<<< HEAD
+                .playerCapacity(10)
+=======
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc
                 .region("분당")
                 .province("경기")
                 .reservationFee(10000)
@@ -136,6 +154,9 @@ public class SoccerFieldRepositoryTest {
 
         assertEquals("테스트 구장", soccerField.getFieldName());
     }
+<<<<<<< HEAD
+}
+=======
 
     @Test
     @Transactional
@@ -180,3 +201,4 @@ public class SoccerFieldRepositoryTest {
         assertEquals(soccerField.getProvince(), resultFields.getContent().get(0).getProvince());
     }
 }
+>>>>>>> 6911fdba8fe07a53d5e0b0be953110a5f6398cfc

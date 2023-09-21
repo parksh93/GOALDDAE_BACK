@@ -1,5 +1,9 @@
 package com.goalddae.service;
 
+import com.goalddae.dto.board.BoardListDTO;
+import com.goalddae.dto.board.BoardUpdateDTO;
+import com.goalddae.dto.board.HeartInfoDTO;
+import com.goalddae.dto.board.MyBoardListDTO;
 import com.goalddae.dto.board.*;
 import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.CommunicationHeart;
@@ -222,18 +226,6 @@ public class BoardServiceTest {
 
     @Test
     @Transactional
-    @DisplayName("전체 신고목록 반환")
-    public void findAllReportedBoardTest(){
-
-
-//        List<ReportedBoard> list = boardService.findAllReportedBoard();
-
-//        assertEquals(list.size(), 4);
-
-    }
-
-    @Test
-    @Transactional
     @DisplayName("새 신고 추가")
     public void saveReportedBoardTest(){
 
@@ -250,51 +242,7 @@ public class BoardServiceTest {
 
         boardService.saveReportedBoard(reportedBoard);
 
-//        List<ReportedBoard> list = boardService.findAllReportedBoard();
-//        ReportedBoard result = list.get(list.size()-1);
-//
-//        assertEquals(result.getBoardId(), boardId);
-//        assertEquals(result.getReporterUserId(), reporterUserId);
-//        assertEquals(result.getReportedUserId(), reportedUserId);
-
-    }
-
-//    @Test
-//    @Transactional
-//    @DisplayName("신고 거절")
-//    public void rejectReportedBoardTest(){
-//
-//        long reportId = 2;
-//
-//
-//        boardService.rejectReportedBoard(reportId);
-//
-//        ReportedBoard result = reportedBoardJPARepository.findById(reportId).orElse(null);
-//
-//        assertNull(result);
-//
-//    }
-
-//    @Test
-//    @Transactional
-//    @DisplayName("신고 승인")
-//    public void approveReportedBoardTest(){
-//
-//        long reportId = 3;
-//
-//        ReportedBoard reportedBoard = reportedBoardJPARepository.findById(reportId).get();
-//
-//        long boardId = reportedBoard.getBoardId();
-//
-//        boardService.approveReportedBoard(reportId);
-//
-//        ReportedBoard result = reportedBoardJPARepository.findById(reportId).orElse(null);
-//        CommunicationBoard communicationBoard = boardJPARepository.findById(boardId).orElse(null);
-//
-//        assertNull(result);
-//        assertNull(communicationBoard);
-//
-//    }
+  }
 
     @Test
     @Transactional

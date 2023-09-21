@@ -1,5 +1,14 @@
 package com.goalddae.service;
 
+
+import com.goalddae.dto.match.IndividualMatchDTO;
+import com.goalddae.dto.match.IndividualMatchRequestDTO;
+import com.goalddae.entity.IndividualMatch;
+import com.goalddae.entity.IndividualMatchRequest;
+import com.goalddae.repository.IndividualMatchJPARepository;
+import com.goalddae.repository.IndividualMatchRequestJPARepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import com.goalddae.dto.match.*;
 import com.goalddae.entity.IndividualMatch;
 import com.goalddae.entity.IndividualMatchRequest;
@@ -13,12 +22,11 @@ import com.goalddae.repository.UserJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +42,8 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
     @Autowired
     public IndividualMatchServiceImpl(IndividualMatchJPARepository individualMatchJPARepository,
                                       IndividualMatchRequestJPARepository individualMatchRequestJPARepository,
-                                      MatchStatusNotifier matchStatusNotifier, UserJPARepository userJPARepository) {
+                                      MatchStatusNotifier matchStatusNotifier,
+                                      UserJPARepository userJPARepository) {
         this.individualMatchJPARepository = individualMatchJPARepository;
         this.individualMatchRequestJPARepository = individualMatchRequestJPARepository;
         this.matchStatusNotifier = matchStatusNotifier;
@@ -79,7 +88,6 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
             return Collections.emptyList();
         }
     }
-
     // 신청 가능 상태
     private String determineStatus(IndividualMatch match) {
         long currentRequestsCount = match.getRequests().size();
@@ -108,12 +116,31 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
         return status;
     }
 
+
     @Override
-    public List<IndividualMatchRequest> findAllByUserId(long userId) {
+    public List<Object> findAllByUserId(long userId) {
         List<IndividualMatchRequest> individualMatchRequestList
                 = individualMatchRequestJPARepository.findAllByUserId(userId);
-        return individualMatchRequestList;
+
+        List<IndividualMatch> individualMatchList
+                = individualMatchJPARepository.findAllByUserId(userId);
+
+        List<Object> combinedList = new ArrayList<>();
+
+        // 사용자가 신청한 매치를 먼저 추가
+        combinedList.addAll(individualMatchRequestList);
+
+        // 사용자가 생성한 매치 중에서 userId와 일치하는 것이 있으면 추가
+        for (IndividualMatch individualMatch : individualMatchList) {
+            if (individualMatch.getUser().getId() == userId) {
+                // IndividualMatch 객체를 추가
+                combinedList.add(individualMatch);
+            }
+        }
+
+        return combinedList;
     }
+
 
     @Override
     public IndividualMatchDetailDTO findById(long matchId) {
@@ -152,7 +179,7 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
                 .managerName(manager.getName())
                 .build();
 
-            return individualMatchDetailDTO;
+        return individualMatchDetailDTO;
     }
 
     @Override
@@ -196,4 +223,3 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
         individualMatchRequestJPARepository.deleteByUserIdAndIndividualMatchId(cancelMatchRequestDTO.getUserId(), cancelMatchRequestDTO.getMatchId());
     }
 }
-

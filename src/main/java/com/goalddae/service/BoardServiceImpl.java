@@ -148,7 +148,7 @@ public class BoardServiceImpl implements BoardService{
                 .count(updatedPost.getCount())
                 .build();
 
-            boardJPARepository.save(updatedPost);
+        boardJPARepository.save(updatedPost);
 
     }
 
