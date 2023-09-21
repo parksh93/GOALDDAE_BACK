@@ -38,6 +38,7 @@ public class IndividualMatchJpaRepositoryTest {
         String province = "경기";
         String level = "유망주";
         String gender = "남자";
+        long lastMatchId = 1;
 
         SoccerField mockSoccerField = mock(SoccerField.class);
         when(mockSoccerField.getFieldName()).thenReturn("테스트 구장");
@@ -59,11 +60,10 @@ public class IndividualMatchJpaRepositoryTest {
                 .requests(requests)
                 .build();
 
-        when(individualmatchJPARepository.findMatches(any(LocalDateTime.class), any(LocalDateTime.class), eq(province), eq(level), eq(gender)))
+        when(individualmatchJPARepository.findMatches(any(LocalDateTime.class), any(LocalDateTime.class), eq(province), eq(level), eq(gender), eq(lastMatchId)))
                 .thenReturn(Collections.singletonList(individualMatch));
 
-        List<IndividualMatch> result = individualmatchJPARepository.findMatches(startTime, endTime, province, level, gender);
-
+        List<IndividualMatch> result = individualmatchJPARepository.findMatches(startTime, endTime, province, level, gender, lastMatchId);
         assertThat(result).isNotEmpty();
     }
 }

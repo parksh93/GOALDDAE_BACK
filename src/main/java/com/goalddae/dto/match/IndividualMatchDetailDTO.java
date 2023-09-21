@@ -43,4 +43,7 @@ public class IndividualMatchDetailDTO {
     private String nickname;
     private String profileImgUrl;
     private String level;
+
+    private long managerId;
+    private String managerName;
 }
