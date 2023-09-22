@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -98,6 +98,7 @@ public class FieldReservationServiceImpl implements FieldReservationService {
         }
     }
 
+
     @Transactional
     public List<Integer> getReservationTimesByFieldIdAndDate(long fieldId, String date) {
         // 문자열 형식의 date를 LocalDateTime으로 변환
@@ -108,11 +109,37 @@ public class FieldReservationServiceImpl implements FieldReservationService {
                 0, 0
         );
 
+        // 현재 시간을 가져옵니다.
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
         List<ReservationField> reservationFields = reservationFieldJPARepository
                 .findBySoccerFieldIdAndReservedDate(fieldId, localDateTime);
 
-        return reservationFields.stream()
-                .map(reservationField -> reservationField.getStartDate().toLocalTime().getHour())
-                .collect(Collectors.toList());
+        Set<Integer> reservedTimes = new HashSet<>();
+
+        // 예약된 시간대를 Set에 추가합니다.
+        for (ReservationField reservationField : reservationFields) {
+            int hour = reservationField.getStartDate().toLocalTime().getHour();
+            reservedTimes.add(hour);
+        }
+
+        // 입력받은 date와 현재 날짜를 비교하여 같을 경우에만 현재 시간 이전의 시간대를 추가합니다.
+        if (localDateTime.toLocalDate().isEqual(currentDateTime.toLocalDate())) {
+            for (int i = 0; i < currentDateTime.getHour(); i++) {
+                reservedTimes.add(i);
+            }
+        }
+
+        // 입력받은 date와 현재 날짜를 비교하여 현재 날짜가 이전이면 전체 시간대를 추가합니다.
+        if (localDateTime.isBefore(currentDateTime)) {
+            for (int i = 0; i < 24; i++) {
+                reservedTimes.add(i);
+            }
+        }
+
+        List<Integer> sortedTimes = new ArrayList<>(reservedTimes);
+        Collections.sort(sortedTimes);
+
+        return sortedTimes;
     }
 }
