@@ -12,6 +12,7 @@ public class TeamMemberCheckDTO {
 
     private long userId;
     private String name;
+    private String nickname;
     private String profileImgUrl;
     private String preferredCity;
     private String preferredArea;

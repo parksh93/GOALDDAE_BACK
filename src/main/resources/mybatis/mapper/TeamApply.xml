@@ -15,6 +15,7 @@
         ta.users_id as userId,
         ta.team_id as teamId,
         u.name as name,
+        u.nickname as nickname,
         u.profile_img_url as profileImgUrl,
         u.preferred_city as preferredCity,
         u.preferred_area as preferredArea
