@@ -101,7 +101,7 @@ public class Team {
     public void setInformation() {
         this.teamCreate = LocalDateTime.now();
         this.teamProfileUpdate = LocalDateTime.now();
-        this.teamProfileImgUrl = "기본 프로필 주소 필요";
+        this.teamProfileImgUrl = "https://kr.object.ncloudstorage.com/goalddae-bucket/profile/goalddae_default_profile.Webp";
     }
 
     @PreUpdate

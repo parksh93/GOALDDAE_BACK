@@ -17,4 +17,5 @@
         INSERT INTO team_match_result_${awayTeamId} (match_id, home_score, away_score, away_team_id)
         VALUES (#{matchId}, #{awayScore}, #{homeScore}, #{homeTeamId});
     </insert>
+
 </mapper>
