@@ -140,6 +140,17 @@ public class TeamMatchServiceImpl implements TeamMatchService {
     }
 
     public TeamMatchInfoDTO convertToDto(TeamMatch teamMatch) {
+        // 홈 팀 찾기
+        Team homeTeam = teamJPARepository.findById(teamMatch.getHomeTeamId())
+                .orElseThrow(() -> new EntityNotFoundException("No team found with ID " + teamMatch.getHomeTeamId()));
+
+        // 어웨이 팀 찾기
+        Team awayTeam = null;
+        if (teamMatch.getAwayTeamId() != 0) {
+            awayTeam = teamJPARepository.findById(teamMatch.getAwayTeamId())
+                    .orElseThrow(() -> new EntityNotFoundException("No team found with ID " + teamMatch.getAwayTeamId()));
+        }
+
         TeamMatchInfoDTO dto = new TeamMatchInfoDTO();
         dto.setId(teamMatch.getId());
         dto.setFieldId(teamMatch.getReservationField().getId());
@@ -161,10 +172,19 @@ public class TeamMatchServiceImpl implements TeamMatchService {
         dto.setFieldImg1(teamMatch.getReservationField().getSoccerField().getFieldImg1());
         dto.setFieldImg2(teamMatch.getReservationField().getSoccerField().getFieldImg2());
         dto.setFieldImg3(teamMatch.getReservationField().getSoccerField().getFieldImg3());
+        dto.setHomeTeamId(homeTeam.getId());
+        dto.setHomeTeamName(homeTeam.getTeamName());
+        dto.setHomeTeamProfileImg(homeTeam.getTeamProfileImgUrl());
+
+        if (awayTeam != null) {
+            dto.setAwayTeamName(awayTeam.getTeamName());
+            dto.setAwayTeamProfileImg(awayTeam.getTeamProfileImgUrl());
+        }
 
         return dto;
     }
 
+    // 팀 매치 상세페이지 조회
     @Override
     public TeamMatchInfoDTO getTeamMatchDetail(Long teamMatchId) {
         TeamMatch teamMatch = teamMatchJPARepository.findWithSoccerFieldById(teamMatchId)

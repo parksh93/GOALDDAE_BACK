@@ -31,4 +31,9 @@ public class TeamMatchInfoDTO {
     private String fieldImg1;
     private String fieldImg2;
     private String fieldImg3;
+    private Long homeTeamId;
+    private String homeTeamName;
+    private String homeTeamProfileImg;
+    private String awayTeamName;
+    private String awayTeamProfileImg;
 }
