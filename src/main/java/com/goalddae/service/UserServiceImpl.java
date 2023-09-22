@@ -409,16 +409,4 @@ public class UserServiceImpl implements UserService {
         User levelUpdatedUser = changeUserInfoDTO.toEntity();
         userJPARepository.save(levelUpdatedUser);
     }
-
-    // 현재 로그인된 사용자가 어떤 팀의 리더인지 검사
-    @Override
-    public boolean checkIfTeamLeader(Long userId) {
-        User user = userJPARepository.findById(userId).orElse(null);
-        if (user == null || user.getTeamId() == null) {
-            return false;
-        }
-
-        Long teamId = user.getTeamId();
-        return teamMemberRepository.isTeamLeader(teamId, userId) > 0;
-    }
 }

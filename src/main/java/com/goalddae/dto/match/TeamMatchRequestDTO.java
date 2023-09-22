@@ -10,8 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeamMatchRequestDTO {
-    private long id;
-    private long userId;
-    private long matchId;
-    private long awayTeamId;
+    private Long awayUserId;
+    private Long awayTeamId;
 }

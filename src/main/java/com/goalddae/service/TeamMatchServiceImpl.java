@@ -1,12 +1,14 @@
 package com.goalddae.service;
 
 import com.goalddae.dto.match.TeamMatchDTO;
+import com.goalddae.dto.match.TeamMatchRequestDTO;
 import com.goalddae.entity.IndividualMatch;
 import com.goalddae.entity.TeamMatch;
 import com.goalddae.entity.TeamMatchRequest;
 import com.goalddae.entity.User;
 import com.goalddae.dto.match.TeamMatchInfoDTO;
 import com.goalddae.entity.*;
+import com.goalddae.repository.TeamJPARepository;
 import com.goalddae.repository.TeamMatchJPARepository;
 import com.goalddae.repository.TeamMatchRequestJPARepository;
 import com.goalddae.repository.UserJPARepository;
@@ -29,23 +31,23 @@ import java.util.stream.Collectors;
 public class TeamMatchServiceImpl implements TeamMatchService {
 
     private final TeamMatchJPARepository teamMatchJPARepository;
-
     private final TeamMatchRequestJPARepository teamMatchRequestJPARepository;
-
     private final UserJPARepository userJPARepository;
-
     private final MatchStatusNotifier matchStatusNotifier;
+    private final TeamJPARepository teamJPARepository;
 
     @Autowired
     public TeamMatchServiceImpl(TeamMatchJPARepository teamMatchJPARepository,
                                 TeamMatchRequestJPARepository teamMatchRequestJPARepository,
                                 UserJPARepository userJPARepository,
-                                MatchStatusNotifier matchStatusNotifier) {
+                                MatchStatusNotifier matchStatusNotifier,
+                                TeamJPARepository teamJPARepository) {
 
         this.teamMatchJPARepository = teamMatchJPARepository;
         this.teamMatchRequestJPARepository = teamMatchRequestJPARepository;
         this.userJPARepository = userJPARepository;
         this.matchStatusNotifier = matchStatusNotifier;
+        this.teamJPARepository =teamJPARepository;
     }
 
     // 홈팀 - 팀장이 팀 매치 예약
@@ -138,6 +140,17 @@ public class TeamMatchServiceImpl implements TeamMatchService {
     }
 
     public TeamMatchInfoDTO convertToDto(TeamMatch teamMatch) {
+        // 홈 팀 찾기
+        Team homeTeam = teamJPARepository.findById(teamMatch.getHomeTeamId())
+                .orElseThrow(() -> new EntityNotFoundException("No team found with ID " + teamMatch.getHomeTeamId()));
+
+        // 어웨이 팀 찾기
+        Team awayTeam = null;
+        if (teamMatch.getAwayTeamId() != 0) {
+            awayTeam = teamJPARepository.findById(teamMatch.getAwayTeamId())
+                    .orElseThrow(() -> new EntityNotFoundException("No team found with ID " + teamMatch.getAwayTeamId()));
+        }
+
         TeamMatchInfoDTO dto = new TeamMatchInfoDTO();
         dto.setId(teamMatch.getId());
         dto.setFieldId(teamMatch.getReservationField().getId());
@@ -159,16 +172,42 @@ public class TeamMatchServiceImpl implements TeamMatchService {
         dto.setFieldImg1(teamMatch.getReservationField().getSoccerField().getFieldImg1());
         dto.setFieldImg2(teamMatch.getReservationField().getSoccerField().getFieldImg2());
         dto.setFieldImg3(teamMatch.getReservationField().getSoccerField().getFieldImg3());
+        dto.setHomeTeamId(homeTeam.getId());
+        dto.setHomeTeamName(homeTeam.getTeamName());
+        dto.setHomeTeamProfileImg(homeTeam.getTeamProfileImgUrl());
+
+        if (awayTeam != null) {
+            dto.setAwayTeamName(awayTeam.getTeamName());
+            dto.setAwayTeamProfileImg(awayTeam.getTeamProfileImgUrl());
+        }
 
         return dto;
     }
 
-
+    // 팀 매치 상세페이지 조회
     @Override
     public TeamMatchInfoDTO getTeamMatchDetail(Long teamMatchId) {
         TeamMatch teamMatch = teamMatchJPARepository.findWithSoccerFieldById(teamMatchId)
                 .orElseThrow(() -> new IllegalArgumentException("No match found with ID " + teamMatchId));
 
         return convertToDto(teamMatch);
+    }
+
+    @Override
+    @Transactional
+    public void applyForMatch(Long teamMatchId, TeamMatchRequestDTO request) {
+        // 1. 먼저 TeamMatch 객체를 데이터베이스에서 찾습니다.
+        TeamMatch teamMatch = teamMatchJPARepository.findById(teamMatchId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" +  teamMatchId));
+
+        // 2. 신청한 유저와 그의 팀이 유효한지 확인합니다.
+        User awayUser = userJPARepository.findById(request.getAwayUserId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + request.getAwayUserId()));
+
+        // 3. 어웨이팀 정보를 업데이트합니다.
+        teamMatch.applyAway(awayUser, request.getAwayTeamId());
+
+        // 4. 변경된 정보를 데이터베이스에 저장합니다.
+        teamMatchJPARepository.save(teamMatch);
     }
 }

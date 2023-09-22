@@ -27,3 +27,11 @@ insert into individual_match_request values (
 /* 검색 관련 */
 SELECT * FROM team
 WHERE field_name LIKE '%검색어%';
+
+/* 관리자 계정 */
+insert into users values (
+    null, false, 0, "admin", "2001-03-10", "admin@gamil.com",
+    null, null, "asdas", 0, "박상현", "관리자" , 0,
+    "$2a$10$HrDe52MaA3EjXAKY1.GRkeX4NWthA9BqzT3IHKO9VG9nYPgUKPI2m",
+    "010-1234-1232", null, null, null, now(), now(), null, null)
+    ;
