@@ -1,7 +1,7 @@
 package com.goalddae.controller;
 
+import com.goalddae.dto.match.TeamMatchRequestDTO;
 import com.goalddae.dto.team.*;
-import com.goalddae.dto.user.GetUserInfoDTO;
 import com.goalddae.dto.match.TeamMatchDTO;
 import com.goalddae.dto.team.TeamListDTO;
 import com.goalddae.dto.team.TeamUpdateDTO;
@@ -9,30 +9,18 @@ import com.goalddae.dto.team.TeamUpdateDTO;
 import com.goalddae.entity.Team;
 import com.goalddae.entity.TeamMatchRequest;
 import com.goalddae.service.TeamMatchService;
-import com.goalddae.service.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.goalddae.dto.match.TeamMatchDTO;
 import com.goalddae.dto.match.TeamMatchInfoDTO;
-import com.goalddae.dto.match.TeamMatchRequestDTO;
-import com.goalddae.dto.team.TeamListDTO;
-import com.goalddae.dto.team.TeamUpdateDTO;
 import com.goalddae.dto.user.TeamMatchUserInfoDTO;
-import com.goalddae.entity.Team;
-import com.goalddae.entity.TeamMatch;
-import com.goalddae.entity.TeamMatchRequest;
-import com.goalddae.entity.User;
 import com.goalddae.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.goalddae.dto.team.TeamSaveDTO;
 import org.springframework.http.HttpStatus;
@@ -41,7 +29,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import retrofit2.http.POST;
 
 @RestController
 @RequestMapping("/team")
@@ -49,11 +36,6 @@ public class TeamController {
 
     private final TeamService teamService;
     private final TeamMatchService teamMatchService;
-    private final TeamMatchRequestService teamMatchRequestService;
-    private final UserService userService;
-
-
-
 
     @Autowired
     public TeamController(TeamService teamService,
@@ -62,8 +44,6 @@ public class TeamController {
                           UserService userService) {
         this.teamService = teamService;
         this.teamMatchService = teamMatchService;
-        this.teamMatchRequestService = teamMatchRequestService;
-        this.userService = userService;
     }
 
     @GetMapping(value = "/list")
@@ -99,15 +79,6 @@ public class TeamController {
         }
     }
 
-    /* @PostMapping(value = "/teamSave")
-    public ResponseEntity<String> teamSave(@RequestBody Team team){
-
-        teamService.save(team);
-        return ResponseEntity
-                .ok("팀 생성이 완료되었습니다.");
-    }
-    */
-
     // 팀 등록
     @PostMapping(value = "/save")
     public ResponseEntity<String> saveTeam(@RequestBody TeamSaveDTO teamSaveDTO) {
@@ -142,7 +113,6 @@ public class TeamController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("팀 수정 중 오류 발생");
         }
     }
-
 
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<String> teamDelete(@PathVariable Long id){
@@ -245,28 +215,13 @@ public class TeamController {
         return new ResponseEntity<>(teamMatchService.getTeamMatchDetail(teamMatchId), HttpStatus.OK);
     }
 
-    // 팀장 유무 확인
-    @GetMapping("/checkIfTeamLeader/{userId}")
-    public ResponseEntity<Boolean> checkIfTeamLeader(@PathVariable Long userId) {
-        boolean isTeamLeader = userService.checkIfTeamLeader(userId);
-        return new ResponseEntity<>(isTeamLeader, HttpStatus.OK);
-    }
-
     // 팀 매치 신청
-    @PostMapping(value = "/match/request/{teamMatchId}")
-    public void requestTeamMatch(@PathVariable Long teamMatchId, @RequestBody TeamMatchRequestDTO request) {
-        teamMatchRequestService.requestTeamMatch(request.getUserId(), teamMatchId, request);
-    }
+    @PutMapping("/match/request/{teamMatchId}")
+    public ResponseEntity<Void> applyForMatch(
+            @PathVariable Long teamMatchId,
+            @RequestBody TeamMatchRequestDTO request) {
 
-    @GetMapping("/match/detail/{teamMatchId}/home")
-    public ResponseEntity<List<TeamMatchUserInfoDTO>> getHomeTeamApplicationStatus(@PathVariable Long teamMatchId) {
-        List<TeamMatchUserInfoDTO> homeApplicationDTOs = teamMatchRequestService.getHomeRequest(teamMatchId);
-        return ResponseEntity.ok(homeApplicationDTOs);
-    }
-
-    @GetMapping("/match/detail/{teamMatchId}/away")
-    public ResponseEntity<List<TeamMatchUserInfoDTO>> getAwayTeamApplicationStatus(@PathVariable Long teamMatchId) {
-        List<TeamMatchUserInfoDTO> awayApplicationDTOs = teamMatchRequestService.getAwayRequest(teamMatchId);
-        return ResponseEntity.ok(awayApplicationDTOs);
+        teamMatchService.applyForMatch(teamMatchId, request);
+        return ResponseEntity.ok().build();
     }
 }

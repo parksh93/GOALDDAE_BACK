@@ -8,6 +8,4 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TeamMatchRequestJPARepository extends JpaRepository<TeamMatchRequest, Long> {
-        Optional<TeamMatchRequest> findByTeamMatch(TeamMatch match);
-        List<TeamMatchRequest> findByTeamIdAndTeamMatchId(Long teamId, Long teamMatchId);
 }
