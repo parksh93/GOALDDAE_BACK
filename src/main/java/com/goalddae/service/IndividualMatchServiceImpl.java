@@ -145,7 +145,15 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
     @Override
     public IndividualMatchDetailDTO findById(long matchId) {
         IndividualMatch individualMatch = individualMatchJPARepository.findById(matchId).get();
-        User manager = userJPARepository.findById(individualMatch.getManagerId()).get();
+        User manager = userJPARepository.findById(individualMatch.getManagerId()).orElse(null);
+
+        long managerId = 0;
+        String mangerName = "";
+
+        if(manager != null){
+            managerId = manager.getId();
+            mangerName = manager.getNickname();
+        }
 
         IndividualMatchDetailDTO individualMatchDetailDTO = IndividualMatchDetailDTO.builder()
                 .id(matchId)
@@ -175,8 +183,8 @@ public class IndividualMatchServiceImpl implements IndividualMatchService {
                 .profileImgUrl(individualMatch.getUser().getProfileImgUrl())
                 .level(individualMatch.getUser().getLevel())
                 .playDate(individualMatch.getStartTime().toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
-                .managerId(individualMatch.getManagerId())
-                .managerName(manager.getName())
+                .managerId(managerId)
+                .managerName(mangerName)
                 .build();
 
         return individualMatchDetailDTO;
