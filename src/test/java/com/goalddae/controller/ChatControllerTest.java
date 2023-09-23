@@ -1,6 +1,12 @@
 package com.goalddae.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.goalddae.entity.Channel;
+import com.goalddae.entity.User;
+import com.goalddae.repository.UserJPARepository;
+import com.goalddae.repository.chat.ChannelRepository;
+import com.goalddae.repository.chat.ChannelUserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -28,6 +36,41 @@ public class ChatControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    ChannelRepository channelRepository;
+
+    @Autowired
+    ChannelUserRepository channelUserRepository;
+
+    @Autowired
+    UserJPARepository userJPARepository;
+
+    @BeforeEach
+    public void saveChannel (){
+        channelRepository.deleteAll();
+        userJPARepository.deleteAll();
+        channelUserRepository.deleteAll();
+
+        Channel channel = Channel.builder()
+                .channelName("테스트")
+                .channelImgUrl("없음")
+                .build();
+
+        channelRepository.save(channel);
+
+        User user = User.builder()
+                .authority("user")
+                .loginId("asda12312s")
+                .email("1234")
+                .name("박상현")
+                .signupDate(LocalDateTime.now())
+                .profileUpdateDate(LocalDateTime.now())
+                .build();
+
+        userJPARepository.save(user);
+
+    }
 
     @Test
     @Transactional

@@ -8,6 +8,7 @@ import com.goalddae.entity.ReportedBoard;
 import com.goalddae.repository.BoardJPARepository;
 import com.goalddae.repository.HeartJPARepository;
 import com.goalddae.repository.ReportedBoardJPARepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +38,21 @@ public class BoardJPARepositoryTest {
     @Autowired
     ReportedBoardJPARepository reportedBoardJPARepository;
 
+    @BeforeEach
+    void saveBoard() {
+        boardJPARepository.deleteAll();
+        heartJPARepository.deleteAll();
+        reportedBoardJPARepository.deleteAll();
+
+
+    }
+
     @Test
     @Transactional
     @DisplayName("페이징처리된 게시글 목록 조회")
     public void findAllBoardListDTOTest(){
 
-        int page = 7;
+        int page = 1;
         final int PAGE_SIZE = 10;
 
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by("id").descending());

@@ -51,9 +51,9 @@ public class FriendListRepositoryTest {
     @DisplayName("친구 리스트 조회")
     public void findFriendListTest(){
         FindFriendRequestDTO findFriendRequestDTO = FindFriendRequestDTO.builder().userId(1).build();
-        
+
         List<FindFriendListResponseDTO> findFriendListResponseDTO = friendListRepository.findFriendList(findFriendRequestDTO);
-        
+
         assertEquals(findFriendListResponseDTO.get(0).getNickname(), "안녕뉴비야");
     }
 

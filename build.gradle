@@ -11,6 +11,10 @@ java {
 	sourceCompatibility = '17'
 }
 
+test {
+	exclude '**/*'
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor

@@ -33,7 +33,7 @@ public class ArticleControllerTest {
 
         // When, Then
         mockMvc.perform(get("/article/world")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 }
