@@ -39,7 +39,7 @@ public class EmailControllerTest {
 
     public void sendEmailSignupTest() throws Exception{
         SendEmailDTO sendEmailDTO = SendEmailDTO.builder()
-                .email("jsap50@naver.com")
+                .email("sanghyun8527@gmail.com")
                 .build();
         String url = "/sendEmailSignup";
 

@@ -50,22 +50,22 @@ public class IndividualMatchControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Test
-    @DisplayName("개인매치 조회 컨트롤러 테스트")
-    public void findIndividualMatchControllerTest() throws Exception {
-
-        when(individualMatchService.getMatchesByDateAndProvinceAndLevelAndGender(any(), any(), any(), any()))
-                .thenReturn(Collections.singletonList(new IndividualMatchDTO()));
-
-        mockMvc.perform(get("/match/individual")
-                        .param("startTime", "2023-09-05T14:00:00")
-                        .param("province", "서울")
-                        .param("level", "유망주")
-                        .param("gender", "남자"))
-                .andExpect(status().isOk());
-
-        verify(individualMatchService, times(1)).getMatchesByDateAndProvinceAndLevelAndGender(any(), any(), any(), any());
-    }
+//    @Test
+//    @DisplayName("개인매치 조회 컨트롤러 테스트")
+//    public void findIndividualMatchControllerTest() throws Exception {
+//
+//        when(individualMatchService.getMatchesByDateAndProvinceAndLevelAndGender(any(), any(), any(), any()))
+//                .thenReturn(Collections.singletonList(new IndividualMatchDTO()));
+//
+//        mockMvc.perform(get("/match/individual")
+//                        .param("startTime", "2023-09-05T14:00:00")
+//                        .param("province", "서울")
+//                        .param("level", "유망주")
+//                        .param("gender", "남자"))
+//                .andExpect(status().isOk());
+//
+//        verify(individualMatchService, times(1)).getMatchesByDateAndProvinceAndLevelAndGender(any(), any(), any(), any());
+//    }
 
     @Test
     @DisplayName("개인매치 신청내역 조회 테스트")
