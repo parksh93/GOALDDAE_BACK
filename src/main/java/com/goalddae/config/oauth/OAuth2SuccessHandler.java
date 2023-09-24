@@ -26,7 +26,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(2);
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(1);
-    public static final String REDIRECT_PATH = "http://localhost:3000";
+    public static final String REDIRECT_PATH = "http://223.130.137.59:3000";
 
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
