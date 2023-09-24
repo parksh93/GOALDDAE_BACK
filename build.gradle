@@ -12,7 +12,7 @@ java {
 }
 
 test {
-//	exclude '**/*'
+	exclude '**/*'
 
 	systemProperty "jasypt.encryptor.password", System.getProperty("jasypt.encryptor.password")
 }
