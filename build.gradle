@@ -12,7 +12,9 @@ java {
 }
 
 test {
-	exclude '**/*'
+//	exclude '**/*'
+
+	systemProperty "jasypt.encryptor.password", System.getProperty("jasypt.encryptor.password")
 }
 
 configurations {
@@ -51,6 +53,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.jsoup:jsoup:1.14.3' // 크롤링
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1' //json 객체 parse
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
 }
 
 tasks.named('test') {

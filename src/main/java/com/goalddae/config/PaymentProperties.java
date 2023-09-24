@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Component
-@PropertySource("classpath:application-payment.properties")
+//@PropertySource("classpath:application-payment.properties")
 public class PaymentProperties {
-    @Value("${franchise_key}")
+    @Value("${payment.franchise_key}")
     private String franchiseKey;
-    @Value("${rest_api_key}")
+    @Value("${payment.rest_api_key}")
     private String restApiKey;
-    @Value("${rest_api_secret}")
+    @Value("${payment.rest_api_secret}")
     private String restApiSecret;
 }

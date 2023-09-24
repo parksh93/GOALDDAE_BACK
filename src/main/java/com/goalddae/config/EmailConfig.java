@@ -10,7 +10,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 @Configuration
-@PropertySource("classpath:application-email.properties")
 public class EmailConfig {
     @Value("${mail.id}")
     private String id;

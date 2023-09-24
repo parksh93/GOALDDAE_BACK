@@ -1,12 +1,12 @@
 #application.yml
 spring:
   datasource:
-    url: ${url}
-    username: ${username_}
-    password: ${password}
-    driver-class-name: ${driver-class-name}
-  profiles:
-    active: db, jwt, payment, oauth2, s3
+    url: ENC(RCZ/q9EdcB0NfejOqwsgzBdXzF9zFzbuV9M9XVvMt/8ljiuj/FNJdQWM+ZZgfxhxMXiM4NZm+WpzbZOV54vM7bWQUo27ZM/1slVASBEd5J9bbl7F6xAVKjFiNkWQg2uCx9vMkkcd51LQu8tCVrwSsjhLlxqx1MTu)
+    username: ENC(5im9Jv0BmIToJdHpawOPGh69zY/ax5op)
+    password: ENC(iINpJl+7rPUZ6vA4Rs3vUkyeRQRxnPSgZSRtgXzgd4o=)
+    driver-class-name: ENC(2FswYcVFPdFISshEe+4NQhU+h4C+tv9QoCbwS6zWXBPY5Jl5PD11EQ==)
+  #  profiles:
+  #    active: db, jwt, payment, oauth2, s3, mail, payment, jasypt
   jpa:
     hibernate:
       ddl-auto: update
@@ -19,25 +19,16 @@ spring:
       client:
         registration:
           google:
-            client-id: ${google-client-id}
-            client-secret: ${google-client-secret}
+            client-id: ENC(O3IUmZq6/ywBKrwFgDYqoqoZYTCcu80YTaS0jDKtz7aPD6U1OVr6X8zi0P47lV7iJFJBCE+jsCe2J0cB+vKJ5Hf3sn7Z1ZBu9bqDCVTNjYjqF0oxDGqk/g==)
+            client-secret: ENC(7TjShWc9FRKUdcAqGQ96JU8oE722otOgotY0FVNtJDX9tRAO1PCxbJHBMAsdoRPR)
             scope: email, profile
           naver:
-            client-id: ${naver-client-id}
-            client-secret: ${naver-client-secret}
+            client-id: ENC(HFGfeE4T4X1pzvt1mKOWmnyxRO3CIt7BGEv3F/F1y28=)
+            client-secret: ENC(usK43HU/hRHdeXh0AisaPtIn2PtDU4n0)
             redirect-uri: http://localhost:8080/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope: name, email, profile_image
             client-name: Naver
-
-        #          kakao:
-        #            client-id: 카카오 클라이언트 ID
-        #            client-secret: 카카오 클라이언트 Secret
-        #            redirect-uri: 세팅한 URL
-        #            client-authentication-method: POST
-        #            authorization-grant-type: authorization_code
-        #            scope: profile_nickname, profile_image
-        #            client-name: Kakao
 
         provider:
           naver:
@@ -52,8 +43,8 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 jwt:
-  issuer: ${issuer}
-  secret_key: ${secret_key}
+  issuer: ENC(rEn3PA5ec6vp1D0I9WEernmTs4H1VkgI)
+  secret_key: ENC(h/hLqNsDkFsFeRFtFVrNVP5o9U5L7q6r1xQnu8ni6jg=)
 
 cloud:
   aws:
@@ -62,8 +53,35 @@ cloud:
     region:
       static: ap-northeast-2
     credentials:
-      access-key: ${access-key}
-      secret-key: ${secret-key}
+      access-key: ENC(iu1BW6DYk7dMNWLRg4pHVA27PmesNFsMWXa4MoZGnI4=)
+      secret-key: ENC(vGl/SQShATTV3QKKmG6n2fSkj/axHXJPvKFUmCCvWLRhY8hshBEUvR8m/bTtOuoCCakBjPKACZ4=)
     s3:
       bucket: goalddae-bucket
       endpoint: https://kr.object.ncloudstorage.com
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    property:
+        prefix: ENC(
+        suffix: )
+
+mail:
+  id: ENC(ir9I5FAK1vvdLr+2uQzfrm95KOmh5tCuMJKELrFGUhU=)
+  password: ENC(kWDhyUI3UL5AreFBF9sT/PwHI4NFbyyuPx+0rWAZ7E0=)
+  host: ENC(VDk+A0sIV8GYLT8/ZlzHK4uHF+5TuvyF)
+  smtp:
+    auth: true
+    starttls:
+      required: true
+      enable: true
+    socketFactory:
+      class: javax.net.ssl.SSLSocketFactory
+      fallback: false
+      port: 465
+    port: 465
+
+payment:
+  franchise_key: ENC(LqovER/WSNuHCm8Hgx1ltUOsmxWG/2+6)
+  rest_api_key: ENC(FruFCkJEdsfmlifk0k3EXyNSBNupT+LPh5dfkWZfUUA=)
+  rest_api_secret: ENC(SZm8W3vPjekSo/wSawJS+x8QNXof5nWP9Khwtlrsz/JjKifIrvRegsTDbQ9cDw5KmbPyv1/mBKiBOd6g6oljrbGsz3mYumZtcnxtrfO6JzC65nHfYvMQMm9VYNdsS0u2)
