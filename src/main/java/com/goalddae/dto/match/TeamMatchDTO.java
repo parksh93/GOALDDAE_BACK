@@ -18,4 +18,6 @@ public class TeamMatchDTO {
     private String status;
     private long playerNumber;
     private String gender;
+    private String homeTeamName;
+    private String awayTeamName;
 }

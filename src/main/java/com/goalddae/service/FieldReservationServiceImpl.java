@@ -82,6 +82,9 @@ public class FieldReservationServiceImpl implements FieldReservationService {
                     .homeTeamId(teamId) // 매치할 팀 (홈팀 id)
                     .reservationField(reservationField) // 예약한 구장
                     .build();
+            // 홈 팀의 선수 목록에 홈 팀 대표 선수 추가
+            teamMatch.getHomePlayers().add(user);
+
             teamMatchJPARepository.save(teamMatch);
         } else {
             // 개인매치 정보 생성 및 저장

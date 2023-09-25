@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -53,19 +54,34 @@ public class TeamMatch {
     @Column(nullable = false)
     private long homeTeamId;
 
-    // 홈 유저
+    // 홈 유저(홈팀 대표)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="home_user_id")
     private User homeUser;
+
+    // 홈 팀 선수들 (홈 팀 대표 포함)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "team_match_home_players",
+            joinColumns = @JoinColumn(name = "team_match_id"),
+            inverseJoinColumns = @JoinColumn(name ="user_id"))
+    @Builder.Default
+    private List<User> homePlayers = new ArrayList<>();
 
     // 어웨이(상대팀)
     @Column
     private long awayTeamId;
 
-    // 어웨이 유저
+    // 어웨이 유저(어웨이팀 대표)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="away_user_id")
     private User awayUser;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "team_match_away_players",
+            joinColumns = @JoinColumn(name ="team_match_id"),
+            inverseJoinColumns =@JoinColumn(name ="user_id"))
+    @Builder.Default
+    private List<User> awayPlayers= new ArrayList<>();
 
     // 외래키 형성 - 예약구장
     @ManyToOne
@@ -80,13 +96,30 @@ public class TeamMatch {
         this.managerId = managerId;
     }
 
-    // 외래키 형성 - 매치요청
-    @OneToMany(mappedBy = "teamMatch")
-    private List<TeamMatchRequest> requests;
+//    // 팀 매치 신청 - 어웨이팀
+//    public void applyAway(User awayUser, long awayTeamId) {
+//        this.awayUser = awayUser;
+//        this.awayTeamId = awayTeamId;
+//    }
 
-    // 팀 매치 신청 - 어웨이팀
+    // 홈팀과 어웨이팀이 같은지 확인하기 위함
+    public boolean isSameTeam(Long awayTeamId) {
+        return this.homeTeamId == awayTeamId;
+    }
+
     public void applyAway(User awayUser, long awayTeamId) {
         this.awayUser = awayUser;
         this.awayTeamId = awayTeamId;
+    }
+
+    // 양방향 관계 - TeamMatchRequest 엔터티의 리스트를 반환하도록 설정
+    @OneToMany(mappedBy = "teamMatch", fetch = FetchType.LAZY)
+    private List<TeamMatchRequest> requests;
+
+    public List<TeamMatchRequest> getRequests() {
+        if (requests == null) {
+            requests = new ArrayList<>();
+        }
+        return requests;
     }
 }

@@ -51,16 +51,16 @@ public class TeamMatchServiceImpl implements TeamMatchService {
     }
 
     // 홈팀 - 팀장이 팀 매치 예약
-    @Override
-    public void createTeamMatch(TeamMatch teammatch) {
-        teamMatchJPARepository.save(teammatch);
-    }
+//    @Override
+//    public void createTeamMatch(TeamMatch teammatch) {
+//        teamMatchJPARepository.save(teammatch);
+//    }
 
     // 어웨이팀 - 타 팀이 팀 매치 신청
-    @Override
-    public void requestTeamMatch(TeamMatchRequest request) {
-        teamMatchRequestJPARepository.save(request);
-    }
+//    @Override
+//    public void requestTeamMatch(TeamMatchRequest request) {
+//        teamMatchRequestJPARepository.save(request);
+//    }
 
     // 팀 매치 리스트 조회 - 일자, 지역, 남녀구분
     @Override
@@ -96,14 +96,27 @@ public class TeamMatchServiceImpl implements TeamMatchService {
 
             return new PageImpl<>(
                     matchesInProvince.stream()
-                            .map(match -> new TeamMatchDTO(
-                                    match.getId(),
-                                    match.getReservationField().getId(),
-                                    match.getStartTime(),
-                                    match.getReservationField().getSoccerField().getFieldName(),
-                                    determineStatus(match),
-                                    (int)match.getPlayerNumber(),
-                                    match.getGender()))
+                            .map(match -> {
+                                Team homeTeam = teamJPARepository.findTeamById(match.getHomeTeamId());
+                                String homeTeamName = homeTeam.getTeamName();
+
+                                String awayTeamName = null;
+                                if (match.getAwayTeamId() != 0) {
+                                    Team awayTeam = teamJPARepository.findTeamById(match.getAwayTeamId());
+                                    awayTeamName = awayTeam != null ? awayTeam.getTeamName() : null;
+                                }
+
+                                return new TeamMatchDTO(
+                                        match.getId(),
+                                        match.getReservationField().getId(),
+                                        match.getStartTime(),
+                                        match.getReservationField().getSoccerField().getFieldName(),
+                                        determineStatus(match),
+                                        (int)match.getPlayerNumber(),
+                                        match.getGender(),
+                                        homeTeamName,
+                                        awayTeamName);
+                            })
                             .collect(Collectors.toList()), pageable , matchesInProvince.getTotalElements());
         } catch (Exception e) {
             System.err.println("error: " + e.getMessage());
@@ -115,18 +128,20 @@ public class TeamMatchServiceImpl implements TeamMatchService {
 
     // 신청 가능 상태
     private String determineStatus(TeamMatch match) {
-        long currentRequestsCount = match.getRequests().size();
+        long currentHomePlayersCount = match.getHomePlayers().size();
+        long currentAwayPlayersCount = match.getAwayPlayers().size();
+        long totalCurrentPlayerCount = currentHomePlayersCount + currentAwayPlayersCount;
         long maxPlayerNumber = match.getPlayerNumber();
         LocalDateTime now = LocalDateTime.now();
 
         String status;
 
-        if (currentRequestsCount == maxPlayerNumber) {
+        if (totalCurrentPlayerCount == maxPlayerNumber) {
             status = "마감";
-        } else if (currentRequestsCount >= maxPlayerNumber * 0.8 ) {
+        } else if (totalCurrentPlayerCount >= maxPlayerNumber * 0.8 ) {
             status = "마감임박";
         } else if (now.isAfter(match.getStartTime())) {
-            status = "마감";
+            status = "종료";
         } else if (now.plusHours(2).isAfter(match.getStartTime())) {
             status = "마감임박";
         } else {
@@ -172,7 +187,7 @@ public class TeamMatchServiceImpl implements TeamMatchService {
         dto.setFieldImg1(teamMatch.getReservationField().getSoccerField().getFieldImg1());
         dto.setFieldImg2(teamMatch.getReservationField().getSoccerField().getFieldImg2());
         dto.setFieldImg3(teamMatch.getReservationField().getSoccerField().getFieldImg3());
-        dto.setHomeTeamId(homeTeam.getId());
+        dto.setHomeTeamId(teamMatch.getHomeTeamId());
         dto.setHomeTeamName(homeTeam.getTeamName());
         dto.setHomeTeamProfileImg(homeTeam.getTeamProfileImgUrl());
 
@@ -193,21 +208,33 @@ public class TeamMatchServiceImpl implements TeamMatchService {
         return convertToDto(teamMatch);
     }
 
+    // 팀 매치 신청 - 같은 팀 끼리 매치 방지
     @Override
     @Transactional
     public void applyForMatch(Long teamMatchId, TeamMatchRequestDTO request) {
-        // 1. 먼저 TeamMatch 객체를 데이터베이스에서 찾습니다.
-        TeamMatch teamMatch = teamMatchJPARepository.findById(teamMatchId)
+        TeamMatch teamMatch= teamMatchJPARepository.findById(teamMatchId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" +  teamMatchId));
 
-        // 2. 신청한 유저와 그의 팀이 유효한지 확인합니다.
+        if (teamMatch.isSameTeam(request.getAwayTeamId())) {
+            throw new IllegalArgumentException("A team cannot play a match against itself.");
+        }
+
+        long totalAppliedPlayers = (teamMatch.getHomePlayers() != null ? teamMatch.getHomePlayers().size() : 0)
+                + (teamMatch.getAwayPlayers() != null ? teamMatch.getAwayPlayers().size() : 0);
+
+        if (totalAppliedPlayers >= teamMatch.getPlayerNumber()) {
+            throw new IllegalArgumentException("The match is already full.");
+        }
+
         User awayUser = userJPARepository.findById(request.getAwayUserId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + request.getAwayUserId()));
 
-        // 3. 어웨이팀 정보를 업데이트합니다.
-        teamMatch.applyAway(awayUser, request.getAwayTeamId());
+        teamMatch.getAwayPlayers().add(awayUser);
 
-        // 4. 변경된 정보를 데이터베이스에 저장합니다.
+        if (teamMatch.getAwayTeamId() == 0) {
+            Team awayTeam=teamJPARepository.findById(request.getAwayTeamId()).orElseThrow(() -> new EntityNotFoundException("No such Team found with id: " + request.getAwayTeamId()));
+            teamMatch.applyAway(awayUser,awayTeam.getId());
+        }
         teamMatchJPARepository.save(teamMatch);
     }
 }
