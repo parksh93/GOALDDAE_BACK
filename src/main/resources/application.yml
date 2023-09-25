@@ -1,10 +1,10 @@
 #application.yml
 spring:
   datasource:
-    url: ENC(RCZ/q9EdcB0NfejOqwsgzBdXzF9zFzbuV9M9XVvMt/8ljiuj/FNJdQWM+ZZgfxhxMXiM4NZm+WpzbZOV54vM7bWQUo27ZM/1slVASBEd5J9bbl7F6xAVKjFiNkWQg2uCx9vMkkcd51LQu8tCVrwSsjhLlxqx1MTu)
-    username: ENC(5im9Jv0BmIToJdHpawOPGh69zY/ax5op)
-    password: ENC(iINpJl+7rPUZ6vA4Rs3vUkyeRQRxnPSgZSRtgXzgd4o=)
-    driver-class-name: ENC(2FswYcVFPdFISshEe+4NQhU+h4C+tv9QoCbwS6zWXBPY5Jl5PD11EQ==)
+    url: ENC(noYKCh1ox/mi553kaSZFeeiROmiceZQhomyeQaBycjM0X6XOfBUV3Qxx7Naadt9DJwr9D/vNwE5JtoO5XOOcsAg4WKWhbcmc2HAIncqYK4DigPyL8QLuQjg/PhYHCjQhUaaxcge//NLqWAcQ36amBG241vAXLuy+)
+    username: ENC(LURQQHtySzlneKsw3Hn+PXpe1BgqUb5E)
+    password: ENC(OxaxxXJaaTlZQjLGzdgupJ3d7gIdyl+SK2M1Atf6dwI=)
+    driver-class-name: ENC(p2euEo/ESquHypoblIzaBc8Ehh/Sj3I/9oql4rv8/tctgPqc3/2GPQ==)
   #  profiles:
   #    active: db, jwt, payment, oauth2, s3
   jpa:
@@ -19,12 +19,12 @@ spring:
       client:
         registration:
           google:
-            client-id: ENC(O3IUmZq6/ywBKrwFgDYqoqoZYTCcu80YTaS0jDKtz7aPD6U1OVr6X8zi0P47lV7iJFJBCE+jsCe2J0cB+vKJ5Hf3sn7Z1ZBu9bqDCVTNjYjqF0oxDGqk/g==)
-            client-secret: ENC(7TjShWc9FRKUdcAqGQ96JU8oE722otOgotY0FVNtJDX9tRAO1PCxbJHBMAsdoRPR)
+            client-id: ENC(P/7K09qzEucQLGwvt4We2WqBB6zlXKY8KHYh6fy67b8NmafBr9PifOX8WYBVY59Hzj5OrHAtssIPRM1jI5OsG9kjbiWyQljHlB7qsYbcCGTHyfEqq1z7QQ==)
+            client-secret: ENC(Q5SAdZyMBaL67jPPq5W9OXYX3AHjvaw71eJKvtBUIN/9WQf/Dg0R0GMcjMEtuouI)
             scope: email, profile
           naver:
-            client-id: ENC(HFGfeE4T4X1pzvt1mKOWmnyxRO3CIt7BGEv3F/F1y28=)
-            client-secret: ENC(usK43HU/hRHdeXh0AisaPtIn2PtDU4n0)
+            client-id: ENC(zyxlVHUbmx++PuD6LW5lGSob2SjVfNWY0AJKYuHsWBc=)
+            client-secret: ENC(Y03JpXjMKeIsha+jwn+YDq9nOk6v6cfA)
             redirect-uri: http://localhost:8080/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope: name, email, profile_image
@@ -38,8 +38,8 @@ spring:
             user_name_attribute: response
 
 jwt:
-  issuer: ENC(rEn3PA5ec6vp1D0I9WEernmTs4H1VkgI)
-  secret_key: ENC(h/hLqNsDkFsFeRFtFVrNVP5o9U5L7q6r1xQnu8ni6jg=)
+  issuer: ENC(E+N9b3EKadf9LRicOj5mrT9Obpgig7QO)
+  secret_key: ENC(JwJtticd74aDGwDc9utYa93w+ZpRetRFoG2jTN8lhWQ=)
 
 cloud:
   aws:
@@ -48,8 +48,8 @@ cloud:
     region:
       static: ap-northeast-2
     credentials:
-      access-key: ENC(iu1BW6DYk7dMNWLRg4pHVA27PmesNFsMWXa4MoZGnI4=)
-      secret-key: ENC(vGl/SQShATTV3QKKmG6n2fSkj/axHXJPvKFUmCCvWLRhY8hshBEUvR8m/bTtOuoCCakBjPKACZ4=)
+      access-key: ENC(QPJrOWmGWeoQrISL3zfxBc/ef4kpTzSS1voSvNFrRJs=)
+      secret-key: ENC(VUU4LjfVmLCe+rTCaXRYYR6nCX8GROfkMwN9ncE5xdzPd6Kz+n9tlDWru1vEdm1dxm0Z892fjb8=)
     s3:
       bucket: goalddae-bucket
       endpoint: https://kr.object.ncloudstorage.com
@@ -62,9 +62,9 @@ jasypt:
         suffix: )
 
 mail:
-  id: ENC(ir9I5FAK1vvdLr+2uQzfrm95KOmh5tCuMJKELrFGUhU=)
-  password: ENC(kWDhyUI3UL5AreFBF9sT/PwHI4NFbyyuPx+0rWAZ7E0=)
-  host: ENC(VDk+A0sIV8GYLT8/ZlzHK4uHF+5TuvyF)
+  id: ENC(AJ6SjY3Nk9npJtus5XxU0Rw700FmNEDw4UncF9Vv+t8=)
+  password: ENC(o6q11rKvtbcSeFldFrZQdIWbvETcc3UaddNFPoTcBZ8=)
+  host: ENC(KES7aLN/AsXR+unJ+GrKQZbSefD0aXDg)
   smtp:
     auth: true
     starttls:
@@ -77,6 +77,12 @@ mail:
     port: 465
 
 payment:
-  franchise_key: ENC(LqovER/WSNuHCm8Hgx1ltUOsmxWG/2+6)
-  rest_api_key: ENC(FruFCkJEdsfmlifk0k3EXyNSBNupT+LPh5dfkWZfUUA=)
-  rest_api_secret: ENC(SZm8W3vPjekSo/wSawJS+x8QNXof5nWP9Khwtlrsz/JjKifIrvRegsTDbQ9cDw5KmbPyv1/mBKiBOd6g6oljrbGsz3mYumZtcnxtrfO6JzC65nHfYvMQMm9VYNdsS0u2)
+  franchise_key: ENC(08qjI2PFliLnN93vVrhw1o6V7oGBaAh+)
+  rest_api_key: ENC(WOdM4O6pqiNA+Bo06rKaCwAzFfoobxiqTRsaZlmvnXc=)
+  rest_api_secret: ENC(tFKIJVyCU9W8vrUCFcaFET3RccMdLfn4zbqroo1N3Y83+61iQ5ZWQsfGegxHPQYimC5czBb2GbiOGXYvqYkBawyfq53C4WxClV3n8OYgHVzz3T3W/81g6yqjbabFJf08)
+
+kakaoDevelop:
+    restApiKey: ENC(EGLsOFJn9JVTRoVWDXvWXcQAbzyHMLzDziJP27+/k5x1ChzSUOaVF43v38R1PQXr)
+
+weather:
+  secretKey: ENC(4o5Cn/aR8elZ6IxrSPoo1mnEaYQMXDKZReXIkOYXBx31y04c5fSEnpeJOr6EFUTjI50/Fr8JH2IebZSuHcHfyeKVHIBFS55GOCAuHNCkby676IrwP52p0j4X2vQsGrjgrKYtbLBueZSeen8NcLUNoQ==)

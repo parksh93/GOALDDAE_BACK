@@ -17,10 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@PropertySource("classpath:application-kakaoDevelop.properties")
 public class KakaoMapService {
     private static String GEOCODE_URL="http://dapi.kakao.com/v2/local/search/address.json?query=";
-    @Value("${restApiKey}")
+    @Value("${kakaoDevelop.restApiKey}")
     private String restAPIKey;
 
     public Map<String, String> getXY(String address) {

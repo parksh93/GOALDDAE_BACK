@@ -20,9 +20,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-@PropertySource("classpath:application-weather.properties")
 public class WeatherServiceImpl implements WeatherService {
-    @Value("${secretKey}")
+    @Value("${weather.secretKey}")
     private String secretKey;
 
     private final static String API_URL = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
