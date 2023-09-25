@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public interface SoccerFieldService {
     // 검색 기능
-    List<SoccerField> searchSoccerFields(String searchTerm);
+    List<SoccerField> searchSoccerFields(String searchTerm) throws IOException;
     // 지역 조회
     List<String> searchCityNames(String searchTerm) throws IOException;
     SoccerField save(SoccerField soccerField);

@@ -38,9 +38,15 @@ public class SoccerFieldController {
 
     // 구장 검색
     @GetMapping("/search")
-    public List<SoccerField> searchSoccerFields(
+    public ResponseEntity<List<SoccerField>> searchSoccerFields(
             @RequestParam(value = "searchTerm", required = false, defaultValue = "") String searchTerm) {
-        return soccerFieldService.searchSoccerFields(searchTerm);
+        try {
+            List<SoccerField> fields = soccerFieldService.searchSoccerFields(searchTerm);
+            return ResponseEntity.ok(fields);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
     }
 
     // 클라이언트가 전달한 searchTerm 매개변수를 받아 SoccerFieldService의 searchCityNames() 메서드를 호출

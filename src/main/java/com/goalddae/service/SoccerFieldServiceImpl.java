@@ -50,9 +50,18 @@ public class SoccerFieldServiceImpl implements SoccerFieldService {
 
     // 구장 조회
     @Override
-    public List<SoccerField> searchSoccerFields(String searchTerm) {
-        return soccerFieldRepository.findByRegionContainingOrFieldNameContaining(searchTerm, searchTerm);
+    public List<SoccerField> searchSoccerFields(String searchTerm) throws IOException {
+        List<String> cityNames = searchCityNames(searchTerm);
+        List<SoccerField> matchedFields = new ArrayList<>();
+
+        for (String cityName : cityNames) {
+            matchedFields.addAll(soccerFieldRepository.findByProvinceContainingOrRegionContainingOrFieldNameContaining(cityName, cityName, cityName));
+        }
+
+        return matchedFields;
     }
+
+
 
     // 구장 이름으로 조회
     @Override

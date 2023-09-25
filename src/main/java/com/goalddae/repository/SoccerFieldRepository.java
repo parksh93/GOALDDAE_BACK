@@ -11,7 +11,7 @@ public interface SoccerFieldRepository extends JpaRepository<SoccerField, Long> 
     // 구장이름 조회
     SoccerField findByFieldName(String fieldName);
     // 검색 기능 - cityNames.json
-    List<SoccerField> findByRegionContainingOrFieldNameContaining(String region, String fieldName);
+    List<SoccerField> findByProvinceContainingOrRegionContainingOrFieldNameContaining(String province, String region, String fieldName);
     // 예약할 구장 조회
     Page<SoccerField> findAllByProvince(String province, Pageable pageable);
     Page<SoccerField> findByProvinceAndGrassWhether(String province, String grassWhether, Pageable pageable);
