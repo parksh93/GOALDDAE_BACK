@@ -209,7 +209,7 @@ public class TeamController {
         return new ResponseEntity<>(matches, HttpStatus.OK);
     }
 
-    // 팀 매치 상세 정보 조회
+    // 팀 매치 상세 조회
     @GetMapping("/match/detail/{teamMatchId}")
     public ResponseEntity<TeamMatchInfoDTO> getTeamMatchDetail(@PathVariable Long teamMatchId) {
         return new ResponseEntity<>(teamMatchService.getTeamMatchDetail(teamMatchId), HttpStatus.OK);
@@ -222,6 +222,13 @@ public class TeamController {
             @RequestBody TeamMatchRequestDTO request) {
 
         teamMatchService.applyForMatch(teamMatchId, request);
+        return ResponseEntity.ok().build();
+    }
+
+    // 팀 매치 취소
+    @DeleteMapping("/match/cancel/{teamMatchId}")
+    public ResponseEntity<Void> cancelTeamMatch(@PathVariable Long teamMatchId, @RequestParam Long userId, @RequestParam Long teamId) {
+        teamMatchService.cancelTeamMatch(teamMatchId, userId, teamId);
         return ResponseEntity.ok().build();
     }
 }

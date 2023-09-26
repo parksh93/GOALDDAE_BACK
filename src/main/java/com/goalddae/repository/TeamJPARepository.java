@@ -2,7 +2,9 @@ package com.goalddae.repository;
 
 import com.goalddae.dto.team.TeamListDTO;
 import com.goalddae.entity.Team;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
