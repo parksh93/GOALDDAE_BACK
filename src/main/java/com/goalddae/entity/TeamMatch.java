@@ -96,12 +96,6 @@ public class TeamMatch {
         this.managerId = managerId;
     }
 
-//    // 팀 매치 신청 - 어웨이팀
-//    public void applyAway(User awayUser, long awayTeamId) {
-//        this.awayUser = awayUser;
-//        this.awayTeamId = awayTeamId;
-//    }
-
     // 홈팀과 어웨이팀이 같은지 확인하기 위함
     public boolean isSameTeam(Long awayTeamId) {
         return this.homeTeamId == awayTeamId;
@@ -121,5 +115,17 @@ public class TeamMatch {
             requests = new ArrayList<>();
         }
         return requests;
+    }
+
+    public boolean hasApplied(Long userId) {
+        return awayUser != null && awayUser.getId() == userId;
+    }
+
+    public void cancelApplication(Long userId) {
+        if (awayUser == null || awayUser.getId() != userId) {
+            throw new RuntimeException("이미 신청하지 않은 매치입니다.");
+        }
+        this.awayUser = null;
+        this.awayTeamId = 0L;
     }
 }

@@ -3,6 +3,7 @@ package com.goalddae.dto.match;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -36,4 +37,7 @@ public class TeamMatchInfoDTO {
     private String homeTeamProfileImg;
     private String awayTeamName;
     private String awayTeamProfileImg;
+    private LocalTime operatingHours;
+    private LocalTime closingTime;
+    private boolean hasApplied;
 }
