@@ -9,7 +9,7 @@ import java.util.Base64;
 public class CookieUtil {
     public static void addCookie(HttpServletResponse response, String name, String value){
         Cookie cookie = new Cookie(name, value);
-        cookie.setPath("http://:223.130.137.59:3000/");
+        cookie.setPath("/");
         cookie.setHttpOnly(true);
 //        cookie.setSecure(true);
         response.addCookie(cookie);
