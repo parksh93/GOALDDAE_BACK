@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.io.IOException;
 import java.time.LocalTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -59,7 +60,7 @@ public class SoccerFieldServiceTest {
     @Test
     @Transactional
     @DisplayName("주어진 지역에 따라 축구장 목록 검색")
-    public void searchFieldsByRegionTest() {
+    public void searchFieldsByRegionTest() throws IOException {
         String region = "성남";
 
         List<SoccerField> soccerFields = soccerFieldService.searchSoccerFields(region);
@@ -71,7 +72,7 @@ public class SoccerFieldServiceTest {
     @Test
     @Transactional
     @DisplayName("주어진 축구장 이름으로 검색")
-    public void searchFieldsByFieldNameTest() {
+    public void searchFieldsByFieldNameTest() throws IOException {
         String fieldName = "테스트 구장8";
 
         List<SoccerField> soccerFields = soccerFieldService.searchSoccerFields(fieldName);
