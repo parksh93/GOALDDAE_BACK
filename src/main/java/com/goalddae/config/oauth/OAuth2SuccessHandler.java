@@ -10,6 +10,8 @@ import com.goalddae.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.antlr.v4.runtime.Token;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -26,6 +28,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(2);
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(1);
+
     public static final String REDIRECT_PATH = "http://223.130.137.59:3000";
 
     private final TokenProvider tokenProvider;

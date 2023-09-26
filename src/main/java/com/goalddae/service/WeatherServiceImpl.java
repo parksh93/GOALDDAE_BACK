@@ -118,9 +118,7 @@ public class WeatherServiceImpl implements WeatherService {
             JSONArray itemArr = (JSONArray) items.get("item");
 
             return itemArr;
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
+        }catch (Exception e) {}
         return null;
     }
 

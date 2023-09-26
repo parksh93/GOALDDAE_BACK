@@ -5,7 +5,9 @@ import com.goalddae.entity.CommunicationBoard;
 import com.goalddae.entity.UsedTransactionBoard;
 import com.goalddae.entity.User;
 import com.goalddae.service.UserServiceImpl;
+import com.goalddae.util.CookieUtil;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,17 +52,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    public ResponseEntity<Boolean> logout(HttpServletResponse response){
-        Cookie cookieToken = new Cookie("token", null);
-        cookieToken.setMaxAge(0);
-        cookieToken.setPath("/");
-
-        Cookie cookieRefreshToken = new Cookie("refreshToken", null);
-        cookieRefreshToken.setMaxAge(0);
-        cookieRefreshToken.setPath("/");
-
-        response.addCookie(cookieToken);
-        response.addCookie(cookieRefreshToken);
+    public ResponseEntity<Boolean> logout(HttpServletRequest request, HttpServletResponse response){
+        CookieUtil.deleteCookie(request,response, "token");
+        CookieUtil.deleteCookie(request,response, "refreshToken");
 
         return ResponseEntity.ok(true);
     }

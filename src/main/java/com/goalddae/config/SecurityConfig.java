@@ -12,6 +12,7 @@ import com.goalddae.util.CookieUtil;
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -32,7 +34,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 @Configuration
-@RequiredArgsConstructor
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final UserService userService;
@@ -42,6 +43,17 @@ public class SecurityConfig {
     private final UserJPARepository userJPARepository;
     private final RefreshTokenService refreshTokenService;
 
+    @Autowired
+    public SecurityConfig(UserDetailsService userDetailsService, UserService userService, TokenProvider tokenProvider, OAuth2UserService oAuth2UserService, RefreshTokenRepository refreshTokenRepository,
+                                  UserJPARepository userJPARepository, RefreshTokenService refreshTokenService){
+        this.userDetailsService = userDetailsService;
+        this.userService = userService;
+        this.tokenProvider = tokenProvider;
+        this.oAuth2UserService = oAuth2UserService;
+        this.refreshTokenRepository =refreshTokenRepository;
+        this.userJPARepository = userJPARepository;
+        this.refreshTokenService = refreshTokenService;
+    }
 
     @Bean
     public WebSecurityCustomizer configure(){

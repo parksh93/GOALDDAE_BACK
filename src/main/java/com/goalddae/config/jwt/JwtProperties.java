@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 @Setter
 @Getter
 @Component
-@Configuration
-//@ConfigurationProperties("jwt")
 public class JwtProperties {
     @Value("${jwt.issuer}")
     private String issuer;

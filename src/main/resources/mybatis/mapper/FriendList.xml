@@ -11,7 +11,8 @@
         SELECT u.id, u.nickname, u.profile_img_url AS profileImgUrl
         FROM users u
         JOIN friend_list_#{userId} f ON u.id = f.friend_id
-        WHERE u.nickname LIKE CONCAT('%',#{nickname},'%');
+        WHERE u.nickname LIKE CONCAT('%',#{nickname},'%')
+        AND u.authority = 'user'
     </select>
     <select id="searchUnFriendList" parameterType="com.goalddae.dto.friend.friendList.SelectFriendListDTO" resultType="com.goalddae.dto.friend.friendList.SearchFriendDTO">
         SELECT u.id, u.nickname, u.profile_img_url AS profileImgUrl,
@@ -22,6 +23,7 @@
         AND u.nickname LIKE CONCAT('%',#{nickname},'%')
         AND u.id NOT IN (SELECT user_id FROM friend_block WHERE friend_id = #{userId})
         AND u.id NOT IN (SELECT friend_id FROM friend_block WHERE user_id = #{userId})
+        AND u.authority = 'user'
     </select>
     <select id="findFriendList" parameterType="com.goalddae.dto.friend.friendList.FindFriendListResponseDTO" resultType="com.goalddae.dto.friend.friendList.FindFriendListResponseDTO">
         SELECT u.nickname, u.profile_img_url AS profileImgUrl, u.id FROM users u

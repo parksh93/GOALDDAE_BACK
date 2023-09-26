@@ -26,6 +26,7 @@ spring:
             client-id: ENC(zyxlVHUbmx++PuD6LW5lGSob2SjVfNWY0AJKYuHsWBc=)
             client-secret: ENC(Y03JpXjMKeIsha+jwn+YDq9nOk6v6cfA)
             redirect-uri: http://223.130.137.115/login/oauth2/code/naver
+#            redirect-uri: http://localhost:8080/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope: name, email, profile_image
             client-name: Naver
