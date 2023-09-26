@@ -1,7 +1,7 @@
 #application.yml
 spring:
   datasource:
-    url: ENC(noYKCh1ox/mi553kaSZFeeiROmiceZQhomyeQaBycjM0X6XOfBUV3Qxx7Naadt9DJwr9D/vNwE5JtoO5XOOcsAg4WKWhbcmc2HAIncqYK4DigPyL8QLuQjg/PhYHCjQhUaaxcge//NLqWAcQ36amBG241vAXLuy+)
+    url: ENC(6AGnZqIbto5nAhAZTJH/0et/o52twUbhznCDBhkD7O3PZWUd7j8nyV/1ApiC3Y41rj3O9nez9+jmBbwJ/A0UAgs6XNVQaGWqtqE3tjneguyTGeupyojAN6lY37K0HsVmf9TCEagKFLVR8QGQntfdUF8K7QxWVXKA)
     username: ENC(LURQQHtySzlneKsw3Hn+PXpe1BgqUb5E)
     password: ENC(OxaxxXJaaTlZQjLGzdgupJ3d7gIdyl+SK2M1Atf6dwI=)
     driver-class-name: ENC(p2euEo/ESquHypoblIzaBc8Ehh/Sj3I/9oql4rv8/tctgPqc3/2GPQ==)
