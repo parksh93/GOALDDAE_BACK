@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,12 +28,7 @@ public class TeamMatchRequest {
     private User user;
 
     // 외래키 형성 - 팀 매치
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="team_match_id")
     private TeamMatch teamMatch;
-
-    // 외래키 형성 - 팀 ID
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="team_id")
-    private Team team;
 }
