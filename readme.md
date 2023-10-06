@@ -147,7 +147,7 @@ Jenkins와 Docker를 이용해 배포를 진행했습니다.
 사용자의 요청이 들어왔을때 바로 서버로 요청을 보내는 것이 아닌 nginx를 거쳐 헬스 체크를 통해 로드밸런싱 처리하여 트래픽을 분산 시켰습니다.
 또한, 버전 업으로 인해 새롭게 배포를 진행해야 할때 서버의 중단을 막기 위해 롤링 방식을 도입해 무중단 배포를 수행했습니다.
 </details>
-
+<div>
 <h2>Tech & Tool</h2>
 
 ---
@@ -179,3 +179,4 @@ Jenkins와 Docker를 이용해 배포를 진행했습니다.
 <img src="https://img.shields.io/badge/IntelliJ-000000?style=flat&logo=IntelliJ IDEA&logoColor=white"/>
 <img src="https://img.shields.io/badge/Visual Studio Code-007ACC?style=flat&logo=Visual Studio Code&logoColor=white"/>
 <a href="https://climbing-alley-625.notion.site/Project-GOALDDAE-95357a09e6784ace932685fc57a54b0e?pvs=4"><img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=Notion&logoColor=white"/></a>
+</div>
