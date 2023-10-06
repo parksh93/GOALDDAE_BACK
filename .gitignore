@@ -38,3 +38,9 @@ out/
 
 application-db.yml
 application-jwt.yml
+application-email.properties
+application-kakaoDevelop.properties
+application-oauth2.yml
+application-payment.properties
+application-s3.yml
+application-weather.properties
