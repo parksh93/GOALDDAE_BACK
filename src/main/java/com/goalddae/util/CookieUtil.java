@@ -11,6 +11,7 @@ public class CookieUtil {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
+        cookie.setDomain("goalddae.shop");
 //        cookie.setSecure(true);
         response.addCookie(cookie);
     }
